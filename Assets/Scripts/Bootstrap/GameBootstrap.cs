@@ -81,9 +81,14 @@ namespace Seedfall
             _clock.Reset();
             if (botStrategy >= 0) SetBot(botStrategy);
             // v166：田地是固定形状（列 × 行），所以这里报的是**形状 + 格数**，不再只是"耕地 N 块"
+            // ★ v173：这一行原来写"每{RowGrowthSeconds:0}s加一排(上限{MaxRows}行)"✗
+            // ⇒ 配置是 300 秒 ✓ 所以它报的是"每300s加一排"✗ —— ★ 而用户要的说法是【分钟】★ ✓
+            // ⇒ 改成分钟，并把上限展开成"行×列=格"✗ 因为用户的要求就是"上限 6×6"✓
+            // （★ 数值一个字节没动 ✗ 只改单位与写法 ✓ —— `tuning.json` 早就是 maxRows 6 / 300 秒 ✓）
             Log.Info($"开局 seed={seed} 阶段={Session.Phase} Bot={(botStrategy < 0 ? "关闭" : ((BotStrategy)botStrategy).ToString())} " +
                      $"初始田地={Session.World.Farm.Columns}列×{Session.World.Farm.Rows}行={Session.World.Farm.UnlockedCount}格 " +
-                     $"种子槽={Session.Bag.SlotCount} 每{Session.World.Farm.RowGrowthSeconds:0}s加一排(上限{Session.World.Farm.MaxRows}行)");
+                     $"种子槽={Session.Bag.SlotCount} 每{Session.World.Farm.RowGrowthSeconds / 60f:0.#}分钟加一排" +
+                     $"(上限{Session.World.Farm.MaxRows}行×{Session.World.Farm.Columns}列={Session.World.Farm.MaxRows * Session.World.Farm.Columns}格)");
         }
 
         public void RestartRun()

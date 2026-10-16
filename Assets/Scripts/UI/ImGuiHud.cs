@@ -610,13 +610,15 @@ namespace Seedfall
             // v108：「攻击倍率」→「伤害倍率」（需求）。它乘的是 (基础伤害 + 攻击伤害) 整块，不只攻击那一项。
             // v162：现在乘的是 (基础伤害 + 对应伤害属性) 整块——三种武器各乘一次，语义不变。
             ly = StatLine(ly, $"伤害倍率　{AddRelative(st.Get(StatId.AtkMult), bs.atkMult)}");
-            // v162（A2）：爆炸倍率 / 爆炸范围**上移进主要属性区**（需求）。
-            //   它们直接决定肥料那条主输出线的伤害与体量，与三种伤害类型同属"我打得多疼"，
-            //   留在次要属性区会让玩家以为它们只是边角加成。
-            //   ★ 显示名从「爆炸伤害」改成「爆炸倍率」★：新属性 BlastDamage 已经叫「爆炸伤害」，
-            //     两条同名会让玩家以为面板写重了。而 ExplodeDamage 本身就是**倍率**（初始 2.5 = 250%），
-            //     这与 v108 把 AtkMult 改叫「伤害倍率」是同一种修正。
-            ly = StatLine(ly, $"爆炸倍率　{AddFlat(st.Get(StatId.ExplodeDamage), bs.explodeDamage)}");
+            // v162（A2）：爆炸范围**上移进主要属性区**（需求）。
+            //   它直接决定肥料那条主输出线的体量，与三种伤害类型同属"我打得多疼"，
+            //   留在次要属性区会让玩家以为它只是边角加成。
+            // ★ v173：与它同批上移的「爆炸倍率」一栏**已删**★ ——
+            //   用户原话："属性删除爆炸倍率一栏 ☆ 爆炸伤害计算公式和其它是一样的" ✓
+            //   ⚠️ 删掉的只是**这一栏显示**，不是那条属性 ✗：
+            //     `StatId.ExplodeDamage` 仍有 4 个非 UI 读者
+            //     （`RunSession.ExplodeAt` / `Projectile.Explode` / `SelfCheck` 两条断言 / `StatName` 的道具名表）⇒
+            //     爆炸伤害仍然 = 肥料的普通伤害 × 爆炸倍率，只是不再在面板上单独占一行 ✓
             ly = StatLine(ly, $"爆炸范围　{AddRelative(st.Get(StatId.ExplodeRange), bs.explodeRange / 100f)}");
             ly = StatLine(ly, $"攻击速度　{AddRelative(st.Get(StatId.AtkSpeed), bs.atkSpeed)}");
             ly = StatLine(ly, $"攻击范围　{AddRelative(st.Get(StatId.AtkRange), bs.atkRange)}");
@@ -656,93 +658,25 @@ namespace Seedfall
             GUI.EndScrollView();
         }
 
-        /// <summary>
-        /// v16：种子卡描述——功能 + 数值（伤害公式 / 攻速 / 暴击率 / 暴击伤害 / 范围 / 击退力 / 生命汲取 / 异常触发速度）。
-        /// 植物的战斗数值 = 种子基准 × 玩家属性 × 继承倍率（InheritMult）。
-        /// </summary>
-        private static string[] SeedCardLines(RunSession s, SeedSlot slot)
-        {
-            SeedDef d = slot.Def;
-            var list = new System.Collections.Generic.List<string>();
-            // v45 修复：空格子的 Def 为 null，旧代码在下面直接取 d.InheritMult → NullReferenceException
-            if (d == null)
-            {
-                list.Add("空种子位");
-                list.Add("在商店购买种子后自动种下");
-                return list.ToArray();
-            }
-            StatBlock st = s.Progress.Stats;
-            float qmul = TableDatabase.Tuning.quality.MultOf(slot.Quality);
-            float atkStat = d.AttackType == AttackType.Support ? 0f : st.Get(StatId.MeleeDamage);
-            float atkMult = st.Get(StatId.AtkMult);
-
-            // ★ v172：等级只做数值提升 ⇒ 旁边直接写出"收益 ×N.NN"（用户标准："1/2/3 级只做数值提升"）★
-            list.Add($"等级：{slot.Level} / {SeedSlot.MaxLevel}　收益 ×{slot.LevelYieldMult:0.00}"
-                     + $"　卖出返还 ×{slot.LevelYieldMult:0.00}");
-            // ★ v172：用户标准里的七项中，"成熟时间 / 金币 / 经验 / 特殊效果"这四项**原来一项都没显示**★
-            // 而它们恰好是"这株植物值不值得种"的全部依据 ⇒ 补上 ✓
-            // 数值与 `Actors.HarvestPlot` 的发放**同一式**（price/5、price/10 × 等级倍率 × 机制倍率 ✓）
-            float cellGold = Mathf.Max(1f, Mathf.RoundToInt(d.Price / 5f * slot.LevelYieldMult
-                                                            * PlantMechanics.HarvestGoldMult(d, null)));
-            float cellExp = Mathf.Max(1f, Mathf.RoundToInt(d.Price / 10f * slot.LevelYieldMult));
-            list.Add($"成熟：{d.GrowTime:0.#}s");
-            list.Add($"收获：金币 {cellGold:0}　经验 {cellExp:0}");
-            list.Add(PlantEffectLine(d, slot.Quality));
-            list.Add("功能：" + d.Desc);
-            list.Add("攻击模式：" + RunSession.AtkTypeText(d));
-            // v109：删除「伤害类型」一栏（需求）——现在版本没有伤害类型的定义了，
-            // 继续显示它就是在展示一个已不存在的维度。
-            // v109：伤害栏按需求的标准写成**一个算式**：
-            //   （植物基础伤害 + 近战伤害）× 伤害倍率
-            // 旧版拆成「伤害：基准…＋攻击…×…%」和「倍率：×…」两行，
-            // 玩家得自己在脑子里把两行乘起来才知道实际打多少。现在直接给出算式与结果。
-            // v162（A3）：算式里的「× 继承率」整项已删除（继承率随旧公式一起消失），
-            //             植物取**近战伤害**，与 Actors.SpawnPlantFromPlot 走同一条路径。
-            // ★ T2：`hasExplode` **已删除** ✗ —— 它恒为 false ✓ ★
-            //   判据原来是 `d.Mechanic.IndexOf("explode") >= 0` ✓
-            //   而 v168 之后 `Mechanic` 只可能是 `PlantMechanics` 登记的那 9 个名字或缺省 `"None"`
-            //   （`All` = Haste / NeighborBoost / WaterSave / ElderGrowth / ThirstTolerant /
-            //            DewDrop / RichHarvest / ChainHarvest / ThirstBloom ✓）
-            //   ⇒ **一个都不含 "explode"** ⇒ 判定恒假 ⇒ 下面两处 `if (hasExplode)` 都是死代码 ✓
-            //   删掉的是：判定式 + `explodeMult` 局部量 + 伤害算式追加 + 「爆炸范围」整行 ✓
-            //   ⚠️ `StatId.ExplodeDamage` 本身**仍在用**（肥料 / 属性面板 / 自检）⇒ 只删这里的读点 ✓
-            //   ⚠️ 连带：`SeedDef.baseExplodeRange`（Defs.cs:853）**失去唯一读者** ⇒ 现在是死字段 ✗
-            //      （它属于 `seeds.json` 那一批，与本次 11 个死字段一起处置 ✓）
-            float perHit = DamageResolver.AttackFormula(d.BaseValue * qmul, atkStat, atkMult, false, 1f, 0f);
-            string dmgExpr = $"（{d.BaseValue * qmul:0.#} ＋ {atkStat:0.#}）× {atkMult * 100f:0}%";
-            list.Add($"伤害：{dmgExpr} = {perHit:0.#}");
-            // v109：攻速**直接给"产生一次攻击的时间"**（秒，2 位小数）。
-            // 旧版同时显示"次/秒"和"间隔s"两个数——同一个量的两种表达，
-            // 玩家要换算才能和武器对比。需求要的就是间隔本身，单位 s。
-            list.Add($"攻速：{d.AttackInterval:0.00}s／次");
-            // v112：暴击率与暴击伤害按**实际值**展示（需求 ⑬）。
-            //
-            // 实际值 = 植物自己的基础值 + 玩家属性的增量：
-            //   暴击率  = def.BaseCritRate + 玩家暴击率增量
-            //   暴击伤害 = def.BaseCritDmg（缺省 2.0 = 两倍）
-            // 这样玩家看到的是**这株植物真正会打出多少**，而不是"玩家属性是多少"——
-            // 后者对一株自带 30% 暴击率的植物是误导。
-            //
-            // 注：玩家自身的初始暴击率是 0%（需求 ②），全靠道具堆；
-            //     植物则各自带基准，两套并存，所以这里必须相加而不是取其一。
-            float pCritRate = d.BaseCritRate + st.Get(StatId.CritRate);
-            float pCritDmg = d.BaseCritDmg > 0.01f ? d.BaseCritDmg : 2f;
-            // v121：**每个属性单独成行**（需求："所有属性单独成行，不要接在别的后面"）。
-            // 旧版把两三个属性挤在一行（用全角空格分隔），在一列窄卡片里换行后会错位，
-            // 读起来像"某个属性的下半截接在了另一个属性后面"。一行一个，扫视也更快。
-            list.Add($"暴击率：{pCritRate * 100f:0.#}%");
-            list.Add($"暴击伤害：{pCritDmg * 100f:0}%");
-            list.Add($"攻击范围：{d.Range * st.Get(StatId.AtkRange):0.0}");
-            list.Add($"击退力：{st.Get(StatId.Knockback):0.00}");
-            // ★ T2：原来这里有一整行「爆炸范围」+ 它的 `if (hasExplode)` 守卫 ✗ —— 一并删除 ✓
-            //   理由同上：`hasExplode` 恒假 ⇒ 这一行**从来没有显示过** ⇒ 删它不改变任何卡片 ✓
-            //   （原本的设计意图"只有会炸的植物才显示"已由"判定恒假"自动满足 ✓）
-            // v121：同样拆成三行
-            list.Add($"生命：{d.BaseHp:0.#}");
-            list.Add($"护盾：{d.BaseShield:0.#}");
-            list.Add($"移速：{d.MoveSpeed:0.0}");
-            return list.ToArray();
-        }
+        // ★ v173：原来这里有一个 `SeedCardLines(RunSession, SeedSlot)` —— **整段已删** ✗ ★
+        //
+        //   它是"商店条目 / 商店详情 / 开局选种"三处的种子卡正文，与主界面那 6 个格子走的
+        //   `PlantCellInfoLines` **各写了一份** ⇒ 两份的字段集不一致：
+        //   这一份 15 行（含 8 个战斗属性），那一份 7 项 ✗
+        //   用户标准："植物只显示：名字、品质、等级、金币产出量、经验产出量、生长时间、特殊功能" ✓
+        //   ⇒ 现在**只有一个生产者**（`PlantCellInfoLines`），两处调用直接指向它 ✓
+        //      "改了一处、另一处还在显示旧属性"从此在结构上不可能发生 ✓
+        //
+        //   连同删除的行（按**代码符号**列，便于回溯）：
+        //     伤害算式（`SeedDef.BaseValue` × 品质倍率 + `StatId.MeleeDamage`）/
+        //     `SeedDef.AttackInterval` / `SeedDef.BaseCritRate` + `StatId.CritRate` /
+        //     `SeedDef.BaseCritDmg` / `SeedDef.Range` × `StatId.AtkRange` / `StatId.Knockback` /
+        //     `SeedDef.BaseHp` / `SeedDef.BaseShield` / `SeedDef.MoveSpeed` /
+        //     攻击模式（`RunSession.AtkTypeText`）/ 功能（`SeedDef.Desc`）/
+        //     卖出返还（`SeedSlot.LevelYieldMult`，与上面"收益"是同一个数）✓
+        //   ★ 植物自 v165 起**不参战** ⇒ 上面这些战斗数没有一个影响它在地里的行为 ✓
+        //   ⚠️ `AttackType` / `AttackKind` / `Support` **不是**死字段：`RunSession.AtkTypeText` 等
+        //      三个文案函数与自检仍在读（商店副标题在用）✓
 
         /// <summary>
         /// v19：统一的种子卡（商店 / 菜单 / 开局选种共用）。
@@ -796,7 +730,7 @@ namespace Seedfall
                 Mathf.Max(60f, card.width - leftW - 14f), Mathf.Max(24f, card.height - bottomReserve - 16f));
             // v48/v51：统一走 DrawInfoList —— 自动换行 + 按实测行数算内容高度（超宽行会折行并计入高度）
             if (!slot.IsEmpty)
-                DrawInfoList(descView, SeedCardLines(s, slot), scrollIndex, scrollStore, "种子卡");
+                DrawInfoList(descView, PlantCellInfoLines(slot), scrollIndex, scrollStore, "种子卡");
             else
                 GUI.Label(descView, "空格", _small);
         }
@@ -1022,7 +956,7 @@ namespace Seedfall
             if (o.Kind == OfferKind.Seed && o.Seed != null)
             {
                 var tmp = new SeedSlot { Def = o.Seed, Quality = o.Quality };
-                list.AddRange(SeedCardLines(s, tmp));
+                list.AddRange(PlantCellInfoLines(tmp));
             }
             else if (o.Kind == OfferKind.Item && o.Item != null)
             {
@@ -2079,32 +2013,46 @@ namespace Seedfall
         }
 
         /// <summary>
-        /// ★ v172：第 7 项"特殊效果" ★ —— 中/高品质写「机制〔阶段〕+ 说明」，
-        /// ★ 低品质不出现"机制"二字 ★
+        /// ★ v173：第 7 项"特殊功能" ★ —— 有机制就写「机制〔阶段〕+ 说明」，
+        /// **没有机制就写「平平无奇」** ✓
         ///
-        /// 用户标准（原话）："低品质（普通、一般）提供**纯数值区别**，中品质（稀有、史诗）做小机制和
-        /// 微高的数值，高品质（传奇）做**大机制**和高数值；★ 植物合成等级 1/2/3 只做数值提升 ★"
+        /// 用户标准（原话）："植物只显示：名字、品质、等级、金币产出量、经验产出量、生长时间、
+        /// 特殊功能 ★（没有就写【平平无奇】）★"✓
         ///
-        /// ⇒ 给普通/一般写"机制：无"会被读成"这个地方缺了东西"✗
-        ///   它们的定义就是纯数值 ⇒ 就写它们的**数值定位** ✓
-        /// ⇒ 等级那一行同理：只写「Lv N/3 ⇒ 收益 ×N.NN」，**不暗示等级会解锁新机制** ✓
+        /// ⇒ v172 那两句**已删** ✗：「定位：纯数值（靠等级与品质拿收益）」与
+        ///   「传奇：纯数值（收益最高档）」—— 它们与"平平无奇"讲的是同一件事（这株没有机制），
+        ///   但前者读起来像一段**说明文案**，后者才是能一眼扫过去的结论 ✓
+        /// ⇒ 于是这一行**不再按品质分两档**：没有机制就是没有机制，普通与传奇写同一句 ✓
+        ///   （`quality` 仍然要传：下面「机制〔大·/小·〕」那一档还按它分 ✓）
         /// </summary>
         private static string PlantEffectLine(SeedDef d, int quality)
         {
             if (d == null) return "";
-            if (!HasMechanicOf(d))
-                return quality >= 4 ? "传奇：纯数值（收益最高档）"
-                                    : "定位：纯数值（靠等级与品质拿收益）";
+            if (!HasMechanicOf(d)) return "平平无奇";
             string text = PlantMechanics.Describe(d.Mechanic);
             string head = (quality >= 4 ? "机制〔大·" : "机制〔小·") + PlantMechanicStage(d.Mechanic) + "〕";
             return string.IsNullOrEmpty(text) ? head + d.Mechanic : head + text;
         }
 
         /// <summary>
-        /// 植物格的信息行（名称与品质画在格子上方 ✓ 这里是剩下 5 项）
-        /// ⑤⑥ 金币 / 经验与 `Actors.HarvestPlot` 的**发放公式同一式**：
+        /// ★ v173：植物信息的**唯一生产者** ★ —— 主界面 6 格 / 菜单中栏 3×2 / 商店种子卡 /
+        /// 商店商品详情 / 开局选种，五处全部走这一个函数 ✓
+        ///
+        /// 用户标准（原话）："植物只显示：名字、品质、等级、金币产出量、经验产出量、生长时间、
+        /// 特殊功能"✓ ⇒ 名字与品质画在卡片抬头（`DrawPlantCell` 的名称行 / `SeedCardPanel` 的左列），
+        /// 这里是剩下的 5 项 ✓ 合计 7 项，**一项不多一项不少** ✓
+        ///
+        /// ★ 为什么必须只有一个生产者 ★
+        /// 改前是两份：这份（7 项）与 `SeedCardLines`（15 行 —— 除了状态与收益之外，
+        /// 还读 `SeedDef` 的 `BaseValue` `AttackInterval` `BaseCritRate` `BaseCritDmg` `Range`
+        /// `BaseHp` `BaseShield` `MoveSpeed` 这 8 个**战斗字段**）✗
+        /// ⇒ 同一个植物在商店卡与主界面格子上**长得不一样**，
+        ///   而用户对两处的要求是同一句 ⇒ 只改一处就等于没做 ✓
+        /// 现在两份合并成一份，结构上不可能再分家 ✓
+        ///
+        /// ⑤⑥ 金币 / 经验与 `Actors.HarvestPlot` 的发放公式同一式：
         /// `max(1, round(price/5 × 等级倍率 × 机制倍率))` 与 `max(1, round(price/10 × 等级倍率))` ✓
-        /// （所以卡片上写的数**就是**收获时进账的数 ✓ 不是另算一份"给玩家看的数" ✓）
+        /// ★ 植物自 v165 起不参战 ⇒ 这里**一个战斗属性都没有** ✓
         /// </summary>
         private static string[] PlantCellInfoLines(SeedSlot slot)
         {
@@ -2120,17 +2068,18 @@ namespace Seedfall
                                                         * PlantMechanics.HarvestGoldMult(d, null)));
             float exp = Mathf.Max(1f, Mathf.RoundToInt(d.Price / 10f * slot.LevelYieldMult));
             list.Add($"金币 {gold:0} · 经验 {exp:0}");
-            // ⑦ 特殊效果（带阶段；低品质走"数值定位"）
+            // ⑦ 特殊功能（带阶段；没有机制就写「平平无奇」）
             list.Add(PlantEffectLine(d, slot.Quality));
             return list.ToArray();
         }
 
         /// <summary>
-        /// ★ v172：一个植物格（6 格共用）★
-        /// 项：① 名称 ② 品质 ③ 等级 ④ 成熟时间 ⑤ 金币 ⑥ 经验 ⑦ 特殊效果 —— 七项一项不少 ✓
+        /// ★ v173：一个植物格（主界面 6 格 / 菜单中栏 3×2 共用）★
+        /// 项：① 名称 ② 品质 ③ 等级 ④ 成熟时间 ⑤ 金币 ⑥ 经验 ⑦ 特殊功能 —— 七项一项不少 ✓
+        /// （内容全部来自 `PlantCellInfoLines` —— 商店卡与这里**同源** ✓）
         /// 矮格子的处置：最后一项（机制说明）**折行**（用户允许两行 ✓）
-        /// 而"等级"与"特殊效果"分别在信息区的**首行与末行**⇒ 任何高度下都不会被先挤掉 ✓
-        /// （那两项是这一次新增的信息 ✓ 挤掉它们等于没做 ✓）
+        /// 而"等级"与"特殊功能"分别在信息区的**首行与末行**⇒ 任何高度下都不会被先挤掉 ✓
+        /// （那两项是 v172 新增的信息 ✓ 挤掉它们等于没做 ✓）
         /// </summary>
         private void DrawPlantCell(RunSession s, SeedSlot slot, Rect cell)
         {

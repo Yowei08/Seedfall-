@@ -2276,7 +2276,21 @@ namespace Seedfall
         private void TickShopTruck(in FrameInput input)
         {
             if (!_truckArmed && !IsOver) { Truck.Reset(Clock); _truckArmed = true; }
-            Truck.Tick(Clock);
+            bool truckPhaseChanged = Truck.Tick(Clock);
+
+            // ★ 商店车到了 / 开走了：播一条提示 ✗ ★
+            //
+            // 为什么必须播：`ImGuiHud` 里**没有任何**与商店车相关的文案（grep 过 `Truck` / `按 E` = 0 处）✗
+            // ⇒ 停靠期玩家看不到"这里可以按 E"⇒ 功能存在但**没人知道** ✓
+            // 而这正是用户说的"没有加入 E 键互动"的感受来源之一 ✓
+            // 用既有的 `SetPrompt` 通道（不碰 HUD，也就不引入第二份真相）✓
+            if (truckPhaseChanged)
+            {
+                if (Truck.Current == ShopTruck.Phase.Dock)
+                    SetPrompt($"商店车到了 —— 走到车旁按 E 进店（停留 {ShopTruck.DockSeconds:0} 秒）");
+                else if (Truck.Current == ShopTruck.Phase.Idle)
+                    SetPrompt("商店车开走了");
+            }
 
             // v168：**车播报改为 opt-in** ✗
             //
@@ -2292,9 +2306,9 @@ namespace Seedfall
                 if (_truckArmed && _lastTruckPhase != Truck.Current)
                 {
                     _lastTruckPhase = Truck.Current;
-                    Vector2 wp = ShopTruck.PointAt(Truck.PhaseT(Clock.GameTime)) * T.farm.arenaHalf;
+                    Vector2 wp = Truck.SamplePoint(Clock) * T.farm.arenaHalf;
                     Debug.Log($"[Seedfall] 商店车 → {Truck.Current}｜{Clock.TimeText()}"
-                              + $"｜进度 {Truck.PhaseT(Clock.GameTime):0.00}"
+                              + $"｜进度 {Truck.SampleT(Clock):0.00}"
                               + $"｜位置 {wp.x:0.0},{wp.y:0.0}"
                               + $"｜场地半宽 {T.farm.arenaHalf:0.0}");
                 }
@@ -2319,10 +2333,21 @@ namespace Seedfall
             // 进入 Shop 阶段**本身就等于暂停一切** ✓
             // （FixedTick 的 switch 在该阶段只跑 TickShop，战斗/刷怪/计时都不推进）
             // 所以"暂停所有游戏画面和计时"不需要额外机制 ✓ 这就是单一闸门 ✓
-            if (Truck.Current == ShopTruck.Phase.Dock && !IsOver && input.ShopOpen
+            //
+            // ★ 两个入口汇成**一条**判定 ★ —— 真实 E 键（`input.ShopOpen`）
+            //   与自动化闩（`RequestShopOpen`，见那里的说明）✓
+            //   闩**读走即清**，所以它等价于"这一帧按了一下 E"（`wasPressedThisFrame`）✓
+            //   ⇒ 不会出现"自动化一按就每帧重进商店"这种只有机器人会遇到的怪状态 ✓
+            bool shopKeyPressed = input.ShopOpen || _shopKeyLatch;
+            _shopKeyLatch = false;
+            if (Truck.Current == ShopTruck.Phase.Dock && !IsOver && shopKeyPressed
                 && World != null && World.Player != null)
             {
-                Vector2 np = ShopTruck.PointAt(Truck.PhaseT(Clock.GameTime));
+                // ★ 必须用 `SamplePoint` 而不是 `PointAt(Truck.PhaseT(...))` ★
+                //   停靠期车**停在停靠位**，而 `PointAt(PhaseT)` 会让它又跑一整圈 ⇒
+                //   真正的可交互窗只剩最后约 0.5 秒（实测），窗口名存实亡 ✗
+                //   （见 `ShopTruck.SamplePoint` 的说明与实测数字 ✓）
+                Vector2 np = Truck.SamplePoint(Clock);
                 float half = T.farm.arenaHalf;
                 Vector2 dockPos = np * half;
                 float d = (World.Player.Pos - dockPos).magnitude;
@@ -2369,7 +2394,9 @@ namespace Seedfall
             // **移除但不结算任何奖励** —— 直接移出列表 = 不走击杀路径 = 不触发经验/掉落 ✓
             // 这正是需求"清除路径上的怪物和植物，不掉落经验值"最直接的实现 ✓
             if (World == null || Truck.Current != ShopTruck.Phase.Looping) return;
-            Vector2 np2 = ShopTruck.PointAt(Truck.PhaseT(Clock.GameTime));
+            // ★ 这里在 `Looping` 阶段，`SamplePoint` 与 `PointAt(PhaseT)` **逐位相同** ★
+            //   ⇒ 换成统一入口**不改变清扫行为** ✓ 只是不再留下"同一个量有两种取法"的坑 ✓
+            Vector2 np2 = Truck.SamplePoint(Clock);
             Vector2 truckPos = np2 * T.farm.arenaHalf;
             float r = T.farm.arenaHalf * 0.16f;
             for (int i = World.Enemies.Count - 1; i >= 0; i--)
@@ -2823,7 +2850,30 @@ namespace Seedfall
 
             bool next = input.Skip || (!infinite && PhaseTimer <= 0f);
             if (!next) return;
-            StartWave(WaveIndex + 1);
+
+            // ★★ 离开商店【不能】无条件把分钟数 +1 ★★
+            //
+            // 原实现：`StartWave(WaveIndex + 1);` ✗ —— 它**与时钟无关** ✓
+            //   ⇒ 每进一次商店，难度分钟就凭空 +1 ⇒ `World.WaveIndex` 前进 ⇒
+            //     敌人 HP / 伤害 / 在场上限 / 每拍刷新量**全部提前跳一档** ✗
+            //
+            // ★ 为什么它以前没被发现 ★：修商店窗之前，玩家与机器人整局进出 **0~1 次**
+            //   ⇒ 这条几乎不触发 ✓ ⇒ ★ 它一直被"商店进不去"那个 bug **掩盖**着 ★ ✓
+            //   修好商店窗之后每局进出 **~3 次** ⇒ 难度曲线会跑到真实时间前面 1~3 分钟 ✓
+            //   （实测形态：t=170.1s 第 4 分钟 ⇒ t=173.6s 第 5 分钟 ⇒ t=177.2s 第 6 分钟，
+            //     7 秒里跳了两档 ✗ —— 玩家在商店里"停一下"，出来敌人就变强了一整档 ✓）
+            //
+            // ★ 正确做法：交给既有的"**落后就补**"契约 ★ ——
+            //   `FixedTick` 里已有：
+            //     `if (!IsOver && Phase == Combat && Clock.WaveIndex > WaveIndex) StartWave(Clock.WaveIndex);`
+            //   ⇒ 时钟真的走过了就补到当前分钟 ✓；没走过就**只是回到战斗** ✓
+            //
+            // ⚠️ 一处**有意的语义变化**（必须说明）：原实现每次离店都白送一次
+            //   `StartWave` ⇒ 顺带 `ResetPlayerForNewWave()` **满血 + 满盾** ✓
+            //   改后只有"时钟真的跨分钟"时才补 ⇒ **离店不再白送满血** ✓
+            //   这与"补满血是每分钟一次的事件"（`StartWave` 的语义）一致 ✓
+            if (Clock.WaveIndex > WaveIndex) StartWave(Clock.WaveIndex);
+            else SetPhase(PhaseState.Combat, 0f);
         }
 
         private void SyncGoldFromWorld()
@@ -2860,6 +2910,28 @@ namespace Seedfall
             Shop.Refresh(this);
             SetPhase(PhaseState.Shop, T.shop.prepareTime);
         }
+
+        /// <summary>
+        /// ★ **按 E** 的可自动化入口 ★ —— 等价于"玩家这一帧按下了 E"，用于机器人 / 外部脚本。
+        ///
+        /// ★ 为什么必须留它 ★
+        /// E 键由 `GameBootstrap.ReadInput` 从 `Keyboard.current.eKey` 读 ✗
+        /// 而 Unity 的 `Input`/`InputSystem` 读的是**操作系统**的键盘状态 ⇒
+        /// 自动化既点不到那个键，也无法在无头回放里"按键" ✓
+        /// （本会话已知的硬约束：键盘驱动的游戏必须**自己留一个方法**给自动化调 ✓）
+        ///
+        /// ★ 为什么是"拉一下闩"而不是"直接开店" ★
+        /// 直接 `SetPhase(Shop)` 会**绕过玩法判定**（停靠期 + 玩家在 4 米内）✗
+        /// 那样自动化测出来的就是"这个方法能被调"，而不是"玩家按 E 能进店" ✓
+        /// 这里只置一个一次性闩，下一帧由 `TickShopTruck` 和真实 E 键**走同一条分支** ⇒
+        /// 条件不满足时它和按键一样**什么都不发生** ✓
+        ///
+        /// ★ 一次性 ★：被消费的当帧就清掉（否则会变成"一直按着 E"⇒ 每帧重进商店）✓
+        /// </summary>
+        public void RequestShopOpen() => _shopKeyLatch = true;
+
+        /// <summary>`RequestShopOpen` 的一次性闩（见那里的说明）。</summary>
+        private bool _shopKeyLatch;
         /// <summary>
         /// v46：**一块耕地对应一个种子**（第 9 波教学：种子位与耕地 1:1）。
         /// 把"种子袋里每种种子的数量"与"占着耕地、由该种子驱动的地块数量"对齐：

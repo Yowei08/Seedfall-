@@ -770,6 +770,95 @@ namespace Seedfall
             s.ForceShopForDebug();
             Log.Info($"DEBUG ForceShop → {s.Phase}");
         }
+
+        /// <summary>
+        /// ★ 调试 / 自动化：**按 E**（与真实按键走同一条分支）★
+        ///
+        /// 为什么需要它：E 键由 `GameBootstrap` 从 `Keyboard.current` 读 ✗
+        /// 而键盘状态来自**操作系统** ⇒ 自动化点不到、无头回放也按不了 ✓
+        /// 于是把"按 E"做成一个可调用的动作 ✓
+        ///
+        /// ⚠️ 它**不绕过任何条件** ✗ —— 只在"停靠期 + 玩家在 4 米内"时才会真的进店，
+        ///    其余情况与真人按键一样什么都不发生 ✓（判定在 `TickShopTruck` 里）
+        /// </summary>
+        public void ShopKey()
+        {
+            RunSession s = S;
+            if (s == null) { Log.Warn("DEBUG ShopKey 会话未启动"); return; }
+            ShopTruck truck = s.Truck;
+            float half = s.T.farm.arenaHalf;
+            Vector2 dock = ShopTruck.DockPoint * half;
+            float dist = s.World != null && s.World.Player != null
+                ? Vector2.Distance(s.World.Player.Pos, dock) : -1f;
+            s.RequestShopOpen();
+            Log.Info($"DEBUG ShopKey（按 E）→ 阶段 {truck.Current}｜离停靠位 {dist:0.00}m"
+                     + $"｜可交互 {truck.CanShop(dist)}｜进店前 Phase={s.Phase}");
+        }
+
+        /// <summary>
+        /// ★ 调试 / 自动化：把商店车**摆到停靠位**（截图 / 复现那一帧）★
+        ///
+        /// 一轮 60 秒，而"车停在门口"只占 10 秒 ✗ 靠等待抓帧不可复现 ✓
+        /// 所以给一个显式的舞台调度（只搬阶段指针，见 `ShopTruck.DebugForcePhase`）✓
+        /// spec：`dock`（默认）/ `idle` / `loop` / `enter` / `leave`
+        /// </summary>
+        public void TruckDock(string spec)
+        {
+            RunSession s = S;
+            if (s == null) { Log.Warn("DEBUG TruckDock 会话未启动"); return; }
+            string key = (spec ?? "").Trim().ToLowerInvariant();
+            ShopTruck.Phase p = key.StartsWith("idle") ? ShopTruck.Phase.Idle
+                : key.StartsWith("loop") ? ShopTruck.Phase.Looping
+                : key.StartsWith("enter") ? ShopTruck.Phase.Entering
+                : key.StartsWith("leave") ? ShopTruck.Phase.Leaving
+                : ShopTruck.Phase.Dock;
+            s.Truck.DebugForcePhase(p, s.Clock);
+            Vector2 np = s.Truck.SamplePoint(s.Clock);
+            float half = s.T.farm.arenaHalf;
+            Log.Info($"DEBUG TruckDock → {p}｜归一化 ({np.x:0.00},{np.y:0.00})"
+                     + $"｜世界 ({np.x * half:0.0},{np.y * half:0.0})｜场地半宽 {half:0.0}"
+                     + $"｜停靠位 {ShopTruck.DockPoint.x:0.00},{ShopTruck.DockPoint.y:0.00}"
+                     + $"｜离停靠位 {(np * half - ShopTruck.DockPoint * half).magnitude:0.00}m"
+                     + $"｜剩余 {s.Truck.DockSecondsLeft(s.Clock):0.0}s");
+        }
+
+        /// <summary>
+        /// ★ 调试 / 自动化：**商店车的一轮行为实测**（只读观测，不改任何玩法数值）★
+        ///
+        /// 跑一局 Balanced 并挂上 `DeathDiagnostics.Observe`，
+        /// 把"车离停靠位多远 / 停了多久 / 玩家能交互多久 / 一轮多长 / 有没有不在场"打成日志 ✓
+        /// spec = 种子（可空 ⇒ 默认 20240607）✓
+        /// 完整报告写到 `Docs/reports/`（长报告会被 Unity 日志截断，所以只打摘要）✓
+        /// </summary>
+        public void TruckReport(string spec)
+        {
+            int exit = 0;
+            try
+            {
+                TableDatabase.Load();
+                ulong seed = 20240607UL;
+                if (!string.IsNullOrEmpty(spec) && ulong.TryParse(spec.Trim(), out ulong parsed)) seed = parsed;
+
+                DeathDiagnostics.Reset();
+                SimResult r = RunSimulator.Run(BotStrategy.Balanced, seed, 400f, false, DeathDiagnostics.Observe);
+
+                string summary = DeathDiagnostics.ShopSummary();
+                Log.Info($"[Seedfall] 商店车实测（seed {seed}｜活 {r.Duration:0.0}s｜进店 {r.ShopVisits} 次"
+                         + $"｜买种 {r.SeedsBought} 份｜植株 {r.PlantsAlive}）\n" + summary);
+                string path = RunSimulator.WriteReport(
+                    $"# 商店车实测（DebugApi.TruckReport｜seed {seed}｜Balanced）\n"
+                    + summary + $"\n  进店 {r.ShopVisits} 次｜买种 {r.SeedsBought} 份｜植株 {r.PlantsAlive}"
+                    + $"｜收割 {r.Harvests}｜金币 {r.Gold}｜等级 {r.Level}｜存活 {r.Duration:0.0}s\n",
+                    $"shop-truck-{System.DateTime.Now:yyyyMMdd-HHmmss}.txt");
+                Log.Info("[Seedfall] 报告：" + path);
+            }
+            catch (Exception e)
+            {
+                exit = 1;
+                Log.Error("DEBUG TruckReport 失败：" + e);
+            }
+            if (exit != 0) Log.Warn("DEBUG TruckReport 以失败结束");
+        }
         /// <summary>模拟 Esc：打开/关闭菜单（暂停）。</summary>
         public void ToggleMenu()
         {

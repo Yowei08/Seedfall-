@@ -83,6 +83,54 @@ namespace Seedfall
         public static readonly List<string> MinuteMarks = new List<string>();
         /// <summary>性能计数器。</summary>
         public static float ObserveCalls;
+        /// <summary>最后一次观测到的游戏时刻（秒）—— 用来把"车不在场上"折算成占比。</summary>
+        public static float ObservedSeconds;
+
+        // ── ★ 商店车【实测】★ ──
+        //   为什么要实测而不是推导：`CanShop` 为真的**时长**是这件事的唯一判据 ✗
+        //   这里用**引擎自己的** `ShopTruck.CanShop(d)` 判定，距离也按 `TickShopTruck`
+        //   的同一条算式算 ⇒ 量的是引擎的真条件，不是设计值 ✓
+        /// <summary>`CanShop` 为真的累计秒数（整局）。</summary>
+        public static float ShopOpenSeconds;
+        /// <summary>`CanShop` 由假变真的次数（= 真正可交互的窗口个数）。</summary>
+        public static int ShopOpenWindows;
+        /// <summary>最长的一段连续可交互时长（秒）。</summary>
+        public static float ShopOpenLongest;
+        /// <summary>整局 `Dock` 阶段的总时长（对照：设计值 = 10 秒 × 窗口数）。</summary>
+        public static float ShopDockSeconds;
+        /// <summary>
+        /// ★ 机制判据 ★ 停靠期"引擎实际摆车的点"离 `DockPoint` 的最远距离（米）。
+        /// 停车正确时应 ≈ 0；位置错配时它会在 10 秒里跑满整圈 ⇒ 十几米 ✗
+        /// </summary>
+        public static float ShopTruckOffDockMax;
+        /// <summary>同一帧里按**旧算法**（`PointAt(PhaseT)`）算的同一量 —— 受控对照 ✓</summary>
+        public static float ShopTruckOffDockMaxOld;
+        /// <summary>★ 用户判据 ★ 车**停在停靠位**（离停靠位 ≤ <see cref="AtDockEpsilon"/> 米）的最长连续时长。</summary>
+        public static float ShopTruckAtDockLongest;
+        /// <summary>车**不在场上**（`Idle`，模型被隐藏）的累计秒数 —— 回答"是不是常驻"。</summary>
+        public static float ShopAwaySeconds;
+        /// <summary>其中**轮与轮之间**的那部分（不含开局等待）—— 这才是"开走之后消失多久"。</summary>
+        public static float ShopAwayBetweenSeconds;
+        /// <summary>走完的完整轮数（`Idle→Entering` 到 `Leaving→Idle`）。</summary>
+        public static int ShopCycles;
+        /// <summary>各轮总时长之和（秒）；除以 <see cref="ShopCycles"/> 得一轮均值。</summary>
+        public static float ShopCycleSecondsSum;
+        /// <summary>一轮最短 / 最长（秒）。</summary>
+        public static float ShopCycleShortest = float.MaxValue;
+        public static float ShopCycleLongest;
+        /// <summary>逐阶段实测累计（秒）：入场 / 绕场 / 停靠 / 离场。</summary>
+        public static float ShopEnterMeasured, ShopLoopMeasured, ShopDockMeasured, ShopLeaveMeasured;
+
+        /// <summary>"停在停靠位"的判定容差（米）。</summary>
+        public const float AtDockEpsilon = 0.5f;
+
+        private static float _shopOpenRun;
+        private static bool _shopOpenPrev;
+        private static float _atDockRun;
+        private static ShopTruck.Phase _shopPhasePrev = ShopTruck.Phase.Idle;
+        private static float _cycleStartAt = -1f;
+        private static bool _cycleTimingArmed;
+        private static bool _truckSeenOnce;
 
         private static readonly Dictionary<int, float> PrevDamageDone = new Dictionary<int, float>();
         private static int _lastWave = -1;
@@ -95,6 +143,31 @@ namespace Seedfall
             PrevDamageDone.Clear();
             _lastWave = -1;
             ObserveCalls = 0;
+            ObservedSeconds = 0f;
+            ShopOpenSeconds = 0f;
+            ShopOpenWindows = 0;
+            ShopOpenLongest = 0f;
+            ShopDockSeconds = 0f;
+            ShopTruckOffDockMax = 0f;
+            ShopTruckOffDockMaxOld = 0f;
+            ShopTruckAtDockLongest = 0f;
+            ShopAwaySeconds = 0f;
+            ShopAwayBetweenSeconds = 0f;
+            ShopCycles = 0;
+            ShopCycleSecondsSum = 0f;
+            ShopCycleShortest = float.MaxValue;
+            ShopCycleLongest = 0f;
+            ShopEnterMeasured = 0f;
+            ShopLoopMeasured = 0f;
+            ShopDockMeasured = 0f;
+            ShopLeaveMeasured = 0f;
+            _shopOpenRun = 0f;
+            _shopOpenPrev = false;
+            _atDockRun = 0f;
+            _shopPhasePrev = ShopTruck.Phase.Idle;
+            _cycleStartAt = -1f;
+            _cycleTimingArmed = false;
+            _truckSeenOnce = false;
         }
 
         /// <summary>
@@ -107,6 +180,7 @@ namespace Seedfall
             World w = s.World;
             if (w == null || w.Player == null) return;
             ObserveCalls++;
+            ObservedSeconds = t;
 
             PlayerActor p = w.Player;
 
@@ -175,7 +249,121 @@ namespace Seedfall
                     "  t={0,7:0.0}s  第 {1} 分钟开始（StartWave ⇒ 满血 + 满盾 + 传送回 (0,0) + 水 +50）",
                     t, s.WaveIndex));
             }
+
+            ObserveShopTruck(s, t);
         }
+
+        /// <summary>
+        /// ★ 实测商店停靠窗 ★ —— 每固定步记录"玩家此刻按 E 会不会真的进店"，
+        /// 以及"车到底停在哪、停了多久、一轮多长"。
+        ///
+        /// 判定用**引擎自己的** `Truck.CanShop(d)`，`d` 用 `TickShopTruck` 里那同一条算式 ✓
+        /// ⇒ 量出来的是"可交互时长"，不是"设计时长" ✓
+        ///
+        /// ⚠️ 它必须跟着**引擎实际用的取位入口**走 ✗ —— 所以修 bug 时这里要一起改，
+        ///    否则"修好了"只是观测在自我安慰 ✓（本会话反复出现的形状）
+        /// </summary>
+        private static void ObserveShopTruck(RunSession s, float t)
+        {
+            ShopTruck truck = s.Truck;
+            World w = s.World;
+            if (truck == null || w == null || w.Player == null) return;
+            float dt = GameClock.FixedDt;
+            float half = w.Tuning.farm.arenaHalf;
+            ShopTruck.Phase ph = truck.Current;
+
+            // ── ① 轮时长：Idle→Entering 起算，Leaving→Idle 收尾 ──
+            if (ph != _shopPhasePrev)
+            {
+                if (ph == ShopTruck.Phase.Entering && _shopPhasePrev == ShopTruck.Phase.Idle)
+                {
+                    _cycleStartAt = t;
+                    _cycleTimingArmed = true;
+                }
+                else if (ph == ShopTruck.Phase.Idle && _shopPhasePrev == ShopTruck.Phase.Leaving && _cycleTimingArmed)
+                {
+                    float dur = t - _cycleStartAt;
+                    ShopCycles++;
+                    ShopCycleSecondsSum += dur;
+                    if (dur < ShopCycleShortest) ShopCycleShortest = dur;
+                    if (dur > ShopCycleLongest) ShopCycleLongest = dur;
+                    _cycleTimingArmed = false;
+                }
+                _shopPhasePrev = ph;
+            }
+
+            // ── ② 逐阶段实测累计 ──
+            switch (ph)
+            {
+                case ShopTruck.Phase.Entering: ShopEnterMeasured += dt; break;
+                case ShopTruck.Phase.Looping: ShopLoopMeasured += dt; break;
+                case ShopTruck.Phase.Dock: ShopDockMeasured += dt; break;
+                case ShopTruck.Phase.Leaving: ShopLeaveMeasured += dt; break;
+                default: ShopAwaySeconds += dt; break;      // Idle = 不在场上（模型被隐藏）
+            }
+            // ★ "车不在场上"要拆成两段 ★ —— 否则它会骗人：
+            //   · **开局等待**（设计：第一分钟没有车，`Reset` 把首个周期锚在 +60s）✓
+            //   · **轮与轮之间的间隙**（"开走之后消失了多久"= 用户说的"不要常驻"）✓
+            //   两者混在一个数里时，"不在场 60 秒"看着像实现了间歇，
+            //   而它其实**全部**来自开局那一次 ✗（第一版实测 60.10s / 4 轮 ⇒ 间隙 ≈ 0.1s ✓）
+            if (ph == ShopTruck.Phase.Entering) _truckSeenOnce = true;
+            if (ph == ShopTruck.Phase.Idle && _truckSeenOnce) ShopAwayBetweenSeconds += dt;
+
+            if (ph == ShopTruck.Phase.Dock) ShopDockSeconds += dt;
+
+            // ── ③ 车距停靠位：同一帧同时算"引擎现在摆在哪"与"旧算法会摆在哪" ──
+            Vector2 atDock = ShopTruck.DockPoint * half;
+            Vector2 truckPos = TruckPosForInteraction(truck, s) * half;
+            Vector2 truckPosOld = ShopTruck.PointAt(truck.PhaseT(s.Clock.GameTime)) * half;
+            if (ph == ShopTruck.Phase.Dock)
+            {
+                float offNow = (truckPos - atDock).magnitude;
+                float offOld = (truckPosOld - atDock).magnitude;
+                if (offNow > ShopTruckOffDockMax) ShopTruckOffDockMax = offNow;
+                if (offOld > ShopTruckOffDockMaxOld) ShopTruckOffDockMaxOld = offOld;
+            }
+
+            // ── ④ "车停在停靠位"的连续时长（不管阶段，只要真的贴在那儿就算） ──
+            //
+            // ⚠️ **Idle 必须排除** ✗ —— `PhaseT` 在 Idle 下走的是"时长为 0 ⇒ 返回 1f"的分支
+            //    （那是给动画采样用的保护值）⇒ `PointAt(1f)` 恰好 = `DockPoint` ✓
+            //    于是"不在场的 60 秒"会被算成"停在停靠位 60 秒"✗
+            //    （第一版就是这么翻车的：实测值 60.03s，正好是一整个周期长度 ✓）
+            //    而 Idle 时模型是**隐藏**的 ⇒ 它根本不在场上，谈不上"停在哪" ✓
+            if (ph != ShopTruck.Phase.Idle && (truckPos - atDock).magnitude <= AtDockEpsilon)
+            {
+                _atDockRun += dt;
+                if (_atDockRun > ShopTruckAtDockLongest) ShopTruckAtDockLongest = _atDockRun;
+            }
+            else
+            {
+                _atDockRun = 0f;
+            }
+
+            // ── ⑤ 玩家可交互窗（引擎判定） ──
+            bool open = ph == ShopTruck.Phase.Dock
+                        && truck.CanShop((w.Player.Pos - truckPos).magnitude);
+            if (open)
+            {
+                ShopOpenSeconds += dt;
+                _shopOpenRun += dt;
+                if (_shopOpenRun > ShopOpenLongest) ShopOpenLongest = _shopOpenRun;
+                if (!_shopOpenPrev) ShopOpenWindows++;
+            }
+            else
+            {
+                _shopOpenRun = 0f;
+            }
+            _shopOpenPrev = open;
+        }
+
+        /// <summary>
+        /// 车在"可交互判定"里用的位置（归一化）。
+        /// ★ ★ 这是**唯一**一处观测侧的取位 ⇒ 引擎改什么入口，这里改一处就能跟上 ✓
+        /// ⚠️ 它【必须】跟引擎用同一个入口 ✗ —— 否则"修好了"只是观测在自我安慰 ✓
+        /// </summary>
+        private static Vector2 TruckPosForInteraction(ShopTruck truck, RunSession s)
+            => truck.SamplePoint(s.Clock);
 
         /// <summary>
         /// 把一次伤害归因到「哪一类敌人的哪一条通道」。
@@ -287,8 +475,61 @@ namespace Seedfall
             sb.AppendLine("## F · Bot 决策分布（死前 30 秒 vs 整局）—— 用来分辨「玩家在种地」还是「玩家在被追」");
             sb.Append(DecisionMix());
             sb.AppendLine();
+
+            // ── G. 商店车【实测】──
+            sb.Append(ShopSummary());
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "──── 下游 ────  进店 {0} 次 ｜ 买种 {1} 份 ｜ 存活植株 {2} ｜ 收割 {3} 次 ｜ 金币 {4} ｜ 等级 {5} ｜ 死亡 {6:0.0}s",
+                r.ShopVisits, r.SeedsBought, r.PlantsAlive, r.Harvests, r.Gold, r.Level, r.Duration));
+            sb.AppendLine();
+
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
                 "  观测调用 {0} 次（采样 {1} 次）", ObserveCalls, Timeline.Count));
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// ★ 商店车【实测】摘要 ★ —— 与报告 G 段**同一份文本**（唯一实现），
+        /// 供 `DebugApi.TruckReport` 直接打进控制台（长日志会被 Unity 截断，所以它是短的）✓
+        /// </summary>
+        public static string ShopSummary()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("## G · 商店车【实测】（用引擎自己的 `CanShop` / 取位入口量的，不是设计值）");
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "   一轮时长            均值 {0,6:0.00}s   最短 {1,6:0.00}s   最长 {2,6:0.00}s   （跑完 {3} 轮）",
+                ShopCycles > 0 ? ShopCycleSecondsSum / ShopCycles : 0f,
+                ShopCycleShortest == float.MaxValue ? 0f : ShopCycleShortest, ShopCycleLongest, ShopCycles));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "   逐阶段实测累计      入场 {0,6:0.00}s  绕场 {1,6:0.00}s  停靠 {2,6:0.00}s  离场 {3,6:0.00}s",
+                ShopEnterMeasured, ShopLoopMeasured, ShopDockMeasured, ShopLeaveMeasured));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "   车【不在场上】累计  {0,7:0.00}s   占整局 {1,5:0.0}%   ← 0 = 常驻，>0 = 真的会开走",
+                ShopAwaySeconds, ObservedSeconds > 0f ? ShopAwaySeconds / ObservedSeconds * 100f : 0f));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "     ├ 开局等待（首个周期锚在 +60s）  {0,6:0.00}s   （设计如此，不是间隙）",
+                ShopAwaySeconds - ShopAwayBetweenSeconds));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "     └ 轮与轮之间的间隙  {0,6:0.00}s ÷ {1} 轮 = 每轮 {2:0.00}s   ← ★「不要常驻」的判据 ★",
+                ShopAwayBetweenSeconds, ShopCycles,
+                ShopCycles > 0 ? ShopAwayBetweenSeconds / ShopCycles : 0f));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "   车停在停靠位(≤{0:0.0}m) 最长连续 {1,6:0.00}s   （设计值 {2:0.00}s）",
+                AtDockEpsilon, ShopTruckAtDockLongest, ShopTruck.DockSeconds));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "   停靠期车离停靠位最远 {0,7:0.00}m  ← 引擎现在的取位入口", ShopTruckOffDockMax));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "                        {0,7:0.00}m  ← 旧算法 `PointAt(PhaseT)` 同一帧的对照", ShopTruckOffDockMaxOld));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "   `CanShop` 为真累计   {0,7:0.00}s   占 Dock 期的 {1,5:0.0}%",
+                ShopOpenSeconds, ShopDockSeconds > 0f ? ShopOpenSeconds / ShopDockSeconds * 100f : 0f));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "   可交互窗口个数       {0,7}", ShopOpenWindows));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "   单窗最长连续可交互   {0,7:0.00}s   （设计值 {1:0.00}s）", ShopOpenLongest, ShopTruck.DockSeconds));
+            sb.AppendLine("   ★ 判据：车停在停靠位的连续时长应 ≈ 10.00s（用户要求「停留 10 秒」）；");
+            sb.AppendLine("           「车不在场上」应 > 0（用户要求「不要常驻」）；");
+            sb.AppendLine("           「玩家可交互」是另一个量 —— 它同时要求玩家站在车旁 ✓");
             return sb.ToString();
         }
 

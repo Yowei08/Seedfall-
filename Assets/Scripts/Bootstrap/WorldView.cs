@@ -1203,9 +1203,13 @@ namespace Seedfall
             if (!visible) return;
 
             // 路径是归一化坐标（-1..1），乘场地半宽得到世界坐标 ✓
+            // ★ 必须与 `RunSession.TickShopTruck` 用**同一个取位入口** ★ ——
+            //   否则会出现"看得见的车在 A、能交互的车在 B" ⇒ 界面在撒谎 ✗
+            //   停靠期 `SamplePoint` 返回 `DockPoint`（车真的停住），
+            //   而 `PointAt(PhaseT)` 会让它又跑一整圈 ✗（见 `ShopTruck.SamplePoint`）
             float half = TableDatabase.Tuning.farm.arenaHalf;
-            float prog = t.PhaseT(s.Clock.GameTime);
-            Vector2 np = ShopTruck.PointAt(prog);
+            float prog = t.SampleT(s.Clock);
+            Vector2 np = t.SamplePoint(s.Clock);
             _truckModel.Go.transform.position = new Vector3(np.x * half, 0f, np.y * half);
 
             // 车头朝 Unity +Z（与 Characters/ 一致），SetFacing 组合出朝向 ✓

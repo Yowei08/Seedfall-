@@ -147,6 +147,54 @@ namespace Seedfall
             return dur <= 0.001f ? 1f : Mathf.Clamp01(PhaseElapsed(now) / dur);
         }
 
+        /// <summary>
+        /// ★ 车此刻应该被"摆"在哪（归一化；调用方乘 `arenaHalf` 得世界坐标）★
+        ///
+        /// ── 为什么不能直接用 `PointAt(PhaseT(now))` ──
+        /// 两个函数的参数**语义不同** ✗：
+        ///   · `PointAt(t)` 的 `t` 是【**整条路径**】的进度 —— 0..1 走完 `Path` 的全部 8 段 ✓
+        ///   · `PhaseT(now)` 是【**当前阶段**】的进度 —— **每个阶段开始时都从 0 重新计** ✓
+        /// 两者**只在 `Looping` 阶段重合**（那时阶段进度恰好就是路径进度）✓
+        /// 其余阶段 `PhaseT` 归零 ⇒ 车被"算"成**从入场点 `Path[0]` 重新出发** ✗
+        ///
+        /// ⇒ 这直接造成了一个玩家可见的缺陷：
+        ///   `Dock` 的 **10 秒**里，车**不是停在停靠位** ✗ 而是又跑了一整圈 ✓
+        ///   而 `CanShop` 要求"玩家离车 ≤ `InteractRange`(4 米)"⇒
+        ///   10 秒的停靠窗里真正可交互的只剩**最后那一小段** ✓
+        ///   后果：玩家走到看得见的车旁边按 E，**什么都不发生** ✗
+        ///
+        /// ── 为什么停靠期就该停在 `DockPoint` ──
+        /// `Path` 的**最后一点就是** `DockPoint`，而 `Looping` 结束时 `PhaseT → 1`
+        /// ⇒ 车此刻**正好在**停靠位 ⇒ "停靠期原地不动"是唯一的**连续**解 ✓
+        /// （这也正是本类注释写明的意图：
+        ///   "最后一点就是停靠位，所以 `Looping → Dock` 不需要额外求位置" ✓）
+        ///
+        /// ── ★ 改动范围被刻意压到最小 ★ ──
+        /// **只改 `Dock`** ✓ —— 入场 / 绕场 / 离场三个阶段**保持原样** ✓
+        /// 并且 `Looping`（**唯一会清扫的阶段**）的返回值与 `PointAt(PhaseT)` **逐位相同**
+        /// ⇒ 巡回清扫的行为**完全不受影响** ✓
+        ///
+        /// ★ 它是**唯一**的取位入口 ★ —— `RunSession.TickShopTruck` 与
+        /// `WorldView.SyncShopTruck` 必须都走它，否则会出现
+        /// "看得见的车在 A、能交互的车在 B" ⇒ **界面在撒谎** ✗
+        /// </summary>
+        public Vector2 SamplePoint(Clock clock)
+        {
+            if (Current == Phase.Dock) return DockPoint;
+            return PointAt(PhaseT(clock.GameTime));
+        }
+
+        /// <summary>
+        /// 与 <see cref="SamplePoint"/> 配对的"朝向采样进度"。
+        /// 停靠期取 `1f` ⇒ `DirAt(1f)` 给出最后一段的方向（车头朝着场内），
+        /// 而不是让车在原地**空转一圈** ✗ ✓
+        /// </summary>
+        public float SampleT(Clock clock)
+        {
+            if (Current == Phase.Dock) return 1f;
+            return PhaseT(clock.GameTime);
+        }
+
         public static float DurationOf(Phase p)
         {
             switch (p)
@@ -207,6 +255,26 @@ namespace Seedfall
         {
             Current = p;
             _phaseStart = now;
+        }
+
+        /// <summary>
+        /// ★ 调试 / 自动化专用：**立刻把车摆到某个阶段** ★（截图与复现用的舞台调度）
+        ///
+        /// ★ 为什么需要它 ★
+        /// 一轮要 60 秒（入场 2.5 + 绕场 45 + 停靠 10 + 离场 2.5），
+        /// 而"车停在门口那一帧"只占其中 **10 秒** ✗
+        /// 靠真实等待去抓那一帧，等于让截图脚本赌时间 ⇒ 不可复现 ✓
+        ///
+        /// ⚠️ 它**只搬阶段指针** ✗ —— 不改 `Path`、不改时长常量、不做任何交互判定 ✓
+        ///    所以"按 E 能不能进店"仍然由 `CanShop` 独立判定（本方法不能让玩家进店）✓
+        ///    调用方是 `DebugApi`，它不在任何玩法路径上 ✓
+        /// </summary>
+        public void DebugForcePhase(Phase p, Clock clock)
+        {
+            _phaseStart = clock.GameTime;
+            Current = p;
+            // Idle 要重新锚定下一个周期，否则下一帧立刻又入场（`now >= _nextCycleAt`）✗
+            if (p == Phase.Idle) _nextCycleAt = clock.GameTime + CycleSeconds;
         }
 
         /// <summary>现在能不能进商店（只有停靠期可以，且玩家要在附近）。</summary>
