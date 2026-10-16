@@ -1093,6 +1093,74 @@ namespace Seedfall
         private Vector3 _artCamEuler = new Vector3(5f, 0f, 0f);
 
         /// <summary>
+        /// ★ v174：摆样机位的**自动退出**秒数 ★
+        ///
+        /// 为什么必须有这个数：`LateUpdate` 每帧把 `Camera.main` 钉在 `_artFocus + _artCamOffset` 上 ✗
+        /// 而 `_artFocus` 是**摆样那一刻**算好的 —— 摆完之后它不会跟着玩家走 ✓
+        /// ⇒ 玩家一动，画面里就是一排植物悬在不该在的地方、而相机还在按老机位取景 ✗
+        /// ⇒ 读起来就是"★ 有些植物没有种在耕地上，且到处移动 ★"（用户原话）✓
+        ///
+        /// 修法：机位只在"拍照"这段时间内接管，到点**自己交还**给 `GameBootstrap.UpdateCamera` ✓
+        /// 为什么不用"靠人记得调 `ArtShotOff()`"：★ 那正是出事的原因 ✗ ——
+        ///   没人会记得，于是 `_artShot` 就一直是 true ✓
+        /// 为什么不做成"摆完立刻交还"：那 `BattleView()`/`FocusFarm()` 这类要靠眼睛看的机位
+        ///   会连一帧都留不住，等于把它们废掉 ✗
+        /// </summary>
+        private const float ArtShotSeconds = 6f;
+
+        private float _artShotRemaining;
+
+        /// <summary>开启摆样机位并**开始倒计时**（每个置 `_artShot = true` 的入口都要走它）✓</summary>
+        private void ArmArtShot() => _artShotRemaining = ArtShotSeconds;
+
+        /// <summary>
+        /// 退出摆样机位，并把 `ArtPreview` 底下**本次摆出来的东西一起清掉** ✓
+        ///
+        /// 清场是判据的一部分：不清的话，摆样过的植物会以 GameObject 的形式留在场景里 ✗
+        /// ⇒ 镜头交还玩家之后，玩家看到的仍然是"走过路过都是不在地里的植物" ✓
+        /// （这和 `ArtShot`/`ShowPlants` 自己开头那段清场是同一个理由 —— 那里清的是"上一次摆的"✓）
+        /// </summary>
+        public string ArtShotOff()
+        {
+            _artShot = false;
+            _artFollowPlayer = false;
+            _artShotRemaining = 0f;
+            int cleared = ClearArtPreview();
+            return "美术特写机位已关闭" + (cleared > 0 ? $"（清掉 {cleared} 个摆样对象）" : "");
+        }
+
+        /// <summary>销毁 `ArtPreview` 下的所有摆样对象，返回清掉的数量（无 holder 时返回 0）✓</summary>
+        private static int ClearArtPreview()
+        {
+            GameObject holder = GameObject.Find("ArtPreview");
+            if (holder == null) return 0;
+            int n = holder.transform.childCount;
+            for (int c = n - 1; c >= 0; c--)
+                Destroy(holder.transform.GetChild(c).gameObject);
+            return n;
+        }
+
+        private void LateUpdate()
+        {
+            if (!_artShot) return;
+
+            // 到点自己交还机位 —— 不依赖任何人记得调 `ArtShotOff()`
+            _artShotRemaining -= Time.unscaledDeltaTime;
+            if (_artShotRemaining <= 0f)
+            {
+                ArtShotOff();
+                return;
+            }
+
+            LateUpdateArtFollow();
+            Camera cam = Camera.main;
+            if (cam == null) return;
+            // 机位由 _artCamOffset/_artCamEuler 决定（角色一排 / 植物阵列各有一套）
+            cam.transform.position = _artFocus + _artCamOffset;
+            cam.transform.rotation = Quaternion.Euler(_artCamEuler);
+        }
+
+        /// <summary>
         /// v58：环境摆样——用环境模块拼一小块场景，验收模块的尺度关系与拼接是否成立。
         /// 农田按 1.6m 格距铺、栅栏按 2.0m 段首尾相接，正是它们在玩法里的用法。
         /// </summary>
@@ -1146,6 +1214,7 @@ namespace Seedfall
             _artCamOffset = new Vector3(0f, 9.5f, -15.5f);
             _artCamEuler = new Vector3(30f, 0f, 0f);
             _artShot = true;
+            ArmArtShot();
 
             string report = "环境摆样：" + ok + " 个模块已放置" + (missing > 0 ? "，缺 " + missing : "") + "\n" + sb;
             Log.Info("ENV-PREVIEW\n" + report);
@@ -1196,6 +1265,7 @@ namespace Seedfall
             _artCamOffset = new Vector3(0f, 4.6f, -8.2f);
             _artCamEuler = new Vector3(28f, 0f, 0f);
             _artShot = true;
+            ArmArtShot();
 
             string report = "植物预览：" + ok + "/" + ids.Length + " 个已放置\n" + sb;
             Log.Info("PLANT-PREVIEW\n" + report);
@@ -1206,6 +1276,7 @@ namespace Seedfall
         /// v54：美术特写——把 4 个模型摆成一排，并在 LateUpdate 里接管相机贴近拍摄。
         /// 为什么要在 LateUpdate 接管：GameBootstrap 每帧都会重置跟随相机，
         /// 只有 LateUpdate 里写入的机位才能稳定压过它。
+        /// v174：接管是**限时**的（见 `ArtShotSeconds`），到点自动交还 ✓
         /// </summary>
         public string ArtShot()
         {
@@ -1213,26 +1284,8 @@ namespace Seedfall
             _artCamOffset = new Vector3(0f, 0.30f, -4.2f);
             _artCamEuler = new Vector3(5f, 0f, 0f);
             _artShot = true;
+            ArmArtShot();
             return "美术特写机位已开启。\n" + placed;
-        }
-
-        /// <summary>退出美术特写，相机交还游戏。</summary>
-        public string ArtShotOff()
-        {
-            _artShot = false;
-            _artFollowPlayer = false;
-            return "美术特写机位已关闭";
-        }
-
-        private void LateUpdate()
-        {
-            if (!_artShot) return;
-            LateUpdateArtFollow();
-            Camera cam = Camera.main;
-            if (cam == null) return;
-            // 机位由 _artCamOffset/_artCamEuler 决定（角色一排 / 植物阵列各有一套）
-            cam.transform.position = _artFocus + _artCamOffset;
-            cam.transform.rotation = Quaternion.Euler(_artCamEuler);
         }
 
         public string ShowModels()
@@ -1382,6 +1435,7 @@ namespace Seedfall
             clip.SampleAnimation(go, Mathf.Clamp(t, 0f, clip.length));
             _artFocus = new Vector3(0f, 0.55f, 0f);
             _artShot = true;
+            ArmArtShot();
 
             string report = charId + "/" + animName + " @ " + t.ToString("0.00") + "s"
                 + "｜片段时长 " + clip.length.ToString("0.000") + "s";
@@ -1422,6 +1476,7 @@ namespace Seedfall
             _artCamOffset = new Vector3(0f, 0.30f, -4.2f);
             _artCamEuler = new Vector3(5f, 0f, 0f);
             _artShot = true;
+            ArmArtShot();
             _artFollowPlayer = false;
 
             string report = "染色验证：\n" + sb;
@@ -1481,6 +1536,7 @@ namespace Seedfall
             _artCamOffset = new Vector3(0f, 4.6f, -7.6f);
             _artCamEuler = new Vector3(24f, 0f, 0f);
             _artShot = true;
+            ArmArtShot();
             _artFollowPlayer = true;
             return "战斗特写机位已开启（跟随玩家）";
         }
@@ -1627,6 +1683,7 @@ namespace Seedfall
                 _artCamOffset = new Vector3(0f, 9.0f, -0.6f);
                 _artCamEuler = new Vector3(88f, 0f, 0f);
                 _artShot = true;
+                ArmArtShot();
                 _artFollowPlayer = false;      // 固定在耕地上，不跟玩家跑
                 return $"耕地特写 → 第 {i} 格｜作物 {p.CropSeedId}｜生长 {p.GrowthProgress01:P0}｜状态 {p.State}";
             }

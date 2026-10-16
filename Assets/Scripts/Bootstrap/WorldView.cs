@@ -457,24 +457,28 @@ namespace Seedfall
                 SpawnScenery(id, p, yaw, sway, rng.Range(0f, 6.28f));
             }
 
-            // ② 草丛：铺满全场（这是地面的"底料"，密度最高）
+            // ② 草丛：铺满**耕地之外**的场地（这是地面的"底料"，密度最高）
             //    注意：密度是**可玩性**问题，不是美术问题——铺太满，敌人和足迹就读不出来了。
             //    实测 320 丛时整屏都是草，压到 170。
+            //    v174：下界 0 → FarmlandEdge()。草与下面三段一样会被读成"长在田里的植物"✗
+            //          （用户原话："有些植物存在异常，没有种植在耕地上"）。田里应当是空地：
+            //          作物才是玩家要读的目标，杂草只会干扰读图 ✓
             int tufts = 170;
             for (int i = 0; i < tufts; i++)
             {
                 float a = rng.Range(0f, Mathf.PI * 2f);
-                float r = rng.Range(0f, half - 0.8f);
+                float r = rng.Range(FarmlandEdge(), half - 0.8f);
                 Vector3 p = new Vector3(Mathf.Cos(a) * r, 0f, Mathf.Sin(a) * r);
                 SpawnScenery("grass", p, rng.Range(0f, 360f), 1.0f, rng.Range(0f, 6.28f));
             }
 
             // ③ 碎石：**大幅减量**。石头在俯视图里是最大的地面对比物，
             //    铺多了像满地鹅卵石滩，把角色淹没掉。14 块点缀足够。
+            //    v174：下界 0 → FarmlandEdge()——碎石不再铺进田里（与 ② 同一条纪律）
             for (int i = 0; i < 14; i++)
             {
                 float a = rng.Range(0f, Mathf.PI * 2f);
-                float r = rng.Range(0f, half - 1.0f);
+                float r = rng.Range(FarmlandEdge(), half - 1.0f);
                 Vector3 p = new Vector3(Mathf.Cos(a) * r, 0f, Mathf.Sin(a) * r);
                 SpawnScenery(rng.Chance(0.5f) ? "rock_b" : "rock_c", p, rng.Range(0f, 360f), 0f, 0f);
             }
@@ -486,10 +490,13 @@ namespace Seedfall
 
             // ⑤ v64 新增装饰：花 / 蘑菇 / 芦苇 / 树桩 / 倒木 / 木桶
             //    花草量大、单体小，负责把地面的"空"填掉；树桩木桶少量，负责讲"有人来过"的故事。
+            //    ★ v174：下界 0 → FarmlandEdge() ★ —— 花与蘑菇是"**与作物同形**"的小植物，
+            //    撒进田里就会读成"没种在耕地上的异常植物"（用户原话）✗
+            //    它们连同草/碎石一起改从耕地外沿起算，外圈林带（`Range(rIn, rOut)` 那两段）保持不动 ✓
             for (int i = 0; i < 90; i++)
             {
                 float a = rng.Range(0f, Mathf.PI * 2f);
-                float r = rng.Range(0f, half - 1.0f);
+                float r = rng.Range(FarmlandEdge(), half - 1.0f);
                 SpawnScenery(rng.Chance(0.5f) ? "flower_a" : "flower_b",
                     new Vector3(Mathf.Cos(a) * r, 0f, Mathf.Sin(a) * r),
                     rng.Range(0f, 360f), 1.0f, rng.Range(0f, 6.28f));
@@ -497,7 +504,7 @@ namespace Seedfall
             for (int i = 0; i < 24; i++)
             {
                 float a = rng.Range(0f, Mathf.PI * 2f);
-                float r = rng.Range(0f, half - 1.0f);
+                float r = rng.Range(FarmlandEdge(), half - 1.0f);
                 SpawnScenery("mushroom", new Vector3(Mathf.Cos(a) * r, 0f, Mathf.Sin(a) * r),
                     rng.Range(0f, 360f), 0f, 0f);
             }
@@ -597,6 +604,30 @@ namespace Seedfall
             }
             // 园门摆在南侧正对场地中心——它就该是"入口"的位置
             SpawnScenery("garden_gate", new Vector3(0f, 0f, -half), 180f, 0f, 0f);
+        }
+
+        /// <summary>
+        /// ★ v174：耕地外沿到场地中心的距离 ★ —— 装饰撒点的**半径下界**就取它 ✓
+        ///
+        /// 为什么需要这个常量：装饰的半径原先一律从 `0` 起算 ✗ ⇒ 花/蘑菇/草/碎石
+        /// **撒进了耕地里** ✗ ⇒ 田里站着与作物同形的小植物，看起来就是
+        /// "有些植物没有种植在耕地上"（用户原话）✗
+        ///
+        /// ⚠️ 地头到底在哪，别再用"格子中心"当"外沿"：
+        ///   `FarmGrid.WorldOf` 的格心 = `(gx − (Size−1)/2) × TileSize` ⇒ 6 列时格心在 **±6.25** ✓
+        ///   但每格自己有 `TileSize`（2.5）宽 ⇒ **整块地要再往外扩半格 1.25** ✓
+        ///   ⇒ 耕地外沿 = 6.25 + 1.25 = **7.5** ✓（= `gridSize × tileSize ÷ 2` = 6 × 2.5 ÷ 2 ✓ 两条算法互为验算）
+        /// 再留 1.25m 余量（≈ 半格）⇒ 撒点下界 **8.75**，装饰不会贴着地块边缘压线 ✓
+        ///
+        /// 只给**地面装饰**用。外圈林带（`Range(rIn, rOut)` 那两段）不在此列 ✗
+        /// —— 那些是收视野边界的设计，本来就在墙外 ✓
+        /// </summary>
+        private static float FarmlandEdge()
+        {
+            FarmDef f = TableDatabase.Tuning.farm;
+            float gridHalf = (Mathf.Max(2, f.gridSize) - 1) * 0.5f * f.tileSize;   // 最外列/行的格心
+            float edge = gridHalf + f.tileSize * 0.5f;                              // 再加半格厚度 = 外沿
+            return edge + f.tileSize * 0.5f;                                        // 留半格余量
         }
 
         /// <summary>

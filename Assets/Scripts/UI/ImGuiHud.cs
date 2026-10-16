@@ -2104,9 +2104,30 @@ namespace Seedfall
             SeedDef d = slot.Def;
             if (d == null) { list.Add("（空格）"); return list.ToArray(); }
             // ③ 等级 —— ★ 只做数值提升 ★ ⇒ 直接把"它给了多少"写在旁边
-            list.Add($"Lv {slot.Level}/{SeedSlot.MaxLevel}　收益 ×{slot.LevelYieldMult:0.00}");
-            // ④ 成熟时间
-            list.Add($"成熟 {d.GrowTime:0.#}s");
+            //
+            // ★ v174（修复 B′）：这一行也必须取**收获**口径，标签也照实写「收获」★
+            //
+            // 症状（是 B 的**同一处**没修干净 ✗）：Lv2 卡上 `金币 5` 是按 1.35 算出来的
+            //   （4 × 1.35 = 5.4 → 5 ✓），而旁边那一行却写 `收益 ×1.50`（卖出返还表）✗
+            //   ⇒ 同一张卡上两个倍率打架，玩家会以为金币那格算错了 ✓
+            // 判据：取同一个口径 ⇒ `收获 ×1.35` 与 `金币 5` **互相对得上** ✓
+            //   （只动**显示** ✗ ⑤⑥ 的计算一个字没改：金币/经验本来就对 ✓）
+            // ⚠️ 标签为什么必须一起改 ✗：只换数不换词 ⇒ 玩家会照着"收益 ×1.50"去验算，
+            //   而 1.50 是**卖出**那条线（`SeedSlot.LevelYieldMult`）✓
+            //   卖出返还现在只在真正卖的那一刻出现（`RunSession.cs:2823` 的合成提示）
+            //   与商店的「出售 N」按钮（`ImGuiHud.cs:499` = `slot.SellValueFor`）✓
+            list.Add($"Lv {slot.Level}/{SeedSlot.MaxLevel}　收获 ×{slot.LevelHarvestMult:0.00}");
+            // ④ 成熟时间 —— ★ 也要吃**等级速度倍率**（v174 修复 C）★
+            //
+            // 症状：Lv3 卡写 `成熟 18s`，而地里那株实际 **13.8s** 就熟 ✗
+            // 权威（**同一式，不自己再算一遍** ✓）：
+            //   `FarmGrid.BeginPlant` = `def.GrowTime / SeedEconomy.LevelSpeedMult(SeedSlot.GrowSpeedPerLevel, Level)`
+            //   （`FarmGrid.cs:253-254`；换等级时 `SetLevel` 是同一式，`:296-297`）✓
+            //   自检也钉着这条：`GrowthTotal == radish.GrowTime / 1.30`（Lv3）✓
+            // ⇒ 1 级 ×1.00（18s 不变）／2 级 ÷1.15 ≈ 15.7s／3 级 ÷1.30 ≈ 13.8s ✓
+            float growSeconds = d.GrowTime
+                                / SeedEconomy.LevelSpeedMult(SeedSlot.GrowSpeedPerLevel, slot.Level);
+            list.Add($"成熟 {growSeconds:0.#}s");
             // ⑤⑥ 金币 / 经验
             //
             // ★ v174（修复 B）：等级倍率取【收获】那一条，不是【卖出返还】那一条 ★
