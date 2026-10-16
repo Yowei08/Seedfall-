@@ -338,351 +338,52 @@ namespace Seedfall
         }
     }
 
-    public sealed class PlantAlly : Actor
-    {
-        public SeedDef Def;
-        public string MutationId;
-        /// <summary>种子品质档位（0 白 / 1 绿 / 2 蓝 / 3 紫 / 4 金）。</summary>
-        public int Quality;
-        public int PlotIndex;
-        public Vector2 Home;
-        public bool Growing;
+    // ★ T2（2026-10）：`PlantAlly` 类**已整条删除** ✗ ★
+    //
+    // 它是"植物参战"这条子树的**类型根**。删它的判据：
+    //   · 生产者：`SpawnPlantFromPlot`（已删）⇒ 工程里**再也没有 `new PlantAlly`** ✓
+    //   · 推进者：`PlantAlly.Tick` 的调用点已在 v173 随"植物 tick 闸门"删除
+    //     （见 `World.Simulate` 第 3 段）⇒ 它的 `override Actor.Tick` 早已无人调用 ✓
+    //     ⚠️ 这一点很要紧：因为是 `override`，**编译器不会报"未使用"** ⇒ 只能靠审计发现 ✓
+    //   · 状态根：`World.Plants`（已删）✓
+    //   · 全部读者：敌人 3 处（跳跃场 / BOSS 冲锋 / `TickEnemyShot`）、`World.NearestAlly`、
+    //     `World.FindPlantOnPlot`、`World.Cleanup` 的尸体清理、`WorldView.SyncPlants`、
+    //     `DebugApi` 转储、`RunSession`（遥测 + 释放地块 + 铲除幼苗）、`SelfCheck` 若干断言
+    //     ⇒ **全部已在下线范围内处理完毕** ✓
+    //
+    // ⚠️ 随类一起消失的成员（它们**不需要**逐个删 —— 类型没了，成员自然没了）：
+    //     `Tick`（override）· `DamageMultiplier` · `Fire` · `ApplyAilmentHit` · `AilmentOf` ·
+    //     `Heal` · `OnDeath`（含 `volatile` 分支）· `SetGrown` · `FreeFromPlot` · `IsGuard` /
+    //     `IsHealer` / `IsAttacker` / `Label` · 以及 `AttackValue` / `FullHp` / `DetectM` 等战斗属性 ✓
+    //
+    // ★ 关于 `OnDeath` 的 `volatile` 分支（上一轮审计要求"停下并报告"的那一条）★
+    //   它在**删之前就已经不可达**，所以删它不丢任何东西 ✓
+    //   证据：`OnDeath` 的判据是 `MutationId == "volatile"` ✓ 而 `MutationId` 的
+    //   **唯一写者**是 `SpawnPlantFromPlot`，它开头第一句就是 `mutationId = null;`（硬置空）✓
+    //   ⇒ 全工程 `PlantAlly.MutationId` **恒为 null** ⇒ 该分支恒假 ✓
+    //   ⇒ 它对应的 `PlantDiedEvent`（→ `RunSession` 的 `plant_death` 遥测）也是**从来没发过**的 ✓
+    //
+    // ★ 新玩法里"植物"没有消失 ★ —— 它换了个载体：
+    //     `FarmPlot`（长在地块上）+ `PlantMechanics`（成长/收获/缺水三阶段）+
+    //     `Farm.PlantCount`（存活植株 = 占着的列数）✓
+    //   消失的只是"会移动、会索敌、会被打、会死亡的植物**实体**" ✓
 
-        public float FullHp, GrowingHp;
-        // ★ v172：`HasMechanic` / `NightBoosted` / `OwnWorld` 已删除 ✗
-        //
-        // 这三个是"植物参战机制"的**唯一读取口**：旧机制名
-        // （`NightBoost` / `HealAura` / `Magnet` / `Taunt` / `SlowField` /
-        //   `HealOnKill` / `Thorns` / `Chain` / `DeathExplode`）
-        // 全部经 `HasMechanic` 判定 ✓ 它们的分支也全部已删除 ✓
-        //
-        // ⇒ 删掉读取口 = 这 9 条旧机制在工程里**不再有名字**，
-        //   于是"把它们接回来"没有落点：没有 `HasMechanic` 可以调 ✓
-        //
-        // ⚠️ 机制判定在本工程**只保留一处**：`PlantMechanics.Has(def, name)`
-        //    （成长 / 收获 / 缺水三阶段，见 `PlantMechanics.cs`）✓
-        //    `Def.Mechanic` 字段本身保留 —— 它是新机制表的载体，与新玩法无关 ✗
 
-        public float AttackValue;     // z（攻击类）
+        // ★ T2：以下是随 `PlantAlly` 一起删除的成员 —— `DamageMultiplier` / `Fire` /
+        //   `ApplyAilmentHit` / `AilmentOf` / `Heal` / `OnDeath` ✓
+        //   保留这段说明是为了交代两件事：
+        //   ① `AilmentOf` 的处置正是上一轮写在它自己的文档注释里的计划
+        //      （"它随'植物参战'整条下线时一起删"）—— 这次执行了 ✓
+        //   ② `AilmentKind` **枚举本身保留**（插件线的灼烧直接用枚举成员，
+        //      与植物无关）⇒ 只有"字符串 → 枚举"的映射随植物一起消失 ✓
 
-        /// <summary>
-        /// v113：植物**自己的**暴击率与暴击伤害（需求 ⑬）。
-        /// 生成时算好并存下来：暴击率 = 品种基础 + 玩家属性增量；暴击伤害用品种自带值（缺省 2.0）。
-        /// 这两项跟卡面上显示的是**同一对数字**，所以玩家看到的概率就是他实际会遇到的概率。
-        /// </summary>
-        public float CritRate, CritDmg;
-        public float HealValue;       // q（恢复类）
-        public float AttackInterval;
-        public float RangeM;
-        /// <summary>v9 判定范围：比攻击范围大一点；范围内无敌人时向玩家靠拢。</summary>
-        /// <summary>v20：跟随角色时保持的最小距离。</summary>
-        public float FollowMinDistance = 1.8f;
+        // ★ T2：`Heal(...)` 与 `OnDeath(...)` 随 `PlantAlly` 一起删除（说明见上方类级注释）✗
+        //   补充两条"为什么它们不值得单独留"：
+        //   · `Heal` —— 它治疗的对象是"别的植物 / 玩家"，而"别的植物"已不存在 ✓
+        //     玩家回血走 `Pickup`（爱心）与 `Health.Heal`，与本方法无关 ✓
+        //   · `OnDeath` —— 它的 `volatile` 分支恒假（`MutationId` 恒 null，见类级注释）✓
+        //     它的末尾 `Bus.Publish(PlantDiedEvent)` 是那个死事件的唯一发布点 ✓
 
-        public float DetectM;
-        public float MoveSpeedM;
-        public float KnockbackM;
-
-        public float AttackTimer;
-        public float LifeTime;
-        public float DamageDone;
-        public float HealDone;
-        private int _ailmentRotation;
-
-        public bool IsGuard => Def.Support == SupportMode.Guard;
-        public bool IsHealer => Def.Support == SupportMode.Heal;
-        public bool IsAttacker => !IsGuard && !IsHealer;
-        public string Label => Def != null ? Def.Name : "?";
-
-        /// <summary>植物与玩家一样享受受击无敌帧。</summary>
-        public override bool UsesInvulnFrames => true;
-
-        public void SetGrown()
-        {
-            if (!Growing) return;
-            Growing = false;
-            float delta = FullHp - Health.MaxHp;
-            Health.MaxHp = FullHp;
-            if (delta > 0f) Health.Hp = Mathf.Min(Health.MaxHp, Health.Hp + delta);
-        }
-
-        /// <summary>
-        /// 成熟后离开地块（`PlotIndex = -1`）。
-        /// ★ v166：注释原来写"变成自由作战的帮手"✗ —— 植物已不参战 ✓
-        /// 现在它只服务 `SpawnPlantFromPlot` 的测试夹具；玩法路径上已无调用者 ✓
-        /// </summary>
-        public void FreeFromPlot()
-        {
-            PlotIndex = -1;
-        }
-
-        public override void Tick(float dt, World w)
-        {
-            LifeTime += dt;
-            TickCommonTimers(dt);
-            if (Growing) return; // 生长中：不动、不攻击
-
-            float atkSpeed = Mathf.Max(0.05f, w.Player.Progress.Stats.Get(StatId.AtkSpeed));
-            float speedMul = 1f;
-
-            if (IsAttacker)
-            {
-                // v9：判定范围（DetectM）内找敌人；有敌人 → 靠近敌人；没敌人 → 靠拢玩家
-                EnemyActor target = w.NearestEnemyTo(Pos, DetectM);
-                if (target != null)
-                {
-                    float dist = Vector2.Distance(Pos, target.Pos);
-                    if (dist > RangeM * 0.85f)
-                    {
-                        Vector2 dir = (target.Pos - Pos).normalized;
-                        Pos += dir * MoveSpeedM * dt;
-                        Pos = World.ClampToArena(Pos, Radius, w.Tuning.farm.arenaHalf);
-                    }
-                }
-                else
-                {
-                    // v20：跟随角色时保持最小距离，不与角色重合
-                    Vector2 anchor = w.Player != null && w.Player.Alive ? w.Player.Pos : Home;
-                    float toAnchor = Vector2.Distance(Pos, anchor);
-                    if (toAnchor > FollowMinDistance)
-                        Pos = Vector2.MoveTowards(Pos, anchor, MoveSpeedM * dt);
-                }
-
-                // ★ v172：`HealAura`（治疗光环）与 `Magnet`（吸附掉落）两个 `HasMechanic` 分支已删除 ✗
-                //   它们的前提是"植物在场上并跟着玩家" ⇒ 随"植物不参战"一起不可达 ✓
-
-                AttackTimer -= dt * atkSpeed * speedMul;
-                if (AttackTimer <= 0f && target != null)
-                {
-                    AttackTimer = Mathf.Max(0.1f, AttackInterval);
-                    Fire(target, w);
-                }
-            }
-            else if (IsHealer || Def.Special == "GuardHeal")
-            {
-                // ★ v172：同上 —— 治疗光环 / 吸附掉落两个分支已删除（不可达）✗
-
-                AttackTimer -= dt * atkSpeed * speedMul;
-                if (AttackTimer <= 0f)
-                {
-                    AttackTimer = Mathf.Max(0.3f, AttackInterval);
-                    Heal(w, Def.Special == "HealAll");
-                }
-            }
-        }
-
-        private float DamageMultiplier(World w)
-        {
-            float m = 1f;   // v31：变异词条已删除
-            return m;
-        }
-
-        private void Fire(EnemyActor target, World w)
-        {
-            float dmg = DamageMultiplier(w);
-            Vector2 dir = (target.Pos - Pos).normalized;
-
-            // v120：**远程攻击加细微角度散布**（需求）。
-            // 只对远程 —— 近战是扇形判定，位置本身就有余量，加散布只会让"明明贴着敌人却打空"。
-            // 每次攻击独立掷，所以多株齐射时不再叠成一条完美直线。
-            if (Def.AttackKind == AttackKind.Ranged)
-            {
-                float jitt = w.Tuning.formula.aimJitterDeg;
-                if (jitt > 0f)
-                {
-                    float rad = w.Rng.Range(-jitt, jitt) * Mathf.Deg2Rad;
-                    float cs = Mathf.Cos(rad), sn = Mathf.Sin(rad);
-                    dir = new Vector2(dir.x * cs - dir.y * sn, dir.x * sn + dir.y * cs);
-                }
-            }
-
-            // v113：植物暴击 —— **在本次攻击的系数上掷一次**。
-            //
-            // 只改这一处就够了：下面所有分支（异常子弹 / 异常直击 / 近战 / 远程弹道）
-            // 用的都是同一个局部变量 `dmg`，所以暴击自动覆盖全部路径。
-            // 逐个分支去加必然会漏掉一条，表现为"某类植物不会暴击"这种怪现象。
-            bool plantCrit = false;
-            if (CritRate > 0f && w.Rng.Chance(CritRate)) { dmg *= CritDmg; plantCrit = true; }
-
-            if (Def.AttackType == AttackType.Ailment)
-            {
-                AilmentKind kind = AilmentOf(Def.Special, ref _ailmentRotation);
-                if (Def.AttackKind == AttackKind.Ranged)
-                {
-                    // 状态类子弹现在也有命中直接伤害（按异常值的比例）
-                    float hit = AttackValue * dmg * w.Tuning.formula.ailmentHitRatio;
-                    Projectile pshot = Projectile.PlantShot(this, Pos, dir, hit, AttackValue * dmg, kind,
-                        target, Def.Special, w.Tuning.formula.plantProjectileSpeed);
-                    pshot.Crit = plantCrit;   // v114：暴击标记随子弹走
-                    w.SpawnProjectile(pshot);
-                }
-                else
-                {
-                    ApplyAilmentHit(target, AttackValue * dmg, kind, w, plantCrit);
-                }
-                return;
-            }
-
-            if (Def.AttackKind == AttackKind.Melee)
-            {
-                // 近战取"范围内最近的 N 个"（Cleave = 3），而不是列表顺序
-                int maxHits = Def.Special == "Cleave" ? 3 : 1;
-                var alreadyHit = new List<int>(maxHits);
-                float kb = KnockbackM * (Def.Special == "HeavyKnockback" ? 1.6f : 1f);
-                for (int k = 0; k < maxHits; k++)
-                {
-                    EnemyActor best = null;
-                    float bestD = RangeM * RangeM;
-                    for (int i = 0; i < w.Enemies.Count; i++)
-                    {
-                        EnemyActor e = w.Enemies[i];
-                        if (!e.Alive || alreadyHit.Contains(e.Id)) continue;
-                        float d = (e.Pos - Pos).sqrMagnitude;
-                        if (d <= bestD) { bestD = d; best = e; }
-                    }
-                    if (best == null) break;
-                    alreadyHit.Add(best.Id);
-                    w.DealDamage(new DamageRequest
-                    {
-                        Type = DamageType.Physical,
-                        RawValue = AttackValue * dmg,
-                        Source = this,
-                        Target = best,
-                        FromPlant = true,
-                        Knockback = kb,
-                        Ailment = AilmentKind.None,
-                        // v114：把暴击标记传下去 —— 敌人挨打时会用它决定弹"暴击样式"还是普通白字。
-                        // 不给这个标记的话，植物暴击就"伤害变大了但画面上看不出来"。
-                        Crit = plantCrit
-                    });
-                }
-            }
-            else
-            {
-                Projectile pshot2 = Projectile.PlantShot(this, Pos, dir, AttackValue * dmg, 0f, AilmentKind.None,
-                    target, Def.Special, w.Tuning.formula.plantProjectileSpeed);
-                pshot2.Crit = plantCrit;   // v114：暴击标记随子弹走
-                w.SpawnProjectile(pshot2);
-            }
-        }
-
-        private void ApplyAilmentHit(EnemyActor target, float value, AilmentKind kind, World w, bool crit = false)
-        {
-            w.DealDamage(new DamageRequest
-            {
-                Type = DamageType.Ailment,
-                RawValue = value * w.Tuning.formula.ailmentHitRatio,
-                Source = this,
-                Target = target,
-                FromPlant = true,
-                Ailment = kind,
-                AilmentValue = value,
-                Knockback = KnockbackM * 0.3f,
-                Crit = crit        // v114：异常直击同样要能弹暴击样式
-            });
-        }
-
-        /// <summary>
-        /// ★ 植物 `Special` 字符串 → `AilmentKind` 的映射 ★
-        ///
-        /// ★ v172 查证结论（这条**保留**，不留悬案）★
-        ///   ① `AilmentKind` 这个**枚举是活的** ✓ —— 消费者与植物无关：
-        ///      · `RunSession.cs:3417` —— 插件线的灼烧（`BurnOnHit` 那条）**直接用枚举成员**
-        ///      · `Combat.StatusRuntime.Apply` / `Projectile.Ailment` / `DamageRequest.Ailment`
-        ///      · `SelfCheck` 的毒/火断言
-        ///      ⇒ 所以枚举成员 `Poison/Burn/Freeze` **一个字节都不能删** ✓
-        ///   ② 而**这个字符串→枚举的映射**只服务植物：唯一调用者是下方 `Fire()` ✓
-        ///      ⇒ 插件线**不走它**（插件直接给枚举成员，不经过字符串）✓
-        ///      ⇒ 也就是说 `Def.Special` 里的 `"Poison"/"Burn"/"Freeze"/"Rotate"` 这几个
-        ///        **字符串**只可能来自植物表，而 `seeds.json` 16 条种子的 `special` 全是 `"None"` ✓
-        ///
-        /// ★ 为什么不删它 ★
-        ///   删它必须同时改 `Fire()` 的异常分支（行为性改动），而它**不在**本次审计的删除清单里 ✓
-        ///   收益（少 17 行不可达代码）小于"顺手改一条战斗分支"的风险 ✓
-        ///   ⇒ 记在这里：**它随"植物参战"整条下线时一起删**（与 5 个 SelfCheck 夹具同一批）✓
-        /// </summary>
-        private static AilmentKind AilmentOf(string special, ref int rotation)
-        {
-            switch (special)
-            {
-                case "Poison": return AilmentKind.Poison;
-                case "Burn": return AilmentKind.Burn;
-                case "Freeze": return AilmentKind.Freeze;
-                case "Rotate":
-                {
-                    AilmentKind[] cycle = { AilmentKind.Poison, AilmentKind.Burn, AilmentKind.Freeze };
-                    AilmentKind k = cycle[rotation % cycle.Length];
-                    rotation++;
-                    return k;
-                }
-                default: return AilmentKind.Poison;
-            }
-        }
-
-        private void Heal(World w, bool allTargets)
-        {
-            float radius = RangeM;
-            PlayerActor player = w.Player;
-            if (allTargets)
-            {
-                float total = 0f;
-                for (int i = 0; i < w.Plants.Count; i++)
-                {
-                    PlantAlly p = w.Plants[i];
-                    if (!p.Alive || p == this || p.Growing) continue;
-                    if (Vector2.Distance(p.Pos, Pos) > radius) continue;
-                    p.Health.Heal(HealValue);
-                    total += HealValue;
-                }
-                if (player != null && !player.Health.IsDead && Vector2.Distance(player.Pos, Pos) <= radius)
-                {
-                    player.Health.Heal(HealValue);
-                }
-                HealDone += total;
-                return;
-            }
-
-            // 单体：治疗血量比例最低的友军
-            HealthPool best = null;
-            float bestPct = 1.01f;
-            for (int i = 0; i < w.Plants.Count; i++)
-            {
-                PlantAlly p = w.Plants[i];
-                if (!p.Alive || p == this || p.Growing) continue;
-                if (Vector2.Distance(p.Pos, Pos) > radius) continue;
-                if (p.Health.HpPct < bestPct) { bestPct = p.Health.HpPct; best = p.Health; }
-            }
-            if (player != null && !player.Health.IsDead && Vector2.Distance(player.Pos, Pos) <= radius
-                && player.Health.HpPct < bestPct)
-            {
-                bestPct = player.Health.HpPct;
-                best = player.Health;
-            }
-            if (best == null) { best = Health; bestPct = Health.HpPct; }
-            best.Heal(HealValue);
-            HealDone += HealValue;
-        }
-
-        public override void OnDeath(World w)
-        {
-            if (MutationId == "volatile")
-            {
-                float dmg = AttackValue * 2f;
-                for (int i = 0; i < w.Enemies.Count; i++)
-                {
-                    EnemyActor e = w.Enemies[i];
-                    if (e.Alive && Vector2.Distance(e.Pos, Pos) <= 2.5f)
-                    {
-                        w.DealDamage(new DamageRequest
-                        {
-                            Type = DamageType.Magic, RawValue = dmg, Source = this, Target = e,
-                            FromPlant = true, IgnoreDodge = true
-                        });
-                    }
-                }
-            }
-            Bus.Publish(new PlantDiedEvent { SeedId = Def.Id, PlotIndex = PlotIndex, Lifetime = LifeTime });
-        }
-    }
 
     public sealed class Projectile
     {
@@ -720,7 +421,10 @@ namespace Seedfall
         public float Traveled;
         public Team OwnerTeam;
         public Actor Source;
-        public bool FromPlant;
+        // ★ T2：`FromPlant` 字段**已删除** ✗ ★
+        //   写者：`PlantShot`（已删）+ `PlantAlly.OnDeath`（随类删除）✓
+        //   读者：`TickPlayerShot` 里把它抄进 `DamageRequest.FromPlant`（也随之删除 ✓）
+        //   ⇒ 零写者、零读者 ⇒ 它不是"保留的设计位"，而是旧玩法的一条残线 ✓
         public int Pierce;
         public int Bounce;
         public string Special;
@@ -728,30 +432,13 @@ namespace Seedfall
         public bool Dead;
         public Color Tint = Color.white;
 
-        public static Projectile PlantShot(PlantAlly owner, Vector2 from, Vector2 dir, float damage,
-            float ailmentValue, AilmentKind ailment, EnemyActor target, string special, float speed)
-        {
-            var p = new Projectile
-            {
-                Pos = from,
-                Vel = dir.normalized * (speed > 0f ? speed : 18f),
-                Damage = damage,
-                AilmentValue = ailmentValue,
-                Ailment = ailment,
-                Radius = special == "Splash" ? 0.5f : 0.28f,
-                OwnerTeam = Team.Player,
-                Source = owner,
-                FromPlant = true,
-                Pierce = special == "Pierce2" ? 2 : 0,
-                Bounce = special == "Bounce1" ? 1 : 0,
-                Special = special,
-                Knockback = owner.KnockbackM * 0.5f,
-                TravelLimit = owner.RangeM + 1.5f,
-                Tint = GradeColor(owner.Def.Grade)
-            };
-            if (target != null) p.TravelLimit = Mathf.Max(p.TravelLimit, Vector2.Distance(from, target.Pos) + 1.5f);
-            return p;
-        }
+        // ★ T2：`Projectile.PlantShot(...)` 工厂**已删除** ✗ ★
+        //   它是"植物开火"的唯一弹道构造口 ✓ 调用者只有 `PlantAlly.Fire()` 两处（随类删除）✓
+        //   ⇒ 删掉它之后，`OwnerTeam = Team.Player` 的子弹**只剩玩家武器那一条来源** ✓
+        //   ⚠️ 玩家的弹道不走这里：走 `RunSession` 的武器开火路径（`new Projectile { ... }` 直接构造）✓
+        //   ⚠️ 连带删除：`Projectile.FromPlant` 字段（上面）、`Special` 的植物语义（`Pierce2`/`Bounce1`/`Splash`
+        //      /`Cleave`/`HeavyKnockback` 这些**只由种子表驱动的字符串**从此全工程无写入者）✓
+        //      ⇒ `Special` / `Pierce` / `Bounce` 三个字段本身**保留** —— 它们仍被武器的弹道设置使用 ✓
 
         public static Projectile EnemyShot(Actor source, Vector2 from, Vector2 dir, float damage, float speed, Color tint)
         {
@@ -763,7 +450,6 @@ namespace Seedfall
                 Radius = 0.3f,
                 OwnerTeam = Team.Enemy,
                 Source = source,
-                FromPlant = false,
                 Tint = tint,
                 TravelLimit = 22f,
                 Life = 4f
@@ -881,7 +567,6 @@ namespace Seedfall
                 RawValue = Damage,
                 Source = Source,
                 Target = e,
-                FromPlant = FromPlant,
                 Knockback = Knockback,
                 Ailment = Ailment,
                 AilmentValue = AilmentValue,
@@ -901,21 +586,11 @@ namespace Seedfall
                 Dead = true;
                 return;
             }
-            for (int i = 0; i < w.Plants.Count; i++)
-            {
-                PlantAlly p = w.Plants[i];
-                // 幼苗不吃子弹（生长中完全免疫）
-                if (!p.Alive || p.Growing) continue;
-                if (Vector2.Distance(p.Pos, Pos) <= p.Radius + Radius)
-                {
-                    w.DealDamage(new DamageRequest
-                    {
-                        Type = DamageType.Physical, RawValue = Damage, Source = Source, Target = p
-                    });
-                    Dead = true;
-                    return;
-                }
-            }
+            // ★ T2：**敌人子弹打植物**的整段已删除 ✗ ★
+            //   它遍历 `w.Plants`（恒空）+ 按 `PlantAlly` 类型取 `p.Growing`：
+            //     · 循环体**永远不会执行**（没有生产者 ⇒ 列表恒空）✓
+            //     · 而 `Plants` / `PlantAlly` 本身已随本次下线删除 ⇒ 不删它也编译不过 ✓
+            //   ⇒ 敌人的子弹现在只打玩家（就是本方法上半段那条 ✓）—— 这正是"列表为空"时的既有行为 ✓
         }
     }
 
@@ -1021,7 +696,9 @@ namespace Seedfall
     public struct TreeMatureEvent { public int PlotIndex; }
 
     // v166：`HealOrb` 类已删除（"溢出植物化成治疗光球"—— 植物已不参战/不受伤，不需要治疗）
-    public struct PlantDiedEvent { public string SeedId; public int PlotIndex; public float Lifetime; }
+    // ★ T2：`PlantDiedEvent` 结构**已删除** ✗ ★
+    //   它的唯一发布点是 `PlantAlly.OnDeath`（随类删除），唯一订阅点是 `RunSession.OnPlantDied`
+    //   （已连订阅一并删除）⇒ 收发两边都死 ⇒ 结构体本身也没有存在理由 ✓
 
     /// <summary>单帧可变状态的唯一聚合点。所有玩法状态都在这里，无隐藏引擎状态。</summary>
     public sealed class World
@@ -1032,7 +709,11 @@ namespace Seedfall
         public FarmGrid Farm;
         public PlayerActor Player;
 
-        public readonly List<PlantAlly> Plants = new List<PlantAlly>();
+        // ★ T2：`List<PlantAlly> Plants` **已删除** ✗ ★
+        //   它是"植物参战"子树的**状态根**：生产者（`SpawnPlantFromPlot`）已删、
+        //   推进者（`PlantAlly.Tick`，v173 已删）、全部读者（敌人 3 处 / Heal / NearestAlly /
+        //   Cleanup / FindPlantOnPlot / WorldView / DebugApi / RunSession / SelfCheck）已全部下线 ✓
+        //   ★ 新玩法里"一株植物"住在**一列地块**上 ⇒ 存活植株数请用 `Farm.PlantCount` ★ ✓
         public readonly List<EnemyActor> Enemies = new List<EnemyActor>();
         public readonly List<Projectile> Projectiles = new List<Projectile>();
         public readonly List<Pickup> Pickups = new List<Pickup>();
@@ -1519,13 +1200,11 @@ namespace Seedfall
             Pickups.Add(new Pickup { Pos = pos, IsHeart = true, Heal = heal });
         }
 
-        public PlantAlly FindPlantOnPlot(int plotIndex)
-        {
-            if (plotIndex < 0) return null;
-            for (int i = 0; i < Plants.Count; i++)
-                if (Plants[i].PlotIndex == plotIndex && Plants[i].Alive) return Plants[i];
-            return null;
-        }
+        // ★ T2：`World.FindPlantOnPlot(int)` **已删除** ✗ ★
+        //   它按 `PlotIndex` 在 `Plants` 里找回植物实体 ✓
+        //   两个调用点（`RunSession` 的"释放多余地块"与"铲除幼苗"）都已改成**只调 `plot.RemoveGrowing()`** ✓
+        //   —— 因为 `FindPlantOnPlot` 在没有生产者之后**恒返回 null**，那两处的 `Kill()` 本来就是空转 ✓
+        //   ⚠️ "一株植物 ↔ 一列地块"的对应关系**没有消失**：它在 `FarmGrid`（`ColumnHead` / `PlantCount`）里 ✓
 
         // ------------------------------------------------------------ 查询
         public EnemyActor NearestEnemyTo(Vector2 p, float maxRange)
@@ -1583,20 +1262,22 @@ namespace Seedfall
         // ⚠️ `SlowFieldFactor` 的调用者：全工程 0 个（查证方式：搜 `SlowFieldFactor`）✗
         //    它原本挂在敌人移速计算上，而那条线已经先被删了 ⇒ 它是**孤儿** ✓
 
-        public Actor NearestAlly(Vector2 p, bool playerOnly = false)
+        /// <summary>
+        /// **敌人的目标**：玩家（活着的话）。
+        ///
+        /// ★ T2：它原来是"玩家 **或最近的植物**"（`playerOnly` 参数用来限定只看玩家）✗ ★
+        ///   植物那一支已随 `PlantAlly` / `World.Plants` 删除 ⇒ 现在只剩玩家这一支 ✓
+        ///   ★ 删之前按规矩**先读了两个调用点**（`Enemies.cs:137` GruntEnemy / `:152` ShooterEnemy）★：
+        ///     两处都是 `Actor target = w.NearestAlly(Pos); if (target == null) return;` 然后追/射 ✓
+        ///     两处都**不传** `playerOnly`（即走默认 false）⇒ 它们本来就接受"植物优先" ✓
+        ///   ⇒ 而"没有植物"时的返回值一直是玩家 ⇒ 这次改动**不改变任何既有行为** ✓
+        ///     （与 v172 删 `TauntPlantNear` 是同一条推理：嘲讽恒 null ⇒ 行为不变 ✓）
+        ///   ⚠️ `playerOnly` 参数**一并删除**：两个调用点都用默认值 ⇒ 它从来没有被传过 true ✓
+        ///     （删参数后 `w.NearestAlly(Pos)` 两个调用点**无需改动** ✓）
+        /// </summary>
+        public Actor NearestAlly(Vector2 p)
         {
-            Actor best = Player != null && !Player.IsDead ? Player : null;
-            float bestD = best == null ? float.MaxValue : (best.Pos - p).sqrMagnitude;
-            if (playerOnly) return best;
-            for (int i = 0; i < Plants.Count; i++)
-            {
-                PlantAlly pl = Plants[i];
-                // 幼苗不可被攻击：敌人索敌时直接跳过生长中的植物
-                if (pl.IsDead || pl.Growing) continue;
-                float d = (pl.Pos - p).sqrMagnitude;
-                if (d < bestD) { bestD = d; best = pl; }
-            }
-            return best;
+            return Player != null && !Player.IsDead ? Player : null;
         }
 
         // ------------------------------------------------------------ 结算
@@ -1798,19 +1479,13 @@ namespace Seedfall
                 Enemies.RemoveAt(i);
             }
 
-            for (int i = Plants.Count - 1; i >= 0; i--)
-            {
-                PlantAlly p = Plants[i];
-                if (!p.IsDead) continue;
-                p.Alive = false;
-                if (p.PlotIndex >= 0)
-                {
-                    FarmPlot plot = Farm.Slots[p.PlotIndex];
-                    if (plot.State == PlotState.Growing || plot.State == PlotState.Grown) plot.OnPlantDied();
-                }
-                Plants.RemoveAt(i);
-            }
-
+            // ★ T2：**植物尸体清理**整段已删除 ✗ ★
+            //   它做三件事（整列回空地 / 从列表移除 / 置 `Alive=false`），全部以 `Plants` 为状态根 ✓
+            //   而现在：没有生产者 ⇒ 列表恒空 ⇒ 循环体从不执行 ⇒ 删它不改变行为 ✓
+            //   ⚠️ 连带：`FarmPlot.OnPlantDied()`（`FarmGrid.cs:434`）**失去唯一调用者** ⇒ 现在是 0 调用者 ✗
+            //      ★ 已【报告】而不是顺手删 ★ —— 它是 `FarmGrid` 的公开 API，
+            //        且其实现与仍在用的 `RemoveGrowing()` 等价（都是 `ClearColumn` + `ResetToEmpty`）✓
+            //      ⇒ 要不要留它属于"耕地清理"的地界，不在本轮"植物参战"的范围内 ✓
             for (int i = Projectiles.Count - 1; i >= 0; i--)
                 if (Projectiles[i].Dead) Projectiles.RemoveAt(i);
 
@@ -1854,13 +1529,11 @@ namespace Seedfall
         //   换成了反向断言"跨分钟不再清空植物"——见 SelfCheck。）
     }
 
-    public struct PlantSpawnedEvent
-    {
-        public string SeedId;
-        public SeedGrade Grade;
-        public string MutationId;
-        public int PlotIndex;
-    }
+    // ★ T2：`PlantSpawnedEvent` 结构**已删除** ✗ ★
+    //   它的唯一发布点是 `SpawnPlantFromPlot`（已删），唯一订阅点是 `RunSession.OnPlantSpawned`
+    //   （已连订阅一并删除）⇒ 收发两边都死 ✓
+    //   ⚠️ 与 `ExpOrbDroppedEvent` 的处置**不同**：那个是"只发不收"（订阅方在 RunSession 里，
+    //      当时不能改 RunSession）⇒ 只能留结构体 ✓ 而本次授权了改 RunSession ⇒ 这次能收干净 ✓
 
     public struct GoldChangedEvent { public int Delta; public int Total; }
 }

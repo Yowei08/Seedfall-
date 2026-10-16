@@ -84,7 +84,13 @@ namespace Seedfall
         public float RawValue;
         public Actor Source;
         public Actor Target;
-        public bool FromPlant;
+        // ★ T2：`DamageRequest.FromPlant` 字段**已删除** ✗ ★
+        //   它的写者（`PlantAlly.Fire` / `ApplyAilmentHit` / `OnDeath` / `Projectile.PlantShot`）
+        //   与读者（下面 `Resolve` 里的两处）**全部随植物实体一起下线** ✓
+        //   ⇒ 零写者零读者 ⇒ 字段本身没有存在理由 ✓
+        //   ⚠️ **不需要**为它保留"设计位"：它是"这一发伤害来自植物帮手"的标记，
+        //      而"植物帮手"这个来源在新玩法里不存在 ✓（与 `Projectile.ExplodeOnEnd` 那种
+        //      "看起来是通用的溅射设计位"不同 —— 那个是**武器**语义，这个是**植物**语义 ✓）
         public float Knockback;
         public AilmentKind Ailment;
         public float AilmentValue;
@@ -202,11 +208,14 @@ namespace Seedfall
             Actor target = req.Target;
             if (target == null || !target.Alive) return new DamageResult(0f, false, false, false);
 
-            // 幼苗规则：种下的植物必须完全成长后才能被攻击 → 生长中免疫一切伤害
-            if (target is PlantAlly seedling && seedling.Growing)
-                return new DamageResult(0f, false, false, false);
+            // ★ T2：**幼苗免疫伤害**的守卫已删除 ✗ ★
+            //   原来是 `if (target is PlantAlly seedling && seedling.Growing) return 空结果;` ✓
+            //   植物已不参战 ⇒ 不存在"生长中的植物被攻击"这件事 ⇒ 守卫没有可命中的目标 ✓
+            //   ⚠️ 它不是"某条规则的唯一实现"：生长中的地块是 `FarmPlot`，
+            //      而地块**根本不在 `DamageRequest.Target` 的值域里**（只可能是 Actor）✓
+            //      ⇒ 删掉不会让"幼苗可以被打了"，因为幼苗已经不是 Actor ✓
 
-            // 受击无敌帧（玩家与植物帮手；不可被"无视闪避"绕过）
+            // 受击无敌帧（玩家；不可被"无视闪避"绕过）
             if (!req.IsReflect && target.IsInvulnerable)
                 return new DamageResult(0f, false, false, false);
 
@@ -252,14 +261,14 @@ namespace Seedfall
                     1f);
             }
 
-            // 生命汲取：只有植物帮手的攻击触发
-            if (req.FromPlant && w.Player != null && !w.Player.Health.IsDead)
-            {
-                float leech = 0f;
-                float bonus = 1f;   // v31：变异词条已删除
-                float w2 = LeechFormula(dealt, leech, 0f) * bonus;
-                if (w2 > 0f) w.Player.Health.Heal(w2);
-            }
+            // ★ T2：**生命汲取**（植物帮手的攻击 → 玩家回血）整段已删除 ✗ ★
+            //   它有两层不可达，任一层都足够：
+            //   ① 前置 `req.FromPlant` —— 那个字段已随植物一起删除 ✓
+            //   ② ★ 它本来就是死块 ★：`float leech = 0f;` 是**局部常量、全程无写**，
+            //      而 `LeechFormula(dealt, 0f, 0f) = max(0, dealt × (0 + 0)) = 0` ✓
+            //      ⇒ `if (w2 > 0f)` **恒假** ⇒ 这个块在删之前就从来没执行过 ✓
+            //   ⚠️ `DamageResolver.LeechFormula` **保留** —— 它仍被 `SelfCheck` 的公式断言直接检验 ✓
+            //      （这正是上一轮审计把它列为"不能清空"的那处；本轮实测证明它是死块 ⇒ 授权删除 ✓）
 
             // ★ v172：荆棘南瓜反伤（`Special == "Thorns"`）已删除 ✗
             //
@@ -276,8 +285,10 @@ namespace Seedfall
             //    这条**结算规则**；删守卫等于悄悄改掉规则，将来谁接一个反伤就会踩到
             //    "反伤被闪避"这个 bug ✓ ⇒ 保留规则、删除唯一失效的消费者 ✓
 
-            if (req.FromPlant && req.Source is PlantAlly p) p.DamageDone += dealt;
-            else if (req.Source is EnemyActor e) e.DamageDone += dealt;
+            // ★ T2：`req.FromPlant && req.Source is PlantAlly` 那一支已删除 ✗ ★
+            //   `FromPlant` 字段与 `PlantAlly` 类型都不复存在 ⇒ 只剩敌人这一支 ✓
+            //   ★ 这正是原来 `else if` 的既有行为（`FromPlant` 为假时走的就是这里）⇒ 无行为改动 ✓
+            if (req.Source is EnemyActor e) e.DamageDone += dealt;
 
             target.OnDamaged(dealt, req.Source, w);
             if (killed) target.OnDeath(w);

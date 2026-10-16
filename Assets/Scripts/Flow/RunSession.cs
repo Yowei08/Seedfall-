@@ -1556,8 +1556,11 @@ namespace Seedfall
             Bus.Subscribe<ExpOrbDroppedEvent>(OnExpOrbDropped);
             Bus.Subscribe<ExpOrbPickupEvent>(OnExpOrbPickup);
             Bus.Subscribe<LevelUpEvent>(OnLevelUp);
-            Bus.Subscribe<PlantSpawnedEvent>(OnPlantSpawned);
-            Bus.Subscribe<PlantDiedEvent>(OnPlantDied);
+            // ★ T2：`PlantSpawnedEvent` / `PlantDiedEvent` 的订阅**已删除** ✗ ★
+            //   两个事件的**唯一发布点**都在 `PlantAlly`（出生）与 `PlantAlly.OnDeath`（死亡）里 ✓
+            //   而 `PlantAlly` 已整条下线 ⇒ 它们永远不会被发布 ⇒ 留着订阅等于留两条死通道 ✓
+            //   （对比先例：`ExpOrbPickupEvent` 是"只发不收"，那两个是"收发两边都死"——
+            //     所以这次可以一起删，不存在"删了谁编译不过"的问题 ✓）
             Bus.Subscribe<FloatingTextEvent>(OnFloatingText);
         }
 
@@ -1569,8 +1572,7 @@ namespace Seedfall
             Bus.Unsubscribe<ExpOrbDroppedEvent>(OnExpOrbDropped);
             Bus.Unsubscribe<ExpOrbPickupEvent>(OnExpOrbPickup);
             Bus.Unsubscribe<LevelUpEvent>(OnLevelUp);
-            Bus.Unsubscribe<PlantSpawnedEvent>(OnPlantSpawned);
-            Bus.Unsubscribe<PlantDiedEvent>(OnPlantDied);
+            // ★ T2：两个植物事件的退订**一并删除**（与上面的订阅一一对应 ✓）
             Bus.Unsubscribe<FloatingTextEvent>(OnFloatingText);
         }
 
@@ -1682,15 +1684,15 @@ namespace Seedfall
                 if (Popups[i].Ttl <= 0f) Popups.RemoveAt(i);
             }
         }
-        private void OnPlantSpawned(PlantSpawnedEvent e)
-        {
-            Telemetry.Emit("plant_spawn", ("seed", e.SeedId), ("grade", e.Grade.ToString()),
-                ("mutation", e.MutationId ?? "none"), ("plot", e.PlotIndex));
-        }
-        private void OnPlantDied(PlantDiedEvent e)
-        {
-            Telemetry.Emit("plant_death", ("seed", e.SeedId), ("plot", e.PlotIndex), ("lifetime", e.Lifetime));
-        }
+        // ★ T2：`OnPlantSpawned` / `OnPlantDied` 两个遥测处理器**已删除** ✗ ★
+        //   它们对应的事件（`PlantSpawnedEvent` / `PlantDiedEvent`）随 `PlantAlly` 一起下线 ⇒
+        //   处理器双双成为零调用者 ✓
+        //   ⚠️ **遥测口径变了**（要写进埋点说明）✗：
+        //     · `plant_spawn`  —— 不再上报（没有"植物实体出生"这件事了 ✓）
+        //     · `plant_death`  —— 不再上报
+        //     ★ "植物"这个概念的埋点**取而代之**的是地块口径 ★：
+        //       `plot_harvest` / `plot_release` / `plot_action`（都在下面 ✓）
+        //       以及 `RunSimulator.PlantsAlive`（= `Farm.PlantCount`，一株 = 一列 ✓）
 
         public void TogglePause()
         {
@@ -2662,7 +2664,10 @@ namespace Seedfall
             // ⇒ 这句话在**对着玩家的界面**上撒谎：他说收割会得到帮手，但什么也没多出来 ✗
             // 收益的真实内容是 World.HarvestPlot 发的**金币与经验**（每格 price/5 与 price/10）✓
             SetPrompt($"收割 {def?.Name} → 金币与经验（土地重新生长）");
-            Telemetry.Emit("plot_harvest", ("seed", seedId), ("plants", World.Plants.Count), ("plot", plotIndex));
+            // ★ T2：遥测里的 `("plants", World.Plants.Count)` **已删除** ✗ ★
+            //   它上报的是"场上植物**实体**数"—— 那个列表已下线 ⇒ 字段无处可读 ✓
+            //   ★ 存活植株口径另有 `Farm.PlantCount`（新玩法：一株 = 一列地块）★ ✓
+            Telemetry.Emit("plot_harvest", ("seed", seedId), ("plot", plotIndex));
             return true;
         }
 
@@ -2701,7 +2706,7 @@ namespace Seedfall
                             // 不按 id 回查表（`GetSeed` 对不存在的 id 抛异常）✓
                             SeedDef def = plot.CropDef;
                             SetPrompt($"收获 {def?.Name} → 金币与经验（地块重新生长）");
-                            Telemetry.Emit("plot_harvest", ("seed", plot.CropSeedId), ("plants", World.Plants.Count));
+                            Telemetry.Emit("plot_harvest", ("seed", plot.CropSeedId));
                         }
                     }
                     break;
@@ -2905,8 +2910,11 @@ namespace Seedfall
                 for (int i = owned; i < kv.Value.Count; i++)
                 {
                     FarmPlot plot = kv.Value[i];
-                    PlantAlly plant = World.FindPlantOnPlot(plot.Index);
-                    if (plant != null && plant.Alive) plant.Health.Kill();
+                    // ★ T2：这里原来先 `FindPlantOnPlot` → `plant.Health.Kill()` 再 `RemoveGrowing()` ✗ ★
+                    //   而 `World.Plants` 已无生产者 ⇒ `FindPlantOnPlot` **恒返回 null**
+                    //   ⇒ `plant != null && plant.Alive` 恒假 ⇒ 那两行**从来什么都没做** ✓
+                    //   ★ 真正的释放动作是下面这行 `RemoveGrowing()` ★ —— 它做 `ClearColumn` + `ResetToEmpty` ✓
+                    //   ⇒ 删掉那两行**不改变任何行为** ✓（已按"先读调用点再删"的规矩读过调用方 ✓）
                     plot.RemoveGrowing();          // Growing/Grown → Empty，并清掉 SeedId
                     released++;
                     Telemetry.Emit("plot_release", ("seed", kv.Key), ("plot", plot.Index), ("owned", owned));
@@ -3111,8 +3119,9 @@ namespace Seedfall
                 {
                     if (plot.State == PlotState.Growing)
                     {
-                        PlantAlly growingPlant = World.FindPlantOnPlot(plot.Index);
-                        if (growingPlant != null) growingPlant.Health.Kill();
+                        // ★ T2：原来先 `FindPlantOnPlot` → `growingPlant.Health.Kill()` 再 `RemoveGrowing()` ✗ ★
+                        //   同上：`FindPlantOnPlot` 恒返回 null ⇒ 那两行是**空转** ✓
+                        //   ⇒ 删掉不改变行为：铲除的真正实现是 `RemoveGrowing()` ✓
                         plot.RemoveGrowing();
                         Telemetry.Emit("plot_action", ("plot", plot.Index), ("action", "remove"), ("duration", 0f));
                         SetPrompt("已铲除幼苗");

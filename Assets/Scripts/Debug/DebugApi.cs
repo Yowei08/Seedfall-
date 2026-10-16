@@ -599,7 +599,9 @@ namespace Seedfall
             sb.Append($"phase={s.Phase} minute={s.WaveIndex} t={s.RunTime:0.0} ");
             sb.Append($"hp={w.Player.Health.Hp:0}/{w.Player.Health.MaxHp:0} shield={w.Player.Health.Shield:0}/{w.Player.Health.MaxShield:0} ");
             sb.Append($"level={s.Progress.Level} exp={s.Progress.Exp:0}/{s.Progress.ExpToNext:0} gold={s.Gold} kills={w.KillCount} ");
-            sb.Append($"plots={w.Farm.UsedPlotCount}/{w.Farm.MaxPlots} plants={w.Plants.Count} enemies={w.Enemies.Count} ");
+            // ★ T2：`plants={w.Plants.Count}` 已删除 ✗ —— `World.Plants` 本身已不存在 ✓
+            //   要看"场上有几株植物"请用 `Farm.PlantCount`（新玩法：一株 = 一列地块）✓
+            sb.Append($"plots={w.Farm.UsedPlotCount}/{w.Farm.MaxPlots} enemies={w.Enemies.Count} ");
             sb.Append($"pickups={w.Pickups.Count} bag={BagSummary(s)} farm={s.FarmActionSeconds:0.0}s combat={s.CombatSeconds:0.0}s ");
             sb.Append($"farmRatio={(s.CombatSeconds <= 0f ? 0f : s.FarmActionSeconds / s.CombatSeconds) * 100f:0.0}% ");
             sb.Append($"pos=({w.Player.Pos.x:0.0},{w.Player.Pos.y:0.0}) prompt=\"{s.Prompt}\" ");
@@ -925,15 +927,10 @@ namespace Seedfall
             World w = s.World;
             var sb = new StringBuilder();
             sb.AppendLine($"t={s.RunTime:0.0} 阶段={s.Phase} 波={s.WaveIndex} 击杀={w.KillCount} 弹道={w.Projectiles.Count} 掉落={w.Pickups.Count}");
-            for (int i = 0; i < w.Plants.Count; i++)
-            {
-                PlantAlly p = w.Plants[i];
-                EnemyActor target = w.NearestEnemyTo(p.Pos, p.RangeM);
-                float dist = target == null ? -1f : Vector2.Distance(p.Pos, target.Pos);
-                sb.AppendLine($"植物#{p.Id} {p.Def.Id} 生长中={p.Growing} 存活={p.Alive} hp={p.Health.Hp:0}/{p.Health.MaxHp:0} " +
-                              $"攻击值={p.AttackValue:0.0} 间隔={p.AttackInterval:0.00} 射程={p.RangeM:0.0} 计时={p.AttackTimer:0.00} " +
-                              $"累计伤害={p.DamageDone:0.0} 位置=({p.Pos.x:0.0},{p.Pos.y:0.0}) 最近敌人={dist:0.0}");
-            }
+            // ★ T2：植物实体的逐株转储**整段删除** ✗ ★
+            //   它读的是 `w.Plants` / `PlantAlly.{Growing,AttackValue,AttackInterval,RangeM,AttackTimer,DamageDone}`
+            //   —— 这些属性随 `PlantAlly` 一起消失 ✓
+            //   想看"植物"请用 `ShowPlants()`（它转储的是**耕地/作物**，与植物实体无关 ✓）
             for (int i = 0; i < w.Enemies.Count; i++)
             {
                 EnemyActor e = w.Enemies[i];

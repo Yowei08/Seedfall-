@@ -20,7 +20,8 @@ namespace Seedfall
             public float Total;
         }
 
-        private readonly Dictionary<int, GameObject> _plants = new Dictionary<int, GameObject>();
+        // ★ T2：`_plants` / `_plantModels` 两个字典已删除 ✗ —— 它们只被 `SyncPlants` 读写 ✓
+        //   （植物实体的表现已整段下线，见下方注释 ✓）
         private readonly Dictionary<int, GameObject> _enemies = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, GameObject> _projectiles = new Dictionary<int, GameObject>();
         private readonly Dictionary<int, GameObject> _pickups = new Dictionary<int, GameObject>();
@@ -30,7 +31,7 @@ namespace Seedfall
         // v59：模型化的表现体。有模型的用模型，没有的（BOSS / 小猪）继续走图元，
         // 这样"资源没做完"不会阻塞玩法，也不会让场上出现空洞。
         private readonly Dictionary<int, ModelView> _enemyModels = new Dictionary<int, ModelView>();
-        private readonly Dictionary<int, ModelView> _plantModels = new Dictionary<int, ModelView>();
+        // ★ T2：`_plantModels` 已删除（同上）✗
         private readonly Dictionary<int, Vector3> _lastPos = new Dictionary<int, Vector3>();
         private ModelView _playerModel;
 
@@ -183,7 +184,6 @@ namespace Seedfall
             Bus.Unsubscribe<TreeMatureEvent>(OnPlotMature);
             Bus.Unsubscribe<EnemyKilledEvent>(OnKilledShake);
 
-            _plants.Clear();
             _enemies.Clear();
             _projectiles.Clear();
             _pickups.Clear();
@@ -989,7 +989,6 @@ namespace Seedfall
             if (NightLighting.Instance != null)
                 NightLighting.Instance.FollowPlayer(new Vector3(w.Player.Pos.x, 0f, w.Player.Pos.y), dt);
             SyncBlastReticle(s);
-            SyncPlants(w, dt);
             SyncEnemies(w, dt);
             TickBlasts(dt);
             TickWarnMarkers(dt);
@@ -1352,128 +1351,23 @@ namespace Seedfall
                 _aimTip.transform.position = new Vector3(p.Pos.x, 0.6f, p.Pos.y) + dir0.normalized * 1.3f;
         }
 
-        /// <summary>
-        /// 植物帮手的显示身高（米）。刻意**低于玩家**（玩家 0.961m 建模 × CharScale 2.6 ≈ 2.5m）。
-        /// 旧版按耕地方格折算成 4.5m，帮手比玩家还大，玩家反而找不到自己。
-        /// 所有品种统一用这一个目标高度，所以一排帮手天然一样高。
-        /// </summary>
-        private const float AllyPlantHeight = 1.70f;
-
-        /// <summary>
-        /// 从 pos 指向**最近敌人**的方向（XZ 平面）。没敌人时 hasFoe=false。
-        /// 用平方距离比，避免开方——这个函数每帧对每个植物都要跑一次。
-        /// </summary>
-        private static Vector3 NearestEnemyDir(World w, Vector3 pos, out bool hasFoe)
-        {
-            hasFoe = false;
-            float best = float.MaxValue;
-            Vector2 bestPos = Vector2.zero;
-            for (int i = 0; i < w.Enemies.Count; i++)
-            {
-                EnemyActor e = w.Enemies[i];
-                if (e.IsDead) continue;
-                float dx = e.Pos.x - pos.x, dz = e.Pos.y - pos.z;
-                float d2 = dx * dx + dz * dz;
-                if (d2 < best) { best = d2; bestPos = e.Pos; }
-            }
-            if (best == float.MaxValue) return Vector3.zero;
-            hasFoe = true;
-            Vector3 v = new Vector3(bestPos.x - pos.x, 0f, bestPos.y - pos.z);
-            return v.sqrMagnitude > 0.0001f ? v : Vector3.zero;
-        }
-
-        private void SyncPlants(World w, float dt)
-        {
-            Vector3 playerPos = w.Player != null ? new Vector3(w.Player.Pos.x, 0f, w.Player.Pos.y) : Vector3.zero;
-            for (int i = 0; i < w.Plants.Count; i++)
-            {
-                PlantAlly plant = w.Plants[i];
-                Vector3 pos = new Vector3(plant.Pos.x, 0f, plant.Pos.y);
-
-                if (!_plants.TryGetValue(plant.Id, out GameObject go))
-                {
-                    // 植物模型 id 就是种子 id（seeds.json 的 id 与模型文件名一致）
-                    // v86：**加载动画**（最后一个参数 false→true）。
-                    // 之前传 false，所以 Art/Anim/<id>_idle 从来没被读过 —— 就算模型和动画都做出来了，
-                    // 场上的帮手也是站着不动的。拟人化改造配合走路动画，这个开关必须打开。
-                    ModelView mv = ModelView.Spawn("Plants", plant.Def.Id, _root, true);
-                    if (mv != null)
-                    {
-                        _plantModels[plant.Id] = mv;
-                        go = mv.Go;
-                        // v68：植物按**品质色**霓虹描边——一眼看出场上是几级种子长出来的
-                        mv.SetNeon(NeonOf(Projectile.GradeColor(plant.Def.Grade)));
-                    }
-                    else
-                    {
-                        PrimitiveType type = plant.Def.AttackKind == AttackKind.Melee
-                            ? (plant.IsGuard ? PrimitiveType.Cylinder : PrimitiveType.Capsule)
-                            : PrimitiveType.Sphere;
-                        Color baseColor = Projectile.GradeColor(plant.Def.Grade);
-                        if (plant.IsGuard) baseColor = Color.Lerp(baseColor, new Color(0.5f, 0.55f, 0.65f), 0.45f);
-                        go = Prim(type, "Plant_" + plant.Def.Id, Vector3.zero, Vector3.one, Mat(baseColor));
-                    }
-                    _plants[plant.Id] = go;
-                }
-
-                bool moving = Moved(plant.Id, pos, dt);
-                float grow01 = plant.Growing && plant.Def.GrowTime > 0f
-                    ? Mathf.Lerp(0.35f, 1f, 1f - plant.Health.HpPct)
-                    : 1f;
-
-                if (_plantModels.TryGetValue(plant.Id, out ModelView view))
-                {
-                    // v80：朝向按**索敌优先**决定——
-                    //   有敌人 → 面向最近的敌人（玩家一眼看出它在打谁）
-                    //   没敌人 → 面向自己的**移动方向**（追不上时的行进朝向）
-                    //   都不满足（站着且场上无敌人）→ 保持上一帧朝向，不要抽风式乱转
-                    Vector3 face = NearestEnemyDir(w, pos, out bool hasFoe);
-                    if (!hasFoe)
-                    {
-                        // 植物是**站桩单位**，没有常规速度——它唯一的"移动"是受击击退。
-                        // 所以"没有索敌时面向移动方向"在植物身上落到击退速度上；
-                        // 连击退也没有（站着不动、场上无敌人）就**保持上一帧朝向**，
-                        // 不要每帧归零——那会让植物原地抽风式乱转。
-                        Vector2 v = plant.KnockbackVel;
-                        face = v.sqrMagnitude > 0.0025f ? new Vector3(v.x, 0f, v.y) : Vector3.zero;
-                    }
-                    // face 为 0 表示"没敌人也没被击退"——这时不动朝向，保持上一帧
-                    if (face.sqrMagnitude > 0.0001f)
-                        view.SetFacing(Mathf.Atan2(face.x, face.z) * Mathf.Rad2Deg);
-
-                    // v80：**植物帮手要比玩家小**。
-                    // 旧版用 tile × 0.72 × PlantScale(2.5) = 4.5m，比 2.5m 的玩家还大——
-                    // 帮手喧宾夺主，玩家反而找不到自己。现在固定一个**低于玩家身高**的目标高度，
-                    // 所有品种一致（ScaleToHeight 天然统一），玩家 2.5m / 帮手 1.7m。
-                    view.ScaleToHeight(AllyPlantHeight * grow01);
-
-                    // v86：驱动动画状态机——与敌人/玩家同一套写法。
-                    // 「移动 → Walk，停下 → Idle，受击 → Hit（一次性）」。
-                    view.Tick(dt);
-                    if (moving) view.Play(ModelView.State.Walk);
-                    else if (view.Current == ModelView.State.Walk) view.Play(ModelView.State.Idle);
-                    if (plant.HitFlash > 0f) view.PlayForced(ModelView.State.Hit);
-                    view.SetHitFlash(plant.HitFlash > 0f, dt);   // v88：受击膨胀脉动
-                    view.CenterOn(new Vector3(pos.x, 0f, pos.z));
-
-                    float dark = Mathf.Lerp(0.45f, 1f, plant.Health.HpPct);
-                    view.SetTint(plant.HitFlash > 0f
-                        ? Color.Lerp(new Color(dark, dark, dark), Color.white * 1.7f, 0.85f)
-                        : new Color(dark, dark, dark));
-                }
-                else
-                {
-                    float scale = plant.Radius * 2f * (plant.Growing ? 0.55f : 1f);
-                    go.transform.localScale = new Vector3(scale, scale * 1.3f * grow01, scale);
-                    go.transform.position = new Vector3(plant.Pos.x, scale * 0.7f, plant.Pos.y);
-                    Color tint = Projectile.GradeColor(plant.Def.Grade) * Mathf.Lerp(0.45f, 1f, plant.Health.HpPct);
-                    if (plant.HitFlash > 0f) tint = Color.Lerp(tint, Color.white, 0.85f);
-                    SetColor(go, tint);
-                }
-            }
-            RemoveStale(_plants, w.Plants, a => a.Id);
-            RemoveStaleModels(_plantModels, w.Plants, a => a.Id);
-        }
+        // ★ T2（2026-10）：植物**表现层**整段删除 ✗ ★
+        //
+        // 删掉的是三样（它们只服务"场上会参战的植物帮手"这一个东西）：
+        //   ① `const float AllyPlantHeight = 1.70f` —— 帮手显示身高
+        //   ② `NearestEnemyDir(w, pos, out hasFoe)` —— 帮手的**索敌朝向**辅助
+        //   ③ `SyncPlants(w, dt)` —— 帮手模型的生成 / 移动 / 动画 / 受击脉动 / 淡出
+        //
+        // 判据（与本轮的其余删除同一条）：`World.Plants` **已无生产者**（`SpawnPlantFromPlot` 已删）✓
+        //   ⇒ `SyncPlants` 的 `for` 循环体**永远不会执行** ⇒ 上面三样全是死代码 ✓
+        //   ⇒ 连带 `_plants` / `_plantModels` 两个字典也失去全部读写者 ⇒ 一并删除 ✓
+        //
+        // ⚠️ **没有**连带删除的（都还有别的读者，属于别的地界 ✓）：
+        //   · `RemoveStale` / `RemoveStaleModels` —— 敌人同步（`SyncEnemies`）仍在用 ✓
+        //   · `ModelView.Spawn("Plants", ...)` —— `SyncPlotCrops` 画**地块上的作物**仍在用 ✓
+        //     ★ 注意区分：作物长在 `FarmPlot` 上（新玩法），帮手是 `PlantAlly`（旧玩法）★
+        //   · 「植物」这个玩法概念**没有消失** —— 它现在是地块上的作物（`FarmPlot` / `PlantMechanics`）✓
+        //     消失的只是"会移动、会索敌、会被打的植物**实体**" ✓
 
         /// <summary>模型字典的同步清理（和 RemoveStale 同一思路，只是元素是 ModelView）。</summary>
         private void RemoveStaleModels<T>(Dictionary<int, ModelView> map, List<T> live, System.Func<T, int> idOf)

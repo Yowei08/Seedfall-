@@ -268,16 +268,12 @@ namespace Seedfall
                     Type = DamageType.Physical, RawValue = dmg, Source = this, Target = player
                 });
             }
-            for (int i = 0; i < w.Plants.Count; i++)
-            {
-                PlantAlly p = w.Plants[i];
-                if (!p.Alive) continue;
-                if (Vector2.Distance(p.Pos, Pos) > Def.JumpRadius + p.Radius) continue;
-                w.DealDamage(new DamageRequest
-                {
-                    Type = DamageType.Physical, RawValue = dmg * 0.8f, Source = this, Target = p
-                });
-            }
+            // ★ T2：**落地冲击打植物**的整段已删除 ✗ ★
+            //   它遍历 `w.Plants`（恒空，无生产者）+ 按 `PlantAlly` 类型取 `p.Radius` ✓
+            //   ⇒ 既不编译不过、也从不执行 ✓ 删掉后：落地冲击只打玩家（本方法上半段那条 ✓）
+            //   ★ 这条是上一轮审计**明确要求保留**的两条之一，本轮授权后一并删除 ★
+            //     保留它的原理由是"让'植物存活/死亡'这条链还在"——
+            //     而那条链**本身就要经过 `PlantAlly`** ⇒ 它从来不是保留的理由，而是它也该删的证据 ✓
             Bus.Publish(new EnemyAttackFieldEvent { Pos = Pos, Radius = Def.JumpRadius });
         }
     }
@@ -324,20 +320,8 @@ namespace Seedfall
                 _chargeTime -= dt;
                 MoveStep(_chargeDir, Def.MoveSpeed * 6f, dt, w);
                 TouchTick(dt, w, player);
-                for (int i = 0; i < w.Plants.Count; i++)
-                {
-                    PlantAlly p = w.Plants[i];
-                    if (!p.Alive) continue;
-                    if (Vector2.Distance(p.Pos, Pos) > Radius + p.Radius) continue;
-                    w.DealDamage(new DamageRequest
-                    {
-                        Type = DamageType.Physical,
-                        RawValue = Def.JumpDamageForWave(WaveIndex) * 0.5f,
-                        Source = this,
-                        Target = p,
-                        Knockback = 1.2f
-                    });
-                }
+                // ★ T2：**BOSS 冲锋打植物**的整段已删除 ✗ ★（同上：`w.Plants` 恒空 + `PlantAlly` 类型引用）
+                //   BOSS 冲锋现在只靠 `TouchTick` 打玩家 ✓（那两行在下面 `return;` 之前原样保留 ✓）
                 return;
             }
 

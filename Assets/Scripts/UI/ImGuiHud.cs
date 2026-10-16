@@ -698,21 +698,18 @@ namespace Seedfall
             // 玩家得自己在脑子里把两行乘起来才知道实际打多少。现在直接给出算式与结果。
             // v162（A3）：算式里的「× 继承率」整项已删除（继承率随旧公式一起消失），
             //             植物取**近战伤害**，与 Actors.SpawnPlantFromPlot 走同一条路径。
-            // v109：判断这株植物**有没有爆炸**（需求：没有爆炸的植物不显示爆炸相关内容）。
-            // 判据取 Mechanic 字段——炭花那类写的是 "DeathExplode"。
-            bool hasExplode = !string.IsNullOrEmpty(d.Mechanic)
-                              && d.Mechanic.IndexOf("explode", System.StringComparison.OrdinalIgnoreCase) >= 0;
-
+            // ★ T2：`hasExplode` **已删除** ✗ —— 它恒为 false ✓ ★
+            //   判据原来是 `d.Mechanic.IndexOf("explode") >= 0` ✓
+            //   而 v168 之后 `Mechanic` 只可能是 `PlantMechanics` 登记的那 9 个名字或缺省 `"None"`
+            //   （`All` = Haste / NeighborBoost / WaterSave / ElderGrowth / ThirstTolerant /
+            //            DewDrop / RichHarvest / ChainHarvest / ThirstBloom ✓）
+            //   ⇒ **一个都不含 "explode"** ⇒ 判定恒假 ⇒ 下面两处 `if (hasExplode)` 都是死代码 ✓
+            //   删掉的是：判定式 + `explodeMult` 局部量 + 伤害算式追加 + 「爆炸范围」整行 ✓
+            //   ⚠️ `StatId.ExplodeDamage` 本身**仍在用**（肥料 / 属性面板 / 自检）⇒ 只删这里的读点 ✓
+            //   ⚠️ 连带：`SeedDef.baseExplodeRange`（Defs.cs:853）**失去唯一读者** ⇒ 现在是死字段 ✗
+            //      （它属于 `seeds.json` 那一批，与本次 11 个死字段一起处置 ✓）
             float perHit = DamageResolver.AttackFormula(d.BaseValue * qmul, atkStat, atkMult, false, 1f, 0f);
-            float explodeMult = st.Get(StatId.ExplodeDamage);
-            // 有爆炸的植物：算式末尾追加 × 爆炸倍率（需求），并不再单独显示"爆炸伤害"——
-            // 它已经是这一行的最后一个乘数，单独再列一遍就是同一个数的第二个来源。
             string dmgExpr = $"（{d.BaseValue * qmul:0.#} ＋ {atkStat:0.#}）× {atkMult * 100f:0}%";
-            if (hasExplode)
-            {
-                perHit = DamageResolver.ExplodeFormula(perHit, explodeMult);
-                dmgExpr += $" × {explodeMult * 100f:0}%";
-            }
             list.Add($"伤害：{dmgExpr} = {perHit:0.#}");
             // v109：攻速**直接给"产生一次攻击的时间"**（秒，2 位小数）。
             // 旧版同时显示"次/秒"和"间隔s"两个数——同一个量的两种表达，
@@ -737,19 +734,9 @@ namespace Seedfall
             list.Add($"暴击伤害：{pCritDmg * 100f:0}%");
             list.Add($"攻击范围：{d.Range * st.Get(StatId.AtkRange):0.0}");
             list.Add($"击退力：{st.Get(StatId.Knockback):0.00}");
-            // v109：**没有爆炸的植物整行不显示**（需求）。
-            // 旧版对所有植物都打「爆炸伤害 18　爆炸范围 100%」——
-            // 绝大多数植物根本不爆炸，这一行是纯粹的信息噪声，还让人以为它们会炸。
-            // 有爆炸的植物只显示**爆炸范围**，且用实际值：
-            //   爆炸伤害已经在上面那行的算式里（× 爆炸倍率），不再重复；
-            //   半径按运行时同一条公式算（ExplodeAt 里就是 3.0 × 爆炸范围属性），
-            //   所以卡片上的数和真正炸到的圈**必然一致**。
-            if (hasExplode)
-            {
-                // v111：基础半径读**这株植物自己的**整数值（缺省 3 米），与运行时同一条路径
-                float blastR = RunSession.BlastBaseRadius(d.baseExplodeRange) * st.Get(StatId.ExplodeRange);
-                list.Add($"爆炸范围：{RunSession.BlastBaseRadius(d.baseExplodeRange):0} × {st.Get(StatId.ExplodeRange) * 100f:0}% = {blastR:0.0} 米");
-            }
+            // ★ T2：原来这里有一整行「爆炸范围」+ 它的 `if (hasExplode)` 守卫 ✗ —— 一并删除 ✓
+            //   理由同上：`hasExplode` 恒假 ⇒ 这一行**从来没有显示过** ⇒ 删它不改变任何卡片 ✓
+            //   （原本的设计意图"只有会炸的植物才显示"已由"判定恒假"自动满足 ✓）
             // v121：同样拆成三行
             list.Add($"生命：{d.BaseHp:0.#}");
             list.Add($"护盾：{d.BaseShield:0.#}");

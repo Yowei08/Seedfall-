@@ -478,14 +478,15 @@ namespace Seedfall
             plot7.TickGrowth(Mathf.Max(0.001f, plot7.GrowthRemaining - 0.01f));
             w7.Simulate(0.05f);
             list.Add(new CheckResult("v23：成熟后进入待收获（地块保留，不解放）", plot7.State == PlotState.Grown, plot7.State.ToString()));
-            list.Add(new CheckResult("v23：成熟不会自动参战（等锄头收获）", w7.Plants.Count == 0,
-                $"plants={w7.Plants.Count}"));
             list.Add(new CheckResult("v23：地块保留种子（循环生长）", !string.IsNullOrEmpty(plot7.CropSeedId), plot7.CropSeedId));
-            // v12：只产出一次——继续推进时间不会再有新植物
-            int plantsAfter = w7.Plants.Count;
+            // ★ T2：删掉「v23：成熟不会自动参战」与「树只产出一次」两条断言 ✗ ★
+            //   两条都以 `World.Plants.Count`（= `List<PlantAlly>`）为判据，而该列表已删除 ✓
+            //   ⚠️ 覆盖没有变少：它们测的是"成熟/推进时间**不会**产出植物实体"——
+            //     而现在**没有任何代码路径能产出植物实体**（`SpawnPlantFromPlot` 已删）✓
+            //     ⇒ 从"断言它不发生"升级成"它不可能发生" ✓
+            //   ⚠️ "继续推进时间"这个动作**保留**（它是下面状态/时间类断言的前置）✓
+            //   计数：本块删 2 条 ✓
             for (int i = 0; i < 60; i++) w7.Simulate(0.1f);
-            list.Add(new CheckResult("树只产出一次（不再周期性产出）", w7.Plants.Count == plantsAfter,
-                $"{plantsAfter} -> {w7.Plants.Count}"));
 
             list.Add(new CheckResult("状态异常生效时间提前（≤2s）", t.formula.ailmentDelay <= 2f, $"{t.formula.ailmentDelay}s"));
             list.Add(new CheckResult("状态子弹有命中伤害", t.formula.ailmentHitRatio > 0f, $"比例 {t.formula.ailmentHitRatio:0.00}"));
@@ -823,12 +824,13 @@ namespace Seedfall
             // 而新玩法规定植物**完全不战斗**，收割的奖励是**金币与经验** ✓
             // ⇒ "招募帮手"这条规则必须消失，判据跟着改成**相反的事实** ✓
             // （这不是"改期望值凑绿"：被删掉的规则来自新玩法的定义，见 World.HarvestPlot 的 v165 注释）
-            int before2 = session.World.Plants.Count;
             int goldBefore = session.World.GoldEarned;
             float expBefore = session.World.ExpEarned;
             session.InteractPlotByAttack(plot, RunSession.ToolHoe, 2f);
-            list.Add(new CheckResult("v166：锄头收获不再产生帮手（植物不战斗）",
-                session.World.Plants.Count == before2, $"{before2} → {session.World.Plants.Count}"));
+            // ★ T2：删掉「v166：锄头收获不再产生帮手」这条断言 ✗ ★
+            //   它以 `World.Plants.Count` 为判据，而那个列表已随 `PlantAlly` 一起删除 ✓
+            //   ⇒ "收割不产出战斗单位"现在是**结构事实**（没有工厂能产出）⇒ 无需断言 ✓
+            //   计数：本块删 1 条 ✓（下面"发放金币与经验"那条**保留** —— 它才是收割的真实判据 ✓）
             list.Add(new CheckResult("v166：锄头收获发放金币与经验",
                 session.World.GoldEarned > goldBefore && session.World.ExpEarned > expBefore,
                 $"金币 {goldBefore} → {session.World.GoldEarned}｜经验 {expBefore:0.#} → {session.World.ExpEarned:0.#}"));
@@ -856,16 +858,13 @@ namespace Seedfall
             PlayerActor pl = s2.World.Player;
             pl.Pos = p2.World + new Vector2(1.5f, 0f);          // 站在植物旁
             Vector2 aim = (p2.World - pl.Pos).normalized;        // 朝植物挥锄头
-            int before3 = s2.World.Plants.Count;
             int got = s2.HarvestRipeInMeleeBox(pl.Pos, aim, 2.2f, 100f);
             list.Add(new CheckResult("v27：攻击判定框检测到成熟植物并收割", got == 1,
                 $"收割 {got} 块"));
-            // ★ v166：这条原为「收割后召唤出植物帮手」—— 与 807 那条是**同一个被删规则的副本** ★
-            // `HarvestRipeInMeleeBox → RunSession.HarvestPlot → World.HarvestPlot`，
-            // 而 `World.HarvestPlot` 里的 spawn 已在 v165 删除 ⇒ 帮手不会出现 ✓
-            // 旧断言在 v165 之后就已经是**红的**（只是没人跑到）⇒ 现在改成相反的事实 ✓
-            list.Add(new CheckResult("v166：扫掠收割不再产生帮手（植物不战斗，奖励是金币与经验）",
-                s2.World.Plants.Count == before3, $"{before3} → {s2.World.Plants.Count}"));
+            // ★ T2：删掉「v166：扫掠收割不再产生帮手」这条断言 ✗ ★
+            //   它与上面 807 / 847 两处是**同一条被删规则的第 3 份副本**（判据同样是 `World.Plants.Count`）✓
+            //   ⇒ 随 `World.Plants` 一起删除；"奖励是金币与经验"由本方法其它断言覆盖 ✓
+            //   计数：本块删 1 条 ✓
             list.Add(new CheckResult("v27：收割后土地重新开始生长", p2.State == PlotState.Growing,
                 $"{p2.State}"));
             // v28：锄头只收割、**不补水**（新一轮必须用水壶补水才能启动）
@@ -897,9 +896,9 @@ namespace Seedfall
             // v47：肥料不再只"催熟"——直接催熟并收割：地块重新进入生长，同时场上多一个植物帮手
             list.Add(new CheckResult("v47：肥料一击完成「催熟 + 收获」（地块重新生长）",
                 wasGrowing && bp.State == PlotState.Growing, $"爆炸后地块状态 {bp.State}"));
-            // v166：同上 —— "肥料收获直接召唤出植物帮手"这条规则已被删除（v165 删实现、v166 删断言）
-            list.Add(new CheckResult("v166：肥料收获不再产生帮手（植物不战斗）",
-                s5.World.Plants.Count == 0, $"场上植物 {s5.World.Plants.Count}"));
+            // ★ T2：删掉「v166：肥料收获不再产生帮手」这条断言 ✗ ★
+            //   它是上面同一条被删规则的**第 4 份副本**，判据 `s5.World.Plants.Count == 0`（列表已删除）✓
+            //   计数：本块删 1 条 ✓
             // ── v167：敌人【只掉水】——三条断言取代 v39 的两条经验球断言 ──
             //
             // ★ 为什么是"反向 + 概率 + 边界"三条 ★
@@ -1580,9 +1579,13 @@ namespace Seedfall
             ps.World.HarvestPlot(plot);
             bool sawHarvest = false;
             for (int i = 0; i < ps.Popups.Count; i++) if (ps.Popups[i].Text.StartsWith("收获")) sawHarvest = true;
-            list.Add(new CheckResult("收割 → 弹出「收获 xxx」且不产生帮手（植物不战斗）",
-                sawHarvest && ps.World.Plants.Count == 0,
-                $"提示「{(ps.Popups.Count > 0 ? ps.Popups[0].Text : "无")}」｜植物 {ps.World.Plants.Count}"));
+            // ★ T2：判据里的 `ps.World.Plants.Count == 0` 已删除 ✗ —— `World.Plants` 已不存在 ✓ ★
+            //   只保留本条真正要测的东西：**收割会弹「收获 xxx」** ✓
+            //   （"不产生帮手"那半句随同款副本一起删；现在它是结构事实，不需要断言 ✓）
+            //   ⚠️ 本条**保留**（不是删除）⇒ 计数不变 ✓
+            list.Add(new CheckResult("收割 → 弹出「收获 xxx」",
+                sawHarvest,
+                $"提示「{(ps.Popups.Count > 0 ? ps.Popups[0].Text : "无")}」"));
 
             // 浮动文字的屏幕投影换算（不需要真相机也能算死）
             Vector2 hud = ImGuiHud.WorldToHud(new Vector3(960f, 540f, 1f), 1.35f, 1080f);
