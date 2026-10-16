@@ -345,20 +345,12 @@ namespace Seedfall
             //   这样以后调 `baseHp` 不会再让断言挂 ✓ 而"曲线起点 = 基础"这个规则仍然被钉住 ✓
             Expect(list, "首波基础兵血量 = 基础值（曲线起点 = 1.0）", grunt.HpForWave(1, 1), grunt.BaseHp);
 
-            // ── 幼苗不可被攻击：生长中完全免疫，成株后才吃伤害
-            World w1 = MakeWorld(out PlayerActor p1);
+            // ★ T2：删掉「幼苗免疫伤害 / 成株可被伤害」两条断言 ✗ ★
+            //   它们测的是"植物作为**可被攻击的战斗单位**"：
+            //   判据落在 `DamageResolver.Resolve` 的 `target is PlantAlly seedling && seedling.Growing`
+            //   那条前置上（`Combat.cs:206`）✓ 植物已不参战 ⇒ 该前置整条不可达 ⇒ 断言已无被测对象 ✓
+            //   计数：本块删 2 条（`Expect` 1 + `CheckResult` 1）✓
             SeedDef radish = TableDatabase.GetSeed("radish_guard");
-            FarmPlot plot = w1.Farm.Slots[0];
-            plot.TickAction(PlotAction.Dig, 10f, 1f, farm, null);
-            plot.TickAction(PlotAction.Sow, 10f, 1f, farm, radish);
-            PlantAlly seedling = w1.SpawnPlantFromPlot(plot, radish, null, true);
-            float hpBefore = seedling.Health.Hp;
-            w1.DealDamage(new DamageRequest { Type = DamageType.Physical, RawValue = 5f, Target = seedling, IgnoreDodge = true });
-            Expect(list, "幼苗免疫伤害", seedling.Health.Hp, hpBefore);
-            seedling.SetGrown();
-            w1.DealDamage(new DamageRequest { Type = DamageType.Physical, RawValue = 1f, Target = seedling, IgnoreDodge = true });
-            list.Add(new CheckResult("成株可被伤害", seedling.Health.Hp < seedling.Health.MaxHp,
-                $"hp {seedling.Health.Hp:0.##}/{seedling.Health.MaxHp:0.##}"));
 
             // ── 护盾回复：受击后需等待 shieldRegenDelay 秒，之后每秒 max(最大护盾×10%, 1)
             World w2 = MakeWorld(out PlayerActor p2);
@@ -500,19 +492,10 @@ namespace Seedfall
 
             list.Add(new CheckResult("准备/商店阶段不限时", t.shop.infinitePrepare, ""));
 
-            // ── 植物受击无敌帧（同玩家）
-            World w8 = MakeWorld(out _);
-            FarmPlot plot8 = w8.Farm.Slots[0];
-            plot8.TickAction(PlotAction.Dig, 10f, 1f, farm, null);
-            plot8.TickAction(PlotAction.Sow, 10f, 1f, farm, radish);
-            PlantAlly ally = w8.SpawnPlantFromPlot(plot8, radish, null, true);
-            ally.SetGrown();
-            w8.DealDamage(new DamageRequest { Type = DamageType.Physical, RawValue = 1f, Target = ally, IgnoreDodge = true });
-            float allyHp = ally.Health.Hp;
-            bool allyInvuln = ally.IsInvulnerable;
-            w8.DealDamage(new DamageRequest { Type = DamageType.Physical, RawValue = 1f, Target = ally, IgnoreDodge = true });
-            list.Add(new CheckResult("植物受击进入无敌帧", allyInvuln, $"{ally.InvulnRemaining:0.00}s"));
-            Expect(list, "植物无敌帧内免疫伤害", ally.Health.Hp, allyHp);
+            // ★ T2：删掉「植物受击进入无敌帧 / 植物无敌帧内免疫伤害」两条断言 ✗ ★
+            //   它们测的是"植物作为可被攻击的战斗单位"（`PlantAlly.UsesInvulnFrames` 那套）✓
+            //   ⚠️ 玩家自己的无敌帧**另有断言覆盖**（本方法上方三条）⇒ 覆盖没有变少 ✓
+            //   计数：本块删 2 条（`CheckResult` 1 + `Expect` 1）✓
 
             // ── 镜头与 UI 与弹速
             list.Add(new CheckResult("镜头与地面 60 度", Mathf.Abs(t.camera.pitch - 60f) < 0.01f, $"{t.camera.pitch}"));
@@ -2074,16 +2057,13 @@ namespace Seedfall
             st3.AddChill(1, 1f, f);
             list.Add(new CheckResult("冰：满 4 层冻结（禁止移动）", st3.Frozen && st3.SpeedFactor(f) <= 0f, $"{st3.Frozen}"));
 
-            // ── 植物判定范围
+            // ★ T2：删掉「植物有判定范围且大于攻击范围」断言 ✗ ★
+            //   它测的是**纯植物索敌 AI**（`DetectM > RangeM`，驱动 `PlantAlly.Tick` 的靠近/攻击分支）✓
+            //   植物已不参战 ⇒ 索敌 AI 整条不可达 ⇒ 断言已无被测对象 ✓
+            //   计数：本块删 1 条 ✓
             var session = new RunSession();
             session.Start(777001UL);
             session.StartWave(1);
-            FarmPlot plot = session.World.Farm.Slots[0];
-            plot.TickAction(PlotAction.Dig, 10f, 1f, t.farm, null);
-            plot.TickAction(PlotAction.Sow, 10f, 1f, t.farm, TableDatabase.GetSeed("radish_guard"));
-            PlantAlly plant = session.World.SpawnPlantFromPlot(plot, TableDatabase.GetSeed("radish_guard"), null, false);
-            list.Add(new CheckResult("植物有判定范围且大于攻击范围", plant.DetectM > plant.RangeM,
-                $"判定 {plant.DetectM:0.0} > 攻击 {plant.RangeM:0.0}"));
 
             // ── 初始种子固定 D 级白品质
             list.Add(new CheckResult("初始种子固定白品质（D 级）",
@@ -3179,17 +3159,11 @@ namespace Seedfall
                 goldMerged && goldBag[1].Level == 2 && goldBag[1].Quality == q.Max,
                 $"槽1 = {goldBag[1].QualityName} {goldBag[1].Level} 级"));
 
-            // ── 品质带来实际数值成长（同种子，金 > 白）
-            World wq = MakeWorld(out _);
-            FarmPlot pq = wq.Farm.Slots[0];
-            pq.TickAction(PlotAction.Dig, 10f, 1f, farm, null);
-            pq.TickAction(PlotAction.Sow, 10f, 1f, farm, radish);
-            PlantAlly white = wq.SpawnPlantFromPlot(pq, radish, null, false, 0);
-            PlantAlly gold = wq.SpawnPlantFromPlot(pq, radish, null, false, q.Max);
-            list.Add(new CheckResult("v23：稀有度不影响植物生命", Mathf.Abs(gold.FullHp - white.FullHp) < 0.01f,
-                $"{white.FullHp:0.0} → {gold.FullHp:0.0}"));
-            list.Add(new CheckResult("v23：稀有度不影响植物攻击", Mathf.Abs(gold.AttackValue - white.AttackValue) < 0.01f,
-                $"{white.AttackValue:0.00} → {gold.AttackValue:0.00}"));
+            // ★ T2：删掉「v23：稀有度不影响植物生命 / v23：稀有度不影响植物攻击」两条断言 ✗ ★
+            //   它们把植物 HP 与 `PlantAlly.AttackValue` 当成**战斗属性**来验 ✓
+            //   植物已不参战 ⇒ 这两条属性不再有玩法读者 ⇒ 断言已无被测对象 ✓
+            //   计数：本块删 2 条 ✓
+            //   ⚠️ 品质自身的数值规则**另有覆盖**（本方法上方 :3173-3180「品质不参与合成门槛」等）✓
 
             // ── 每回合开始自动重置玩家状态：受伤后开新波，生命与护盾回满
             var session = new RunSession();

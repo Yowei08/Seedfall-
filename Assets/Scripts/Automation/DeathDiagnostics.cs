@@ -47,8 +47,8 @@ namespace Seedfall
     /// </summary>
     public static class DeathDiagnostics
     {
-        /// <summary>采样间隔（游戏秒）。0.5 秒足够看清"一路掉"还是"突然崩"。</summary>
-        public const float SampleInterval = 0.5f;
+        /// <summary>报告里时间线的行间隔（秒）。采样本身是每固定步一次，打印时按它抽稀。</summary>
+        public const float RowInterval = 1.0f;
 
         /// <summary>一次承伤事件（按敌人增量归因）。</summary>
         public struct Hit
@@ -70,6 +70,7 @@ namespace Seedfall
             public int Grunt, Shooter, Jumper, Boss, Pig;
             public int Kills;
             public int WaterAmmo;
+            public int Gold;
             public int Plants;
             public float X, Y;
             public string Decision;
@@ -161,6 +162,7 @@ namespace Seedfall
                 Grunt = g, Shooter = sh, Jumper = j, Boss = b, Pig = pig,
                 Kills = w.KillCount,
                 WaterAmmo = s.WaterAmmo,
+                Gold = s.Gold,
                 Plants = w.Farm != null ? w.Farm.PlantCount : 0,
                 X = p.Pos.x, Y = p.Pos.y,
                 Decision = bot != null ? bot.LastDecision : ""
@@ -234,18 +236,25 @@ namespace Seedfall
             sb.AppendLine();
 
             // ── A. 死前 30 秒时间线 ──
+            // ★ 必须抽稀 ★：`Observe` 每个固定步都被调用（60 次/秒），
+            //   不抽稀的话这 30 秒就是 1800 行，把报告淹掉（第一版就是这么翻车的）。
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                "## A · 死前 {0:0} 秒时间线（每 {1:0.0} 秒一行；敌人按 近战/远程/跳跃/头目/小猪）", win, SampleInterval * 2f));
-            sb.AppendLine("     t     血/上限    盾/上限   近 远 跳 头 猪  累计杀  弹药  植株  玩家(x,y)         Bot决策");
+                "## A · 死前 {0:0} 秒时间线（每秒 1 行，由 {1:0} 秒/步的采样抽稀；敌人按 近战/远程/跳跃/头目/小猪）",
+                win, GameClock.FixedDt));
+            sb.AppendLine("     t     血/上限    盾/上限   近 远 跳 头 猪  累计杀  弹药   金币  植株  玩家(x,y)         Bot决策");
+            float nextRowAt = float.MinValue;
             for (int i = 0; i < Timeline.Count; i++)
             {
                 Sample s = Timeline[i];
                 if (s.T < from) continue;
+                bool last = i == Timeline.Count - 1;
+                if (!last && s.T < nextRowAt) continue;
+                nextRowAt = s.T + RowInterval;
                 sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                    "  {0,6:0.0}  {1,5:0.0}/{2,-5:0.0} {3,4:0.0}/{4,-4:0.0}  {5,2} {6,2} {7,2} {8,2} {9,2}   {10,5}  {11,4}  {12,4}  ({13,5:0.0},{14,5:0.0})  {15}",
+                    "  {0,6:0.0}  {1,5:0.0}/{2,-5:0.0} {3,4:0.0}/{4,-4:0.0}  {5,2} {6,2} {7,2} {8,2} {9,2}   {10,5}  {11,4}  {12,5}  {13,4}  ({14,5:0.0},{15,5:0.0})  {16}",
                     s.T, s.Hp, s.MaxHp, s.Shield, s.MaxShield,
                     s.Grunt, s.Shooter, s.Jumper, s.Boss, s.Pig,
-                    s.Kills, s.WaterAmmo, s.Plants, s.X, s.Y, s.Decision));
+                    s.Kills, s.WaterAmmo, s.Gold, s.Plants, s.X, s.Y, s.Decision));
             }
             sb.AppendLine();
 
@@ -259,8 +268,13 @@ namespace Seedfall
 
             // ── D. 成长 vs 敌人（分钟级）──
             sb.AppendLine("## D · 每分钟对照（玩家成长 vs 敌人成长）");
-            sb.AppendLine("   分钟   样本  平均等级  平均在场敌  平均血/上限   该分钟击杀  该分钟承伤   耕作决策占比");
+            sb.AppendLine("   分钟   样本  平均等级  平均在场敌  平均血/上限   该分钟击杀  该分钟承伤   耕作决策占比    命中次数   单次均伤");
             sb.Append(PerMinute());
+            sb.AppendLine();
+
+            // ── D2. 承伤增长的来源分解 ──
+            sb.AppendLine("## D2 · 承伤增长到底来自【挨得更多】还是【每下更疼】");
+            sb.Append(GrowthSplit());
             sb.AppendLine();
 
             // ── E. 分钟边界 ──
@@ -364,11 +378,83 @@ namespace Seedfall
                 }
                 if (n == 0) continue;
                 float dmg = DamageBetween(lo, hi);
+                // ★ 这一分钟挨了几下、每下多大 ★ ——
+                //   这是"承伤增长里【数量】占多少、【单次数值】占多少"的**唯一实测依据** ✗
+                //   只报总伤害的话，两种成因在数字上长得一模一样 ✓
+                int hits = 0; float hitSum = 0f;
+                for (int i = 0; i < Hits.Count; i++)
+                {
+                    Hit h = Hits[i];
+                    if (h.T < lo || h.T > hi) continue;
+                    hits++; hitSum += h.Amount;
+                }
                 sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                    "   {0,5}  {1,5}   {2,8:0.0}  {3,10:0.0}  {4,7:0.0}/{5,-5:0.0}  {6,9}  {7,10:0.0}  {8,11:0.0}%",
+                    "   {0,5}  {1,5}   {2,8:0.0}  {3,10:0.0}  {4,7:0.0}/{5,-5:0.0}  {6,9}  {7,10:0.0}  {8,11:0.0}%  {9,6}  {10,8:0.00}",
                     wv, n, lvl / (float)n, en / (float)n, hp / (float)n, mhp / (float)n,
-                    killsLast - killsFirst, dmg, farmDec / n * 100f));
+                    killsLast - killsFirst, dmg, farmDec / n * 100f, hits,
+                    hits > 0 ? hitSum / hits : 0f));
             }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// ★ 把"承伤随分钟增长"拆成两个因子 ★：`承伤 = 命中次数 × 单次均伤`。
+        /// 用对数份额分解（两个因子都是乘性的），得到各占多少百分比 ✓
+        /// 它决定修法：次数占大头 ⇒ 该削**数量**曲线；单次伤害占大头 ⇒ 该削**伤害**曲线 ✓
+        /// 两者对应的旋钮完全不同，而只看总伤害是分不出来的 ✗
+        /// </summary>
+        private static string GrowthSplit()
+        {
+            var sb = new StringBuilder();
+            int maxWave = 0;
+            for (int i = 0; i < Timeline.Count; i++) maxWave = Mathf.Max(maxWave, Timeline[i].Wave);
+
+            // 取第一个完整分钟与最后一个有数据的分钟
+            int first = -1, last = -1;
+            for (int wv = 1; wv <= maxWave; wv++)
+            {
+                float lo = (wv - 1) * 60f, hi = wv * 60f;
+                int c = 0;
+                for (int i = 0; i < Hits.Count; i++) if (Hits[i].T >= lo && Hits[i].T <= hi) c++;
+                if (c > 0) { if (first < 0) first = wv; last = wv; }
+            }
+            if (first < 0 || last == first)
+            {
+                sb.AppendLine("  （数据不足以分解）");
+                return sb.ToString();
+            }
+
+            float d1 = DamageBetween((first - 1) * 60f, first * 60f);
+            float dN = DamageBetween((last - 1) * 60f, last * 60f);
+            int h1 = 0, hN = 0;
+            for (int i = 0; i < Hits.Count; i++)
+            {
+                Hit h = Hits[i];
+                if (h.T >= (first - 1) * 60f && h.T <= first * 60f) h1++;
+                if (h.T >= (last - 1) * 60f && h.T <= last * 60f) hN++;
+            }
+            if (h1 <= 0 || hN <= 0 || d1 <= 0f || dN <= 0f) { sb.AppendLine("  （数据不足）"); return sb.ToString(); }
+
+            float avg1 = d1 / h1, avgN = dN / hN;
+            float rHits = hN / (float)h1, rAvg = avgN / avg1, rAll = dN / d1;
+
+            double lHits = System.Math.Log(rHits), lAvg = System.Math.Log(rAvg), lAll = System.Math.Log(rAll);
+            double shareHits = lAll != 0 ? lHits / lAll * 100.0 : 0.0;
+            double shareAvg = lAll != 0 ? lAvg / lAll * 100.0 : 0.0;
+
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "   第 {0} 分钟 → 第 {1} 分钟：承伤 {2:0.0} → {3:0.0}（×{4:0.00}）", first, last, d1, dN, rAll));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "     · 命中次数  {0} → {1} 下（×{2:0.00}）      ← 贡献 {3:0.0}% 的增长", h1, hN, rHits, shareHits));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "     · 单次均伤  {0:0.00} → {1:0.00}（×{2:0.00}）   ← 贡献 {3:0.0}% 的增长", avg1, avgN, rAvg, shareAvg));
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "   ★ 判定：{0}",
+                shareHits >= 60.0
+                    ? "【数量】是主因 ⇒ 该削的是「同时在场上限 / 每拍刷新量」，不是伤害曲线"
+                    : (shareAvg >= 60.0
+                        ? "【单次伤害】是主因 ⇒ 该削的是 enemies.dmgStepA/B"
+                        : "【数量】与【单次伤害】各占一半 ⇒ 单独动哪一个都只解决一半")));
             return sb.ToString();
         }
 

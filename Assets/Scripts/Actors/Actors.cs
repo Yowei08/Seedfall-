@@ -1295,89 +1295,34 @@ namespace Seedfall
             Enemies.Add(e);
         }
 
-        public PlantAlly SpawnPlantFromPlot(FarmPlot plot, SeedDef def, string mutationId, bool growing, int quality = 0)
-        {
-            mutationId = null;   // v35：变异词条系统已删除——强制置空，杜绝查表空引用
-            StatBlock st = Player.Progress.Stats;
-            FormulaDef f = Tuning.formula;
-            // 品质（白/绿/蓝/紫/金）：攻击与生命同步放大
-            float qmul = Tuning.quality.MultOf(quality);
-
-            float maxHp = def.BaseHp * (st.Get(StatId.MaxHp) / Mathf.Max(1f, f.plantHpBaseline)) * qmul;
-            // v113：**删除植物对玩家护盾的继承**（需求 ⑨）。
-            // 旧式子是 `def.BaseShield × (玩家护盾 ÷ 基准)` —— 植物的护盾跟着玩家属性走。
-            // 删掉之后植物只用**自己的** BaseShield，于是：
-            //   ① 卡片上写的「护盾 x」就是它实际有的值（不再是"还要乘一个你看不见的系数"）
-            //   ② 堆玩家护盾不再顺带强化所有植物，两条成长线分开
-            float shield = def.BaseShield * qmul;
-            float guardValue = 0f;
-            if (def.Support == SupportMode.Guard)
-            {
-                float gm = def.InheritMult > 0f ? def.InheritMult : f.guardInheritMult;
-                guardValue = DamageResolver.GuardFormula(def.BaseValue * qmul, st.Get(StatId.MaxHp), gm, st.Get(StatId.AtkMult));
-                maxHp = guardValue;
-                shield = 0f;
-            }
-
-            // v45：攻击/异常系吃「攻击伤害」这条加法属性；支援系不吃
-            // ★ v172：原来这里写的是"（治疗量由 `HealAura` 机制固定给出）"✗ —— 该机制已删除 ✓
-            //   支援系的治疗量由 `HealFormula` 给出（下方 `healValue`），与已删的光环无关 ✓
-            // v162（A1/A3）：植物的攻击 → **近战伤害**（植物已停战，此处仅为编译保留）。
-            //   需求只规定了三把工具各吃哪条属性；植物不在本次需求范围内，
-            //   统一取「近战伤害」是为了保持"植物=近身输出"的旧语义，不新增第四套规则。
-            float attackValue = 0f;
-            float healValue = 0f;
-            float y = def.AttackType == AttackType.Support ? 0f : st.Get(StatId.MeleeDamage);
-            float m = def.InheritMult;
-            if (def.AttackType == AttackType.Support && def.Support == SupportMode.Heal && m <= 0f) m = f.healInheritMult;
-            if (def.AttackType == AttackType.Support && def.Support == SupportMode.Guard && m <= 0f) m = f.guardInheritMult;
-            if (mutationId != null)
-            {
-                MutationDef md = TableDatabase.GetMutation(mutationId);
-                if (md != null) m += md.InheritMultBonus;
-            }
-
-            float n = st.Get(StatId.AtkMult);
-            // v162（A3）：继承率已从 AttackFormula 删除 —— 攻击值 = (基础 + 近战伤害) × 伤害倍率。
-            // ★ 注意只有**攻击**这一支不再用 m ★：下方 HealFormula 仍然用 m，
-            //   治疗继承率是另一套语义（支援系不吃伤害属性，y 恒为 0），不在本次需求范围内。
-            if (def.IsAttacker)
-                attackValue = DamageResolver.AttackFormula(def.BaseValue * qmul, y, n, false, 1f, f.minDamage);
-            else
-                healValue = DamageResolver.HealFormula(def.BaseValue * qmul, y, m, n);
-
-            var plant = new PlantAlly
-            {
-                Id = NextActorId(),
-                Team = Team.Player,
-                Def = def,
-                MutationId = mutationId,
-                Quality = quality,
-                PlotIndex = plot.Index,
-                Home = plot.World,
-                Pos = plot.World,
-                Radius = Actor.ScaledRadius(def.Support == SupportMode.Guard ? 0.85f : 0.45f),
-                Growing = growing,
-                AttackValue = attackValue,
-                // v113：植物自己的暴击基准 + 玩家属性的增量。
-                // 与卡面显示用**同一个表达式**，所以玩家读到的概率就是实际概率。
-                CritRate = def.BaseCritRate + st.Get(StatId.CritRate),
-                CritDmg = def.BaseCritDmg > 0.01f ? def.BaseCritDmg : 2f,
-                HealValue = healValue,
-                AttackInterval = Mathf.Max(0.2f, def.AttackInterval),
-                RangeM = def.Range * st.Get(StatId.AtkRange),
-                DetectM = def.Range * st.Get(StatId.AtkRange) * Mathf.Max(1f, f.plantDetectFactor),
-                MoveSpeedM = def.MoveSpeed * (st.Get(StatId.MoveSpeed) / Mathf.Max(0.1f, f.plantMoveBaseline)),
-                KnockbackM = st.Get(StatId.Knockback),
-                FullHp = maxHp,
-                GrowingHp = Mathf.Max(1f, maxHp * Mathf.Max(0.05f, Tuning.farm.growingHpFactor))
-            };
-            plant.Health.Setup(growing ? plant.GrowingHp : maxHp, shield);
-            plant.AttackTimer = 0.5f;
-            Plants.Add(plant);
-            Bus.Publish(new PlantSpawnedEvent { SeedId = def.Id, Grade = def.Grade, MutationId = mutationId, PlotIndex = plot.Index });
-            return plant;
-        }
+        // ★ T2（2026-10）：`SpawnPlantFromPlot` **整段删除** ✗ ★
+        //
+        // 它是"植物参战"这条子树**最后一个产出点**：全工程唯一能造出 `PlantAlly` 实体的方法 ✓
+        //
+        // 删它的判据（不是"少几行"，而是"这条子树不存在"）：
+        //   · 调用者：**5 → 0** ✓ —— T2 的 ① 先删掉了 SelfCheck 的 5 个夹具
+        //     （旧行号 354 / 508 / 2084 / 3187 / 3188）⇒ 删完立刻成为**零调用者孤儿** ✓
+        //   · 删掉之后 `Plants.Add(...)` 再无写者 ⇒ **`World.Plants` 可证明恒空** ✓
+        //     ⇒ 树上所有 `Plants` 遍历（敌人跳跃 `Impact` / BOSS 冲锋 / `TickEnemyShot` /
+        //       `NearestAlly` / `Heal` / `Cleanup` / `FindPlantOnPlot`）在运行时**全部空转** ✓
+        //   · 配合 v173 已删的"植物 tick"闸门（见上方 `Simulate` 第 3 段）
+        //     ⇒ "植物索敌 / 移动 / 攻击"这条链**从入口到推进全部不存在** ✓
+        //
+        // ★ 为什么只删到这里（这是 T2 的边界，不是半途而废）★
+        //   `PlantAlly` **类本身** / `World.Plants` 列表 / `Projectile.PlantShot`
+        //   三个**不能**跟着删 ✗ —— 因为它们被"敌人打植物"的循环**按类型引用**着：
+        //     · `Enemies.cs:273`  `PlantAlly p = w.Plants[i];`（跳跃场 `Impact`）
+        //     · `Enemies.cs:329`  同上（BOSS 冲锋）
+        //     · `Actors.cs:906`   同上（`Projectile.TickEnemyShot`）
+        //     · `Actors.cs:1648`  同上（`World.NearestAlly` —— **活的敌方索敌**）
+        //   那几处是**上一轮审计裁决"保留"**的（理由：让"存活 / 死亡"这条链还在）✓
+        //   ⇒ 保留它们 ⇒ 类型必须存在 ⇒ 类与列表必须存在 ✓
+        //   ⇒ 所以 T2 把它删到"**没有任何东西能造出植物**"为止；再往下就是改那条裁决了 ✗
+        //
+        // ⚠️ 连带：`PlantSpawnedEvent`（同文件 :1912）**失去唯一发布点** ⇒ 它现在是**死事件** ✓
+        //    而 `RunSession.cs:1559 / :1572` 仍在 Subscribe / Unsubscribe 它 ✓
+        //    ⇒ 与 `ExpOrbDroppedEvent` 同一个先例：**结构体留着、永不被发布** ✓
+        //      （删结构体会让 RunSession 编译不过 = 越界 ✗）
 
         // ── v10：树的产出源——玩家拥有的所有种子（由 RunSession 同步进来）
 

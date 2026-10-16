@@ -1,5 +1,7 @@
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -131,6 +133,263 @@ namespace Seedfall.EditorTools
             }
 
             if (Application.isBatchMode) EditorApplication.Exit(exitCode);
+        }
+
+        /// <summary>
+        /// ★ 参数扫描（**只允许在隔离副本上跑**）★
+        ///
+        /// 为什么需要它：调平衡的铁律是"一次只动一个变量"，而每改一次 `tuning.json`
+        /// 都要重启 Unity + 重新导入 ⇒ 一次对比十几分钟 ✗ 十几组对比就是几小时 ✗
+        ///
+        /// 本入口改成**在内存里改配置**，一次进程跑完所有变体 ✓
+        /// 依据：`RunSimulator.Run` 开头的 `TableDatabase.Load()` **不带 force** ⇒
+        ///       已经 `Loaded` 就直接返回，不会覆盖我们改过的字段 ✓
+        ///       而 `RunSession.Start` 里是 `T = TableDatabase.Tuning`（**同一个对象引用**）✓
+        ///       ⇒ 改 `Tuning` 的公共字段，World/Bot/刷怪全都看得到 ✓
+        ///
+        /// ★ 它【不写任何文件】★ —— 副本的 `tuning.json` 跑完仍是原样 ✓
+        ///
+        /// ★ 安全联锁：在原工程上跑会被拒绝 ★
+        ///   理由不是"它危险"，而是"它会**污染基线**"：一份不属于那里的配置的输出
+        ///   混进 `Docs/reports` 之后，下一个人会把它当成真实的回归结果 ✗
+        /// </summary>
+        [MenuItem("Tools/Seedfall/★ 参数扫描（只在副本上跑）")]
+        public static void RunTuningSweep()
+        {
+            string proj = System.IO.Path.GetFullPath(
+                System.IO.Path.Combine(UnityEngine.Application.dataPath, ".."));
+            if (proj.IndexOf("SeedfallDiag", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                UnityEngine.Debug.LogError(
+                    "[Seedfall] ★ 参数扫描拒绝运行 ★：只允许在隔离副本上跑（当前 = " + proj + "）。"
+                    + "它会在内存里改平衡配置 ⇒ 跑在原工程上会污染所有人的验证基线。");
+                return;
+            }
+
+            int exitCode = 0;
+            try
+            {
+                TableDatabase.Load(true);
+                TuningDef t = TableDatabase.Tuning;
+                EnemyGrowthDef g = TableDatabase.EnemyGrowth;
+
+                // 原值：每个变体跑之前先还原，跑完再还原
+                float oMaxAliveGrowth = t.waves.maxAliveGrowth;
+                float oSpawnCountGrowth = t.waves.spawnCountGrowth;
+                float oExpBase = t.growth.expBase;
+                float oExpLinear = t.growth.expLinear;
+                float oHpStepB = g.hpStepB;
+
+                void Restore()
+                {
+                    t.waves.maxAliveGrowth = oMaxAliveGrowth;
+                    t.waves.spawnCountGrowth = oSpawnCountGrowth;
+                    t.growth.expBase = oExpBase;
+                    t.growth.expLinear = oExpLinear;
+                    g.hpStepB = oHpStepB;
+                }
+
+                var variants = new List<(string Name, Action Apply)>
+                {
+                    ("00-baseline", () => { }),
+                    // ① 削【数量】：只动"同时在场上限"的增长系数
+                    ("01-count-maxAliveGrowth-6.0", () => { t.waves.maxAliveGrowth = 6.0f; }),
+                    ("02-count-maxAliveGrowth-3.0", () => { t.waves.maxAliveGrowth = 3.0f; }),
+                    // ① 削【数量】：改"每拍刷新量"的增长系数（控的是速率，不是上限）
+                    ("03-count-spawnCountGrowth-2.0", () => { t.waves.spawnCountGrowth = 2.0f; }),
+                    // ② 加快玩家成长：只动经验曲线（收割收益公式在代码里，不动）
+                    ("04-growth-exp-10-6", () => { t.growth.expBase = 10f; t.growth.expLinear = 6f; }),
+                    ("05-growth-exp-14-8", () => { t.growth.expBase = 14f; t.growth.expLinear = 8f; }),
+                    // 组合
+                    ("06-both-count6-exp10-6", () => { t.waves.maxAliveGrowth = 6.0f; t.growth.expBase = 10f; t.growth.expLinear = 6f; }),
+                    // 对照：动 HP 曲线（用户明确说"不动 HP 曲线"，这里只用来证明它确实没用）
+                    ("07-contrast-hpStepB-0.003", () => { g.hpStepB = 0.003f; }),
+                };
+
+                var sb = new StringBuilder();
+                sb.AppendLine("# Seedfall 守园者 · 参数扫描（内存改配置；★ 未写任何文件 ★）");
+                sb.AppendLine($"# 项目 {proj}");
+                sb.AppendLine("# 变体说明：01/02 削在场上限的增长；03 削每拍刷新量的增长；04/05 加快经验曲线；06 组合；07 对照（动 HP 曲线）");
+                sb.AppendLine();
+                sb.AppendLine("变体                              死亡(s)  分钟 等级 击杀 收割 植株 金币  承伤 | 每分钟【在场上限(每拍刷新量区间)】1→8");
+                sb.AppendLine("                                                                                       4       5       6");
+
+                foreach ((string Name, Action Apply) in variants)
+                {
+                    Restore();
+                    Apply();
+
+                    SimResult r = RunSimulator.RunDiagnosed(BotStrategy.Balanced, DefaultSeed, 1500f, out string diag);
+                    RunSimulator.WriteReport(diag, $"sweep-{Name}.txt");
+
+                    sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                        "{0,-32} {1,7:0.0}  {2,4}  {3,4}  {4,4}  {5,4}  {6,4}  {7,4}  {8,5:0.0} | {9}",
+                        Name, r.Duration, r.Wave, r.Level, r.Kills, r.Harvests, r.PlantsAlive, r.Gold,
+                        r.DamageTaken, CapsLine()));
+                    sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                        "{0,-32} 第 4/5/6 分钟上限： {1} / {2} / {3}",
+                        "", Caps(4), Caps(5), Caps(6)));
+                }
+
+                Restore();
+                string path = RunSimulator.WriteReport(sb.ToString(), $"tuning-sweep-{Stamp()}.txt");
+                UnityEngine.Debug.Log("[Seedfall] 参数扫描完成：\n" + sb + "\n报告：" + path);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError("[Seedfall] 参数扫描失败：" + e);
+                exitCode = 1;
+            }
+
+            if (Application.isBatchMode) EditorApplication.Exit(exitCode);
+        }
+
+        /// <summary>按 <see cref="WaveDirector"/> 的同一条算式复算"同时在场上限(每拍刷新量区间)"。</summary>
+        private static string Caps(int wave)
+        {
+            WavesCfg c = TableDatabase.Tuning.waves;
+            float tt = Mathf.Max(0f, wave - 1f);
+            float grow = Mathf.Sqrt(tt);
+            int maxAlive = Mathf.Max(4, c.maxAliveBase + Mathf.RoundToInt(c.maxAlivePerWave * wave)
+                                      + Mathf.RoundToInt(c.maxAliveGrowth * grow));
+            int lo = Mathf.Max(1, c.spawnBaseCount + Mathf.FloorToInt(c.spawnCountPerWave * wave)
+                                   + Mathf.FloorToInt(c.spawnCountGrowth * grow));
+            int hi = lo + Mathf.FloorToInt(Mathf.Max(0f, c.spawnCountByProgress));
+            return $"{maxAlive}({lo}-{hi})";
+        }
+
+        private static string CapsLine()
+        {
+            var parts = new List<string>();
+            for (int wv = 1; wv <= 8; wv++) parts.Add(Caps(wv));
+            return string.Join("  ", parts);
+        }
+
+        /// <summary>
+        /// ★ 多种子分布（**只允许在隔离副本上跑**）★
+        ///
+        /// ★ 为什么必须有它 ★
+        /// 第一版参数扫描给出了一个**反直觉**的结果：
+        ///   把敌人**调少**（maxAliveGrowth 9.8 → 6.0）⇒ 反而 **355.8s → 105.8s**（死得更早）
+        ///   把玩家**调强**（经验曲线 20/11 → 14/8）⇒ 也 **355.8s → 116.9s**（死得更早）
+        /// 两者都"不该"如此 ✓ 唯一的解释是：
+        ///
+        /// ★ 单种子跑局是**混沌样本** ✗ ★
+        ///   `World.Rng` 被刷怪、掉落、暴击、瞄准散布**共同消费** ⇒
+        ///   任何一个数值改动都会让整条随机流**换一条轨迹** ✓
+        ///   于是"改一个旋钮"和"换一个种子"在做同一件事：
+        ///   ★ 都只是重新抽了一次样本 ★ ✓
+        ///
+        /// ⇒ 所以判据必须建立在**分布**上，而不是某一个种子的一个时刻 ✓
+        /// 本入口就是量这个分布的：同一套配置跑 N 个种子，报 min / 中位 / max / 过线率 ✓
+        /// </summary>
+        [MenuItem("Tools/Seedfall/★ 多种子分布（只在副本上跑）")]
+        public static void RunSeedSpread()
+        {
+            string proj = System.IO.Path.GetFullPath(
+                System.IO.Path.Combine(UnityEngine.Application.dataPath, ".."));
+            if (proj.IndexOf("SeedfallDiag", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                UnityEngine.Debug.LogError("[Seedfall] ★ 多种子分布拒绝运行 ★：只允许在隔离副本上跑（当前 = " + proj + "）。");
+                return;
+            }
+
+            int exitCode = 0;
+            try
+            {
+                TableDatabase.Load(true);
+                TuningDef t = TableDatabase.Tuning;
+                float oMaxAliveGrowth = t.waves.maxAliveGrowth;
+                float oSpawnCountGrowth = t.waves.spawnCountGrowth;
+                float oExpBase = t.growth.expBase;
+                float oExpLinear = t.growth.expLinear;
+                float oShieldRegenDelay = t.player.shieldRegenDelay;
+
+                // 种子集合：默认种子 + 1..23（一组"与游戏无关"的序号，避免挑选嫌疑）
+                var seeds = new List<ulong> { DefaultSeed };
+                for (ulong s = 1; s <= 23; s++) seeds.Add(s);
+
+                // 每个变体跑之前先整体还原 ⇒ 变体之间不会互相污染
+                void Restore()
+                {
+                    t.waves.maxAliveGrowth = oMaxAliveGrowth;
+                    t.waves.spawnCountGrowth = oSpawnCountGrowth;
+                    t.growth.expBase = oExpBase;
+                    t.growth.expLinear = oExpLinear;
+                    t.player.shieldRegenDelay = oShieldRegenDelay;
+                }
+
+                var variants = new List<(string Name, Action Apply)>
+                {
+                    ("00-baseline", () => { }),
+                    ("01-count-maxAliveGrowth-6.0", () => { t.waves.maxAliveGrowth = 6.0f; }),
+                    ("02-count-maxAliveGrowth-3.0", () => { t.waves.maxAliveGrowth = 3.0f; }),
+                    ("03-count-spawnCountGrowth-2.0", () => { t.waves.spawnCountGrowth = 2.0f; }),
+                    ("04-growth-exp-10-6", () => { t.growth.expBase = 10f; t.growth.expLinear = 6f; }),
+                    ("05-shieldRegenDelay-10to4", () => { t.player.shieldRegenDelay = 4f; }),
+                    ("06-count3.0+exp10-6", () => { t.waves.maxAliveGrowth = 3.0f; t.growth.expBase = 10f; t.growth.expLinear = 6f; }),
+                    ("07-count3.0+shield4", () => { t.waves.maxAliveGrowth = 3.0f; t.player.shieldRegenDelay = 4f; }),
+                };
+
+                var sb = new StringBuilder();
+                sb.AppendLine("# Seedfall 守园者 · 多种子分布（内存改配置；★ 未写任何文件 ★）");
+                sb.AppendLine($"# 项目 {proj}｜种子 {seeds.Count} 个：{DefaultSeed} + 1..23｜策略 Balanced");
+                sb.AppendLine("# 判据「活到第 5 分钟」= Duration ≥ 300s。过线率才是判据该看的量。");
+                sb.AppendLine();
+                sb.AppendLine("变体                       种子  过线率   min     中位     max    | 中位分钟 中位等级 中位收割");
+                foreach ((string Name, Action Apply) in variants)
+                {
+                    Restore();
+                    Apply();
+
+                    var durs = new List<float>();
+                    var waves = new List<int>();
+                    var levels = new List<int>();
+                    var harvests = new List<int>();
+                    int pass = 0;
+                    var per = new StringBuilder();
+
+                    foreach (ulong sd in seeds)
+                    {
+                        SimResult r = RunSimulator.Run(BotStrategy.Balanced, sd);
+                        durs.Add(r.Duration);
+                        waves.Add(r.Wave);
+                        levels.Add(r.Level);
+                        harvests.Add(r.Harvests);
+                        if (r.Duration >= 300f) pass++;
+                        per.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                            "    seed {0,-10} {1,7:0.0}s  第 {2,2} 分钟  等级 {3}  击杀 {4,4}  收割 {5,3}  植株 {6}",
+                            sd, r.Duration, r.Wave, r.Level, r.Kills, r.Harvests, r.PlantsAlive));
+                    }
+
+                    durs.Sort();
+                    float med = durs[durs.Count / 2];
+                    sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                        "{0,-24} {1,5}  {2,5:0}%  {3,7:0.0}  {4,7:0.0}  {5,7:0.0}  | {6,8} {7,9} {8,9}",
+                        Name, seeds.Count, pass * 100 / seeds.Count, durs[0], med, durs[durs.Count - 1],
+                        Med(waves), Med(levels), Med(harvests)));
+                    sb.Append(per);
+                    sb.AppendLine();
+                }
+
+                t.waves.maxAliveGrowth = oMaxAliveGrowth;
+                string path = RunSimulator.WriteReport(sb.ToString(), $"seed-spread-{Stamp()}.txt");
+                UnityEngine.Debug.Log("[Seedfall] 多种子分布完成：\n" + sb + "\n报告：" + path);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError("[Seedfall] 多种子分布失败：" + e);
+                exitCode = 1;
+            }
+
+            if (Application.isBatchMode) EditorApplication.Exit(exitCode);
+        }
+
+        private static int Med(List<int> xs)
+        {
+            var c = new List<int>(xs);
+            c.Sort();
+            return c[c.Count / 2];
         }
 
         private static string Stamp() => DateTime.Now.ToString("yyyyMMdd-HHmmss");
