@@ -83,8 +83,7 @@ namespace Seedfall
         /// Walk 的播放倍率（v172）。默认 1 = 原速。
         ///
         /// 只作用于 Walk：它解决的是"移速变了、脚步频率没变"的滑步 ✗
-        /// 攻击/受击/切换的时长是**手感与可读性**的一部分（前摇要看得清），
-        /// 与移速无关，跟着一起变速是另一类错误 ✓
+        /// 攻击有它**自己的一路**倍率（见 `_attackSpeed`），不走这里 ✓
         /// </summary>
         private float _playbackSpeed = 1f;
 
@@ -92,7 +91,62 @@ namespace Seedfall
         private const float MinPlaybackSpeed = 0.5f;
         private const float MaxPlaybackSpeed = 1.8f;
 
+        /// <summary>
+        /// ★ v174：攻击的播放倍率 ✗ —— ★★ 与 Walk **分开**的一路 ★★ ✓
+        ///
+        /// ── 它推翻的是 v172 写在本文件里的那条规则 ✗ ──
+        /// v172 的原文是"攻击/受击/切换的时长是手感与可读性的一部分，
+        /// 与移速无关，跟着一起变速是另一类错误"✗
+        /// 而用户明确推翻了它 ✗ ★：
+        ///   ★"★ 攻击动画与实际攻击速度不一致 ⇒ 让动画播放速度受到攻速影响 ★"★ ✓
+        ///
+        /// 他的理由是数据本身 ✗：三把武器的攻速**不同**
+        ///（锄 `0.70s` ｜ 壶 `0.80s` ｜ 肥 `1.20s` ✗ 见 `tuning.json tools.*.cooldown`）
+        /// ★ 而三段攻击片段【一样长】★（`player_attack_hoe/_can/_fert` 都是 `1.458s`）
+        /// ⇒ 攻速相差 `1.71` 倍的两把武器，攻击动作的**真实时长完全相同** ✗
+        /// ⇒ 这才是"表现与实际攻速不一致"的来源 ✓
+        ///
+        /// ── 与 Walk 那条是**同一类**错误 ✗ 不是两类 ──
+        /// Walk 那条修的是"位移变快、脚步频率没变"，这一条修的是"出手变快、动作没变"✗
+        /// 两者都是"表现跟不上逻辑已经开始的时间轴"✓
+        /// v172 把"手感"当成不跟着走的理由 —— 那条理由站不住 ✗：
+        /// 攻速**本来就是**数据决定的（还要吃攻速属性与插件），
+        /// 动作照着它走才叫手感一致，固定片段长度才叫手感错位 ✓
+        ///
+        /// ⚠️ 夹取上限**不能**沿用 Walk 的 `1.8` ✗ ★（★ 这是本条最容易做错的地方 ★）★
+        ///   基准数据下按"片段长 ÷ 攻速"算是：
+        ///     锄 `1.458/0.70` = ★2.08★ ｜ 壶 `1.458/0.80` = ★1.82★ ｜ 肥 `1.458/1.20` = `1.22` ✓
+        ///   ⇒ 若沿用 `1.8` ✗ ★锄头与水壶会被夹到同一个 1.8★
+        ///     ⇒ ★★ 两把武器的动作一样快 ✗ 而这正是本任务要消灭的现象 ★★ ✓
+        ///   ⇒ 用一个夹取上限把三把拍平是**自相矛盾** ✓
+        ///   所以攻击单独给上限 ★4.0★ ✗：它覆盖"攻速堆到约 1.9 倍"
+        ///   （锄头出手间隔 → `0.37s`）✓ 而**不**覆盖更多 ——
+        ///   再快就是一片糊的残影，读不出"挥了"这件事 ✗
+        ///   它的身份是**数据异常的兜底**（例如 cooldown 少写一位 ⇒ 倍率 20）✗
+        ///   而【不是】一个设计用的旋钮 ✓
+        /// </summary>
+        private float _attackSpeed = 1f;
+
+        private const float MinAttackSpeed = 0.25f;
+        private const float MaxAttackSpeed = 4f;
+
         public float PlaybackSpeed => _playbackSpeed;
+
+        /// <summary>★ v174：攻击那一路的倍率（探针用）★</summary>
+        public float AttackPlaybackSpeed => _attackSpeed;
+
+        /// <summary>
+        /// ★ v174：**当前真正在被采样的**倍率 ✗ —— 探针要读的是这个 ✓
+        ///
+        /// 为什么不能直接报 `PlaybackSpeed` ✗：
+        /// 它恒为 **Walk** 的倍率 ✗ ⇒ 攻击期间读到的是走路的那个 `1.00`
+        /// ⇒ 看起来像"倍率没生效" ✗ 而实际生效的是 `_attackSpeed` ✓
+        /// 报错量会把排查引向错误的方向 ——
+        /// 本工程已有先例（`DebugApi.AnimState` 把两种原因合成一句话那段注释）✓
+        /// </summary>
+        public float EffectivePlaybackSpeed =>
+            _state == State.Attack ? _attackSpeed
+            : _state == State.Walk ? _playbackSpeed : 1f;
 
         /// <summary>当前真正会被采样的片段（已按武器解析过）。验证用。</summary>
         public AnimationClip CurrentClip => _hasAnim ? ClipFor(_state) : null;
@@ -161,6 +215,31 @@ namespace Seedfall
         public void SetPlaybackSpeed(float k)
         {
             _playbackSpeed = Mathf.Clamp(k, MinPlaybackSpeed, MaxPlaybackSpeed);
+        }
+
+        /// <summary>
+        /// ★ v174：让**当前武器的攻击片段**用 `seconds` 秒播完 ✗（单位是**真实秒** ✗ 不是倍率）★
+        ///
+        /// ── 为什么接口是"秒"而不是"倍率" ✗ ──
+        /// 片段长度只有本类知道（`ClipFor(State.Attack)` ✗ 还要按武器解析 ✓）
+        /// ⇒ 让调用方去算"片段长 ÷ 攻速"，就是把**路径知识漏到表现层的调度代码里** ✗
+        /// 而调用方**真正掌握**的是玩法那边的"这一把几秒出手一次"✓
+        /// 于是接口定在"秒"，换算留在本类 ✓
+        /// —— 与 `LoadClip` 把 `Art/AnimMerged/` 这个路径留在本类是**同一条纪律** ✓
+        ///
+        /// ⚠️ 必须在 `SetAttackWeapon` **之后**调用 ✗ ★：
+        ///    它解析的是**那一把**的片段 —— 顺序反了就会拿另一段的长度去算倍率 ✗
+        ///    而算错的倍率看起来仍然"动了"（见 `SetPlaybackSpeed` 里同一类说明）✓
+        /// ⚠️ `seconds <= 0`（数据缺 / 按 0 除）⇒ 退回 `1` 倍原速 ✗
+        ///    不夹成 `4` 倍把动作糊成一团 —— "不知道多快"时就别变速 ✓
+        /// ⚠️ 片段缺失（`_attackByWeapon` 没设置 / 资产没导）⇒ 同样退回 `1` ✗
+        ///    这里【不】报错：缺片段那条由 `Tick` 统一报一次，不重复刷屏 ✓
+        /// </summary>
+        public void SetAttackDuration(float seconds)
+        {
+            AnimationClip c = ClipFor(State.Attack);
+            if (c == null || c.length <= 0.0001f || seconds <= 0.001f) { _attackSpeed = 1f; return; }
+            _attackSpeed = Mathf.Clamp(c.length / seconds, MinAttackSpeed, MaxAttackSpeed);
         }
 
         /// <summary>
@@ -611,9 +690,15 @@ namespace Seedfall
         public void Tick(float dt)
         {
             if (!_hasAnim) return;
-            // v172：**只有 Walk 吃倍率**（修"移速变了、脚步频率没变"的滑步）——
-            // 理由见 SetPlaybackSpeed。其余状态恒按原速推进 ✓
-            _stateTime += _state == State.Walk ? dt * _playbackSpeed : dt;
+            // v172：Walk 吃**移速**倍率（修"移速变了、脚步频率没变"的滑步）
+            // v174：Attack 吃**攻速**倍率（修"三把攻速不同、攻击动作却一样长"）
+            //   ⇒ 两条都只改**推进速度** ✗ 不改"选哪一段" ✓
+            //      ⇒ 与 `WorldView.SyncPlayer` 那条"攻击/切换期间不跑 Walk/Idle 迁移"的
+            //        让位守卫**互不冲突**：守卫管选段、这里管速度 ✓
+            // 其余状态（Hit / Death / Swap）恒按原速推进 —— 那几段的前摇要看得清 ✓
+            float rate = _state == State.Attack ? _attackSpeed
+                       : _state == State.Walk ? _playbackSpeed : 1f;
+            _stateTime += dt * rate;
 
             AnimationClip clip = ClipFor(_state);
             if (clip == null)

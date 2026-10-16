@@ -696,20 +696,44 @@ namespace Seedfall
                 $"阶段={truck2.Current}｜普通={sweepEnemy}｜Boss={sweepBoss}｜玩家={sweepPlayer}"));
 
             // 可交互窗口：停靠期才可交互，且要走到 Dock 才成立
-            // ★ 必须【正好落在 Dock 窗口内】★
-            //   v160 之后 Dock = 60 + 47.5 = **107.5s ~ 117.5s**（原先写 47.5~57.5s 是旧的）✗
-            //   取 110s = Dock 正中 ✓
+            // ★ 预算必须【由常量推导】✗ ★
+            //   旧写法是硬编码 110s（= 60 + 47.5 + 2.5，正好旧 Dock 正中）✗
+            //   而"开走之后不在场"那段一加，Dock 从 107.5s 挪到了 **97.5s** ⇒
+            //   110s 落到了 `Leaving` ⇒ 这条断言红了 ✓
+            //   ★ 硬编码的时间点就是这样变成假线索的：它测的其实是一个常数组合 ✓
+            //   ⇒ 改成 `周期 + 入场 + 绕场 + 1s`（落进 Dock 内侧 1 秒，与 Dock 长度无关）✓
+            int ticksToDock = Mathf.CeilToInt(
+                (ShopTruck.CycleSeconds + ShopTruck.EnterSeconds + ShopTruck.LoopSeconds + 1f) / 0.02f);
             var clk5 = new Clock();
             var truck3 = new ShopTruck();
             truck3.Reset(clk5);
             bool shopOutside = truck3.CanShop(0f);             // Idle 下贴着车也不该能进 ✓
-            for (int i = 0; i < 5500; i++) { clk5.Tick(0.02f); truck3.Tick(clk5); }   // 110s → Dock 正中 ✓
+            for (int i = 0; i < ticksToDock; i++) { clk5.Tick(0.02f); truck3.Tick(clk5); }
             bool atDock = truck3.Current == ShopTruck.Phase.Dock;
             bool shopNear = truck3.CanShop(1f);
             bool shopFar = truck3.CanShop(999f);
             list.Add(new CheckResult("商店车只在停靠期、且玩家靠近时可交互",
                 !shopOutside && atDock && shopNear && !shopFar,
                 $"Idle时可入={shopOutside}｜到达阶段={truck3.Current}（{clk5.GameTime:0.0}s）｜近={shopNear}｜远={shopFar}"));
+
+            // ★ 回归护栏：停靠期车必须【真的停在停靠位】★
+            //
+            // 这一条钉的是那个把 10 秒停靠窗吃成 0.5 秒的缺陷：
+            //   `PointAt(PhaseT)` 在 Dock 期让车又跑一整圈（离停靠位最远 28.67m），
+            //   而 `SamplePoint` 返回 `DockPoint`（恒为 0.00m）✓
+            // 判据用**引擎自己的取位入口**，所以"改回去"会立刻红 ✓
+            float maxOff = 0f;
+            for (int i = 0; i < 25; i++)      // 25 × 0.2s = 5s，仍在 10 秒停靠期内 ✓
+            {
+                clk5.Tick(0.2f);
+                truck3.Tick(clk5);
+                if (truck3.Current != ShopTruck.Phase.Dock) break;
+                maxOff = Mathf.Max(maxOff, (truck3.SamplePoint(clk5) - ShopTruck.DockPoint).magnitude);
+            }
+            list.Add(new CheckResult("商店车停靠期真的停在停靠位（SamplePoint 恒为 DockPoint）",
+                maxOff < 1e-4f,
+                $"停靠期离停靠位最远 {maxOff:0.0000}（归一化）｜"
+                + $"旧算法 `PointAt(PhaseT)` 同时刻为 {(ShopTruck.PointAt(truck3.PhaseT(clk5.GameTime)) - ShopTruck.DockPoint).magnitude:0.0000}"));
 
             // ★ 敌人数量上限必须是开的 ★
             //

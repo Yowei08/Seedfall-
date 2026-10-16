@@ -1726,12 +1726,40 @@ namespace Seedfall
             float atkSpeed = p != null ? p.AttackSpeed : 1f;
             string kindText = WeaponTypeText(tool.damageType, tool.kind);
 
+            // ★ v174（修复 A）：肥料框里的伤害必须写成【打出去的那个数】★
+            //
+            // 症状：框里写 `（3 ＋ 1）× 100% = 4`，而它在场上打出的是 4 × 2.5 = 10
+            //       ⇒ 屏幕上的数字**低报了 2.5 倍** ✓
+            //
+            // 根因（`RunSession.ExplodeAt:4138-4139`，本次逐行走过）：那条路先在
+            // `AttackFormula` 上算一遍**普通伤害**，**再乘一档爆炸倍率**
+            // （`StatId.ExplodeDamage`，`tuning.json` 的 `player.explodeDamage = 2.5`）✓
+            // 三条攻击路径确实共用同一个 `AttackFormula`（"算式一样"成立 ✓），
+            // 但肥料在它之后**多一档** ✗ —— 而这一档是**设计**不是漏改：
+            // 自检两条断言钉着"爆炸 = 普通伤害 × 倍率"与"倍率翻倍 → 爆炸翻倍"
+            // （`SelfCheck.cs` 的 1209/1212 两条）⇒ 所以**不删那一档**，改显示 ✓
+            //
+            // ★ 取做法 ①（把框里的 Damage 换成 ExplodeFormula 的结果）★
+            // 理由："面板上能看到真实伤害"比"三把算式形状一致"更硬 ——
+            // 前者玩家可以用来做决策，后者只是排版上好看 ✓
+            // 并把这一档写进算式（`× 爆炸 250%`）⇒ 三个数仍然能自己乘一遍验算，
+            // 即"算式形状"也没有真的丢 ✓
+            //
+            // ⚠️ 锄头 / 水壶**没有**这一档（倍率恒为 1）⇒ 那两框的读数与算式**逐字不变** ✓
+            // ⚠️ `ExplodeAt` 给 `AttackFormula` 传的 `minDamage` 是 0，这里传 `formula.minDamage`
+            //    （0.1）—— 肥料的普通伤害 = (3 + 1) × 100% = 4 ≫ 0.1
+            //    ⇒ 这个差在任何可达数值下都不显形 ✓（值相同，不去动它以免三把分家）
+            bool hasBlast = slot == WeaponSlot.Fertilizer;
+            float explodeMult = hasBlast ? st.Get(StatId.ExplodeDamage) : 1f;
+            float normalDmg = DamageResolver.AttackFormula(baseValue, damageStat, atkMult, false, critDmg, s.T.formula.minDamage);
+
             var r = new WeaponReadout
             {
                 Name = WeaponSlotName(slot),
                 KindText = kindText,
-                DamageExpr = $"（{baseValue:0.#} ＋ {damageStat:0.#}）× {atkMult * 100f:0}%",
-                Damage = DamageResolver.AttackFormula(baseValue, damageStat, atkMult, false, critDmg, s.T.formula.minDamage),
+                DamageExpr = $"（{baseValue:0.#} ＋ {damageStat:0.#}）× {atkMult * 100f:0}%"
+                             + (hasBlast ? $" × 爆炸 {explodeMult * 100f:0}%" : ""),
+                Damage = hasBlast ? DamageResolver.ExplodeFormula(normalDmg, explodeMult) : normalDmg,
                 Range = tool.range * st.Get(StatId.AtkRange) * (1f + pm.RangePct),
                 Interval = tool.cooldown / Mathf.Max(0.05f, atkSpeed * (1f + pm.AttackSpeedPct)),
                 CritRate = critRate,
@@ -1739,7 +1767,7 @@ namespace Seedfall
                 Knockback = st.Get(StatId.Knockback)
                             * (slot == WeaponSlot.Hoe ? 0.5f : slot == WeaponSlot.Can ? 0.2f : 1f)
                             + pm.KnockbackFlat,
-                HasBlast = slot == WeaponSlot.Fertilizer,
+                HasBlast = hasBlast,
                 SlotsUsed = s.Goods.SlotsUsedOn(slot)
             };
             if (r.HasBlast)
@@ -1874,10 +1902,16 @@ namespace Seedfall
         /// ⇒ 八项 + 6 个插件槽 + 已装插件（名字·改哪一环），一项不少 ✓
         ///
         /// ★ 伤害带算式且是"含插件后的实际值" ★：
-        ///   （武器基础伤害 ＋ 对应类型伤害）× 伤害倍数
+        ///   锄头 / 水壶：（武器基础伤害 ＋ 对应类型伤害）× 伤害倍数
+        ///   肥料：上文再 × 一档**爆炸倍率**（`StatId.ExplodeDamage`）★ v174 ★
         ///   锄头→近战 / 水壶→远程 / 肥料→爆炸（三系独立 ✓ `AtkDamage` 已删 ✓）
         /// 算式里的三个数都出自 `WeaponReadoutOf`，而它走 `WeaponSystem.ApplyToAttack`
         /// —— 与三条攻击路径**同一个入口** ⇒ 框里的数就是打出来的数 ✓
+        ///
+        /// ★ v174（修复 A）★：肥料那一档是**读到 `ExplodeAt` 里去了**才补上的 ✗
+        /// 改前肥料框只算到普通伤害（= 4），而场上打出的是它乘爆炸倍率（= 10）
+        /// ⇒ 玩家看到的数比实际的低 2.5 倍 ✓ 现在肥料取 `ExplodeFormula` 的结果，
+        /// 倍率也写进算式 ⇒ `RunSession.ExplodeAt:4138-4139` 的每一步都能在框里对上 ✓
         /// </summary>
         private void DrawWeaponBox(RunSession s, WeaponSlot slot, Rect box, bool current)
         {
@@ -2052,6 +2086,16 @@ namespace Seedfall
         ///
         /// ⑤⑥ 金币 / 经验与 `Actors.HarvestPlot` 的发放公式同一式：
         /// `max(1, round(price/5 × 等级倍率 × 机制倍率))` 与 `max(1, round(price/10 × 等级倍率))` ✓
+        /// ★ v174（修复 B）★：那个"等级倍率"必须取**收获表**（`LevelHarvestMult`
+        /// = 1.00/1.35/1.70），不是**卖出返还表**（`LevelYieldMult` = 1.00/1.50/2.00）✓
+        /// 两张表都在 `RunSession.SeedSlot` 上，名字只差一个词 ⇒ 正是"看起来对、数不对"的温床 ✗
+        ///
+        /// ⚠️ 卡片**算不到**的两项（改前改后一样，不是这次引入的 ✗）：
+        ///   ① 道具规则 `harvest_gold_pct`（`HarvestPlot` 的 `HarvestGoldMult` 字段，
+        ///      由 `RunSession.SyncItemRules` 运行时写入 ⇒ 静态卡片无从得知）
+        ///   ② 缺水期的机制加成（卡片给 `HarvestGoldMult` 传的 plot 是 `null`
+        ///      ⇒ 取的是"不缺水"那档 ✓ 这是**保守**方向：显示 ≤ 实得 ✓）
+        /// ⇒ 卡片承诺的是"这一级、按机制、常态下给多少"，实得只会**不低于**它 ✓
         /// ★ 植物自 v165 起不参战 ⇒ 这里**一个战斗属性都没有** ✓
         /// </summary>
         private static string[] PlantCellInfoLines(SeedSlot slot)
@@ -2064,9 +2108,32 @@ namespace Seedfall
             // ④ 成熟时间
             list.Add($"成熟 {d.GrowTime:0.#}s");
             // ⑤⑥ 金币 / 经验
-            float gold = Mathf.Max(1f, Mathf.RoundToInt(d.Price / 5f * slot.LevelYieldMult
+            //
+            // ★ v174（修复 B）：等级倍率取【收获】那一条，不是【卖出返还】那一条 ★
+            //
+            // 症状：Lv2 / Lv3 的卡片上金币与经验**多算一档** ✓
+            // 根因：这里原来读 `SeedSlot.LevelYieldMult` —— 而它自己的文档写着
+            //   "1.00 / 1.50 / 2.00。**卖出返还**用这条"（`RunSession.cs:139-142`）✗
+            //   实际收获走的是**另一条表**：`SeedSlot.LevelHarvestMult` = 1.00 / 1.35 / 1.70
+            //   （`RunSession.cs:144-145`）✓
+            //   而 `Actors.HarvestPlot:868/871` 里发放收益时读的是 `plot.LevelYieldMult`
+            //   —— 那是 `FarmPlot` 上的同名属性，指向的**正是收获表**
+            //   （`FarmGrid.cs:73` = `SeedEconomy.YieldMult(SeedSlot.HarvestPerLevel, Level)`）✓
+            // ⇒ 两边是**两套值**：卡片显示 ×1.50，实际给 ×1.35 ✗
+            //   自检自己就有一条断言把两者分开（`SelfCheck` 的
+            //   "收获 {Lv2}／卖出 {Lv2}"，1.35 与 1.50 各占一边 ✓）⇒ 拿它当基准 ✓
+            //
+            // ⚠️ 为什么**不是**去改 `Actors.HarvestPlot`：那里是权威 ✓
+            //   错的是卡片这一次读取 —— 收获发放多少由策划定，UI 跟着它走 ✓
+            // ⚠️ 这一改**会改变屏幕上的数字**（Lv2 从 ×1.50 档落到 ×1.35 档 ✓）
+            //   而那是**对的**：原来那句"金币产出量/经验产出量"本来就是错的 ✓
+            // ⚠️ 商店卡 / 开局选种**看不出来**：买来的种子恒为 `StartingLevel`（= 1 级，
+            //   `RunSession.cs:468/482/1145`）⇒ 倍率 = 1.00，两套表在 1 级上**同值** ✓
+            //   变的是主界面 6 格与菜单 3×2 里那些**真的升过级**的槽位 ✓
+            float lvHarvest = slot.LevelHarvestMult;
+            float gold = Mathf.Max(1f, Mathf.RoundToInt(d.Price / 5f * lvHarvest
                                                         * PlantMechanics.HarvestGoldMult(d, null)));
-            float exp = Mathf.Max(1f, Mathf.RoundToInt(d.Price / 10f * slot.LevelYieldMult));
+            float exp = Mathf.Max(1f, Mathf.RoundToInt(d.Price / 10f * lvHarvest));
             list.Add($"金币 {gold:0} · 经验 {exp:0}");
             // ⑦ 特殊功能（带阶段；没有机制就写「平平无奇」）
             list.Add(PlantEffectLine(d, slot.Quality));

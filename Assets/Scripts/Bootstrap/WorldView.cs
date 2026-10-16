@@ -866,7 +866,12 @@ namespace Seedfall
             sb.Append("] ");
             if (_playerModel == null) { sb.Append("model=占位图元（无动画）"); return sb.ToString(); }
             sb.Append($"state={_playerModel.Current} clip={_playerModel.CurrentClipName} ");
-            sb.Append($"t={_playerModel.StateTime:0.000} speed={_playerModel.PlaybackSpeed:0.00} ");
+            // ★ v174：`speed=` 改成报**当前真正生效的**倍率 ✗ ★
+            // 原来报的是 `PlaybackSpeed` —— 它**恒为 Walk 那一档** ✗ ⇒ 攻击期间恒显 `1.00`
+            // ⇒ 看起来像"攻速倍率没接上"✗ 而实际生效在另一路 ✓
+            // 两个分量一起打出来 ⇒ 一句里就能分清"现在是谁在起作用"✓
+            sb.Append($"t={_playerModel.StateTime:0.000} speed={_playerModel.EffectivePlaybackSpeed:0.00} ");
+            sb.Append($"(walk={_playerModel.PlaybackSpeed:0.00} atk={_playerModel.AttackPlaybackSpeed:0.00}) ");
             sb.Append($"atkClips=[{_playerModel.DescribeAttackClips()}]");
             return sb.ToString();
         }
@@ -983,7 +988,7 @@ namespace Seedfall
             SyncPlots(s);
             SyncScenery(dt);          // v64：装饰随风摆动
             TickSwings(dt);           // v66：挥击弧的扫过动画
-            SyncPlayer(w, dt);
+            SyncPlayer(s, dt);
             SyncShopTruck(s, dt);      // v157：商店车（只读会话状态，不持有状态机）
             // v74：火焰光跟随玩家（夜里唯一的稳定近场光源）
             if (NightLighting.Instance != null)
@@ -1220,8 +1225,44 @@ namespace Seedfall
 
         private ModelView _truckModel;
 
-        private void SyncPlayer(World w, float dt)
+        /// <summary>
+        /// ★ v174：某一把武器"几秒出手一次" ✗ —— 与玩法层**同一个式子** ✓
+        ///
+        /// ── 式子从哪来 ✗（★ 不是我在这里另定的 ★）──
+        /// `RunSession` 里玩家两处出手都写这一式：
+        ///   · 锄头 `SwingHoe`     `:3635`  `WeaponCds[Hoe] = hoe.cooldown ÷ (AttackSpeed × (1+插件攻速))`
+        ///   · 水壶/肥料 `UseTool` `:3959` / `:3968` 同一式 ✓
+        /// 武器框上那句 `攻速 N.NNs/次` 也是它（`ImGuiHud` 的工具行 `:1736`）✓
+        /// ⇒ 用户读到的 `0.70 / 0.80 / 1.20` 就是它 ✗ 表现层照抄它才叫"对得上"✓
+        ///
+        /// ⚠️ 为什么**不**直接读 `p.WeaponCds[slot]` ✗ ★（★ 那看着更"权威" ✗ 实际是错的 ★）★
+        ///   · 水壶走的是**持续激光**（`TickBeam` ✗ 每 `0.5s` 扣一次水 ✗ `:3789`），
+        ///     它【从来不写】`WeaponCds[Can]` ⇒ 那格恒为 `0`
+        ///     ⇒ 读它会退成 1 倍原速 ✗（`RunSession.UseTool` 的注释里写着那段"水壶点按"是死代码 ✓）
+        ///   · 而 `WeaponCds` 在 `PlayerActor.Tick` 里**每固定帧递减**（`Actors.cs:337`）✗
+        ///     ⇒ 读到的是"interval − 已经过去的那几帧" ✗ 随帧序漂 ✓
+        ///   两条合起来：读它会把稳定的 `0.80s` 变成"有时 0 有时 0.78"✓
+        ///
+        /// ⚠️ 攻速**属性**与**插件**都要算进去 ✗ ★（★ 漏了就是又造一个不一致 ★）★
+        ///   玩家把攻速堆上去之后出手变快、动作不变 ⇒ 那正是本任务要修的那个现象 ✓
+        /// </summary>
+        private static float AttackSeconds(RunSession s, PlayerActor p, int weaponIndex)
         {
+            TuningDef t = s != null ? s.T : null;
+            if (t == null || t.tools == null) return 0f;
+            bool can = weaponIndex == PlayerActor.WeaponCan;
+            bool fert = weaponIndex == PlayerActor.WeaponFertilizer;
+            ToolDef tool = can ? t.tools.can : fert ? t.tools.fertilizer : t.tools.hoe;
+            if (tool == null) return 0f;
+            WeaponSlot slot = can ? WeaponSlot.Can
+                            : fert ? WeaponSlot.Fertilizer : WeaponSlot.Hoe;
+            float fireRate = Mathf.Max(0.05f, p.AttackSpeed * (1f + s.ModsFor(slot).AttackSpeedPct));
+            return tool.cooldown / fireRate;
+        }
+
+        private void SyncPlayer(RunSession s, float dt)
+        {
+            World w = s.World;
             PlayerActor p = w.Player;
             if (p == null || _player == null) return;
 
@@ -1280,6 +1321,20 @@ namespace Seedfall
                     if (_playerModel.Current != ModelView.State.Attack)
                     {
                         _playerModel.SetAttackWeapon(_pendingAttack);
+                        // ★ v174：**攻击动画的真实时长 = 这一把的攻速** ★
+                        //
+                        // ★ 与那条「让位守卫」的关系（★ 这是本条最容易踩空的地方 ★）★
+                        // 守卫在**下面**（`oneShot` 那段）：它保证 Attack/Swap 期间
+                        // 不被每帧无条件的 `Play(Walk)` 掐掉 ✗
+                        // ⇒ 攻击片段因此**能活到播完** ✓
+                        // 而这里设的是"片段**播多快**"，不是"播哪一段"✗
+                        // ⇒ 两者是**两件事**，倍率必须落在"守卫保住的这段生命期"之内才看得见 ✓
+                        // ⇒ 顺序也必须是：**先** `SetAttackWeapon`（定下是哪一段 ✗ 长度才对 ✓）
+                        //    **再** `SetAttackDuration`（按那段长度算倍率 ✓）
+                        //    **最后** `PlayForced`（把 `_stateTime` 归零起播 ✓）
+                        //    反了就会拿上一把的片段长度算倍率 ✗ 而它看起来**仍然在动** ✗
+                        //    正是那种"改了没生效"最难查的形态 ✓
+                        _playerModel.SetAttackDuration(AttackSeconds(s, p, _pendingAttack));
                         _playerModel.PlayForced(ModelView.State.Attack);
                     }
                     _pendingAttack = -1;

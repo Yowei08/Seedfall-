@@ -113,6 +113,18 @@ namespace Seedfall
         public static float ShopAwayBetweenSeconds;
         /// <summary>走完的完整轮数（`Idle→Entering` 到 `Leaving→Idle`）。</summary>
         public static int ShopCycles;
+        /// <summary>
+        /// ★ 每次"车出现"的时刻（`Idle → Entering`）★ —— 相邻两项之差就是**刷新间隔** ✓
+        ///
+        /// ★ 为什么必须逐次记，而不是只报均值 ★
+        /// 用户的判据是"**每分钟刷新一次**" ⇒ 它问的是**相邻两次出现之间**多久 ✗
+        /// 而"一轮在场上多久"是**另一个量**（少了离场之后那段不在场）✓
+        /// 只报均值时，两者都长成"约 50~60 秒的一个数" ⇒ 读的人必然把它们当成同一个 ✗
+        /// （上一版就是这样被读错的：`一轮时长 50.05s` 被当成了刷新间隔 ✓）
+        /// </summary>
+        public static readonly List<float> ShopAppearAt = new List<float>();
+        /// <summary>各阶段的**进入次数**（用来算"每轮均值"；累计秒数不能直接除以完成轮数 ✗）。</summary>
+        public static int ShopEnterCount, ShopLoopCount, ShopDockCount, ShopLeaveCount;
         /// <summary>各轮总时长之和（秒）；除以 <see cref="ShopCycles"/> 得一轮均值。</summary>
         public static float ShopCycleSecondsSum;
         /// <summary>一轮最短 / 最长（秒）。</summary>
@@ -155,6 +167,11 @@ namespace Seedfall
             ShopAwayBetweenSeconds = 0f;
             ShopCycles = 0;
             ShopCycleSecondsSum = 0f;
+            ShopAppearAt.Clear();
+            ShopEnterCount = 0;
+            ShopLoopCount = 0;
+            ShopDockCount = 0;
+            ShopLeaveCount = 0;
             ShopCycleShortest = float.MaxValue;
             ShopCycleLongest = 0f;
             ShopEnterMeasured = 0f;
@@ -275,10 +292,20 @@ namespace Seedfall
             // ── ① 轮时长：Idle→Entering 起算，Leaving→Idle 收尾 ──
             if (ph != _shopPhasePrev)
             {
+                // 每个阶段的进入次数（用于"每轮均值"✓ 累计秒数 ÷ 完成轮数是错的口径 ✗）
+                switch (ph)
+                {
+                    case ShopTruck.Phase.Entering: ShopEnterCount++; break;
+                    case ShopTruck.Phase.Looping: ShopLoopCount++; break;
+                    case ShopTruck.Phase.Dock: ShopDockCount++; break;
+                    case ShopTruck.Phase.Leaving: ShopLeaveCount++; break;
+                }
+
                 if (ph == ShopTruck.Phase.Entering && _shopPhasePrev == ShopTruck.Phase.Idle)
                 {
                     _cycleStartAt = t;
                     _cycleTimingArmed = true;
+                    ShopAppearAt.Add(t);            // ★ "车出现"的时刻 —— 刷新间隔由它算 ✓
                 }
                 else if (ph == ShopTruck.Phase.Idle && _shopPhasePrev == ShopTruck.Phase.Leaving && _cycleTimingArmed)
                 {
@@ -496,40 +523,83 @@ namespace Seedfall
         {
             var sb = new StringBuilder();
             sb.AppendLine("## G · 商店车【实测】（用引擎自己的 `CanShop` / 取位入口量的，不是设计值）");
+
+            // ★ 第一条就是用户的判据：出现 → 出现 ★
+            sb.AppendLine("   ① 出现间隔（用户判据「每分钟刷新一次」= 相邻两次【车出现】的间隔）");
+            if (ShopAppearAt.Count < 2)
+            {
+                sb.AppendLine("      （本局只出现 1 次，量不到间隔）");
+            }
+            else
+            {
+                var gaps = new StringBuilder();
+                float gMin = float.MaxValue, gMax = 0f, gSum = 0f;
+                int n = 0;
+                for (int i = 1; i < ShopAppearAt.Count; i++)
+                {
+                    float g = ShopAppearAt[i] - ShopAppearAt[i - 1];
+                    gaps.Append(g.ToString("0.00", CultureInfo.InvariantCulture)).Append("  ");
+                    if (g < gMin) gMin = g;
+                    if (g > gMax) gMax = g;
+                    gSum += g; n++;
+                }
+                sb.AppendLine("      逐次间隔      " + gaps.ToString().TrimEnd());
+                sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                    "      均值 {0:0.00}s   最短 {1:0.00}s   最长 {2:0.00}s   （{3} 个间隔 / 出现 {4} 次）",
+                    n > 0 ? gSum / n : 0f, gMin, gMax, n, ShopAppearAt.Count));
+                sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                    "      判据：每个间隔都应 ≈ {0:0.00}s ⇒ {1}",
+                    ShopTruck.CycleSeconds,
+                    Mathf.Abs(gMin - ShopTruck.CycleSeconds) < 0.1f && Mathf.Abs(gMax - ShopTruck.CycleSeconds) < 0.1f
+                        ? "全部落在 ±0.1s 内 ✓" : "★ 有不符的间隔 ✗"));
+            }
+
+            // ★ 第二条是"车在场上多久" —— 它【不等于】上面的间隔 ✗ ★
+            sb.AppendLine("   ② 一轮（车在场上：入场→绕场→停靠→离场，**不含离场之后的不在场**）");
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                "   一轮时长            均值 {0,6:0.00}s   最短 {1,6:0.00}s   最长 {2,6:0.00}s   （跑完 {3} 轮）",
+                "      均值 {0:0.00}s   最短 {1:0.00}s   最长 {2:0.00}s   （跑完 {3} 轮）",
                 ShopCycles > 0 ? ShopCycleSecondsSum / ShopCycles : 0f,
                 ShopCycleShortest == float.MaxValue ? 0f : ShopCycleShortest, ShopCycleLongest, ShopCycles));
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                "   逐阶段实测累计      入场 {0,6:0.00}s  绕场 {1,6:0.00}s  停靠 {2,6:0.00}s  离场 {3,6:0.00}s",
-                ShopEnterMeasured, ShopLoopMeasured, ShopDockMeasured, ShopLeaveMeasured));
+                "      逐阶段每轮均值   入场 {0:0.00}  绕场 {1:0.00}  停靠 {2:0.00}  离场 {3:0.00}",
+                ShopEnterCount > 0 ? ShopEnterMeasured / ShopEnterCount : 0f,
+                ShopLoopCount > 0 ? ShopLoopMeasured / ShopLoopCount : 0f,
+                ShopDockCount > 0 ? ShopDockMeasured / ShopDockCount : 0f,
+                ShopLeaveCount > 0 ? ShopLeaveMeasured / ShopLeaveCount : 0f));
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                "   车【不在场上】累计  {0,7:0.00}s   占整局 {1,5:0.0}%   ← 0 = 常驻，>0 = 真的会开走",
+                "      逐阶段累计（次数）入场 {0:0.00}s（{1}）绕场 {2:0.00}s（{3}）停靠 {4:0.00}s（{5}）离场 {6:0.00}s（{7}）",
+                ShopEnterMeasured, ShopEnterCount, ShopLoopMeasured, ShopLoopCount,
+                ShopDockMeasured, ShopDockCount, ShopLeaveMeasured, ShopLeaveCount));
+            sb.AppendLine("      ⚠️ 累计秒数【不能】直接除以完成轮数 —— 各阶段进入次数不同（局末会停在半途）✗");
+
+            // ★ 第三条：不要常驻 ★
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "   ③ 车【不在场上】累计  {0,7:0.00}s   占整局 {1,5:0.0}%   ← 0 = 常驻，>0 = 真的会开走",
                 ShopAwaySeconds, ObservedSeconds > 0f ? ShopAwaySeconds / ObservedSeconds * 100f : 0f));
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                "     ├ 开局等待（首个周期锚在 +60s）  {0,6:0.00}s   （设计如此，不是间隙）",
-                ShopAwaySeconds - ShopAwayBetweenSeconds));
+                "     ├ 开局等待（首个周期锚在 +{0:0}s）  {1,6:0.00}s   （设计如此，不是间隙）",
+                ShopTruck.CycleSeconds, ShopAwaySeconds - ShopAwayBetweenSeconds));
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
                 "     └ 轮与轮之间的间隙  {0,6:0.00}s ÷ {1} 轮 = 每轮 {2:0.00}s   ← ★「不要常驻」的判据 ★",
                 ShopAwayBetweenSeconds, ShopCycles,
                 ShopCycles > 0 ? ShopAwayBetweenSeconds / ShopCycles : 0f));
+
+            // ★ 第四条：停 10 秒 ★
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                "   车停在停靠位(≤{0:0.0}m) 最长连续 {1,6:0.00}s   （设计值 {2:0.00}s）",
+                "   ④ 车停在停靠位(≤{0:0.0}m) 最长连续 {1,6:0.00}s   （设计值 {2:0.00}s）",
                 AtDockEpsilon, ShopTruckAtDockLongest, ShopTruck.DockSeconds));
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                "   停靠期车离停靠位最远 {0,7:0.00}m  ← 引擎现在的取位入口", ShopTruckOffDockMax));
+                "      停靠期车离停靠位最远 {0,7:0.00}m  ← 引擎现在的取位入口", ShopTruckOffDockMax));
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                "                        {0,7:0.00}m  ← 旧算法 `PointAt(PhaseT)` 同一帧的对照", ShopTruckOffDockMaxOld));
+                "                          {0,7:0.00}m  ← 旧算法 `PointAt(PhaseT)` 同一帧的对照", ShopTruckOffDockMaxOld));
+
+            // ★ 第五条：玩家可交互 —— 与 ④ 是【两个量】✗ ★
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                "   `CanShop` 为真累计   {0,7:0.00}s   占 Dock 期的 {1,5:0.0}%",
+                "   ⑤ 玩家可交互（= ④ **且** 玩家站在车旁）`CanShop` 为真累计 {0:0.00}s   占 Dock 期 {1:0.0}%",
                 ShopOpenSeconds, ShopDockSeconds > 0f ? ShopOpenSeconds / ShopDockSeconds * 100f : 0f));
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                "   可交互窗口个数       {0,7}", ShopOpenWindows));
-            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
-                "   单窗最长连续可交互   {0,7:0.00}s   （设计值 {1:0.00}s）", ShopOpenLongest, ShopTruck.DockSeconds));
-            sb.AppendLine("   ★ 判据：车停在停靠位的连续时长应 ≈ 10.00s（用户要求「停留 10 秒」）；");
-            sb.AppendLine("           「车不在场上」应 > 0（用户要求「不要常驻」）；");
-            sb.AppendLine("           「玩家可交互」是另一个量 —— 它同时要求玩家站在车旁 ✓");
+                "      窗口 {0} 个｜单窗最长连续 {1:0.00}s（设计值 {2:0.00}s）",
+                ShopOpenWindows, ShopOpenLongest, ShopTruck.DockSeconds));
             return sb.ToString();
         }
 
