@@ -345,7 +345,7 @@ namespace Seedfall
             float pad = 12f;
             float top = 84f;
             float bottom = _virtualH - 30f;
-            float leftW = _virtualW * 0.60f;
+            float leftW = _virtualW * 0.50f;
             float rightX = pad + leftW + pad;
             float rightW = _virtualW - rightX - pad;
             float shopH = (bottom - top) * 0.62f;
@@ -515,9 +515,22 @@ namespace Seedfall
             }
             if (shown == 0) GUI.Label(new Rect(ix, inv.y + 30, half, 22), "（还没有道具）", _small);
 
-            // 右：角色属性（主要 / 次要 分开）
-            Panel(new Rect(rightX, top, rightW, bottom - top));
-            DrawStatsColumns(s, rightX, top, rightW, bottom - top, "角色属性");
+            // 右：★ v172 从"只有角色属性"改成"武器与插件 + 角色属性"★
+            //
+            // 用户标准（原话）："同步更新 UI 框，按照我说的标准，★ 预留更大的区域给角色武器，
+            // 商店、菜单都是 ★"
+            // ⇒ 商店是**买插件的地方**，而买插件时只有两件事要判断：
+            //   ① 这把武器还剩几个槽（6 个格子画出来 ✓ 空槽也画 ✓）
+            //   ② 这件插件装上会改哪一环（`WeaponSystem.ChannelOf` ✓ 框里的摘要行 ✓）
+            // ⇒ 所以武器区是右栏的**主要部分**，属性退到下面（属性面板本身自带滚动 ✓ 矮也能用 ✓）
+            //
+            // 宽度为什么从 0.60 收到 0.50：右栏要给到 675px 才放得下"三把武器各一个 168px 的框"✗
+            // 而左栏（货架 4 行 + 种子 / 道具）在 711px 下仍然够宽 ✓
+            float statsH = 130f;
+            float weaponH = bottom - top - statsH - pad;
+            DrawWeaponSection(s, new Rect(rightX, top, rightW, weaponH), "我的武器与插件");
+            Panel(new Rect(rightX, top + weaponH + pad, rightW, statsH));
+            DrawStatsColumns(s, rightX, top + weaponH + pad, rightW, statsH, "角色属性");
         }
 
         /// <summary>v49：绝对值型属性 → 相对开局基准的增量（开局显示 +0）。公开以便自检直接复核。</summary>
@@ -663,7 +676,18 @@ namespace Seedfall
             float atkStat = d.AttackType == AttackType.Support ? 0f : st.Get(StatId.MeleeDamage);
             float atkMult = st.Get(StatId.AtkMult);
 
-            list.Add($"等级：{slot.Level} / {SeedSlot.MaxLevel}　卖出返还 ×{slot.LevelYieldMult:0.00}");
+            // ★ v172：等级只做数值提升 ⇒ 旁边直接写出"收益 ×N.NN"（用户标准："1/2/3 级只做数值提升"）★
+            list.Add($"等级：{slot.Level} / {SeedSlot.MaxLevel}　收益 ×{slot.LevelYieldMult:0.00}"
+                     + $"　卖出返还 ×{slot.LevelYieldMult:0.00}");
+            // ★ v172：用户标准里的七项中，"成熟时间 / 金币 / 经验 / 特殊效果"这四项**原来一项都没显示**★
+            // 而它们恰好是"这株植物值不值得种"的全部依据 ⇒ 补上 ✓
+            // 数值与 `Actors.HarvestPlot` 的发放**同一式**（price/5、price/10 × 等级倍率 × 机制倍率 ✓）
+            float cellGold = Mathf.Max(1f, Mathf.RoundToInt(d.Price / 5f * slot.LevelYieldMult
+                                                            * PlantMechanics.HarvestGoldMult(d, null)));
+            float cellExp = Mathf.Max(1f, Mathf.RoundToInt(d.Price / 10f * slot.LevelYieldMult));
+            list.Add($"成熟：{d.GrowTime:0.#}s");
+            list.Add($"收获：金币 {cellGold:0}　经验 {cellExp:0}");
+            list.Add(PlantEffectLine(d, slot.Quality));
             list.Add("功能：" + d.Desc);
             list.Add("攻击模式：" + RunSession.AtkTypeText(d));
             // v109：删除「伤害类型」一栏（需求）——现在版本没有伤害类型的定义了，
@@ -1154,6 +1178,8 @@ namespace Seedfall
                 DrawVitals(s);
                 DrawKeyHelp(s);
                 DrawWeaponPanel(s);
+                // ★ v172：主界面新增植物区（6 个中格子）★ —— 用户标准："缩小植物区域，改成 6 个格子"
+                DrawPlantPanel(s);
                 DrawWave(s);
                 DrawPlotPrompt(s);
             }
@@ -1910,24 +1936,29 @@ namespace Seedfall
             return free > 0 ? sb.Append($"　（还可装 {free} 件）").ToString() : sb.Append("　（已满）").ToString();
         }
 
-        /// <summary>一个武器框的高度：列表模式要多一行"已装插件" ✓</summary>
-        private static float WeaponBoxHeight(bool listPlugins) => listPlugins ? 190f : 172f;
+        /// <summary>
+        /// 一个武器框的高度。★ 三个界面共用同一个值 ★
+        /// 为什么不做"高/矮"两个变体：变体会让"商店看到的"与"主界面看到的"不是同一张卡片，
+        /// 而用户的要求恰恰是"三个界面都要有、都要大"⇒ 同一种卡片出现在三处才是**一套语言** ✓
+        /// 内容高度（从框顶算）：标题 27 ＋ 伤害 19 ＋ 范围/攻速/击退 19 ＋ 爆炸/暴击/暴伤 19
+        ///                      ＋ 插件槽 26 ＋ 已装插件摘要 34 ＋ 上下留白 12 = 156 ≤ 168 ✓
+        /// </summary>
+        private const float WeaponBoxH = 168f;
 
         /// <summary>
         /// ★ v172：一个武器框 ★ —— 主界面 / 商店 / 菜单**三处共用同一份画法**。
         ///
         /// 用户标准（原话）："放大武器区域，扩大至三大框，显示名称、伤害、范围、攻击速度、
         /// 爆炸范围、暴击、暴击伤害、击退，以及插件槽"✓
-        /// ⇒ 八项 + 6 个插件槽 + 已装插件，一项不少 ✓
+        /// ⇒ 八项 + 6 个插件槽 + 已装插件（名字·改哪一环），一项不少 ✓
         ///
         /// ★ 伤害带算式且是"含插件后的实际值" ★：
         ///   （武器基础伤害 ＋ 对应类型伤害）× 伤害倍数
         ///   锄头→近战 / 水壶→远程 / 肥料→爆炸（三系独立 ✓ `AtkDamage` 已删 ✓）
         /// 算式里的三个数都出自 `WeaponReadoutOf`，而它走 `WeaponSystem.ApplyToAttack`
         /// —— 与三条攻击路径**同一个入口** ⇒ 框里的数就是打出来的数 ✓
-        /// （"拿不到插件加成"这条路在这里不存在：聚合入口是公开的 ✓）
         /// </summary>
-        private void DrawWeaponBox(RunSession s, WeaponSlot slot, Rect box, bool current, bool listPlugins)
+        private void DrawWeaponBox(RunSession s, WeaponSlot slot, Rect box, bool current)
         {
             WeaponReadout r = WeaponReadoutOf(s, slot);
             Color prev = GUI.color;
@@ -1935,8 +1966,8 @@ namespace Seedfall
             GUI.DrawTexture(box, White);
             GUI.color = prev;
 
-            // v89 的既有判据：亮绿底上不用白字（发飘、对比度反而低）⇒ 选中行用 OnLight
-            // 其余行是**暗底**⇒ 用 OnDark（v102 立的规矩：亮底/暗底各给一个明确样式，不靠默认值碰巧合适 ✓）
+            // v89 的既有判据：亮绿底上不用白字（发飘、对比度反而低）⇒ 选中行用 OnLight ✓
+            // 其余行是**暗底** ⇒ 用 OnDark（v102 立的规矩：亮底/暗底各给一个明确样式，不靠默认值碰巧合适 ✓）
             GUIStyle title = current ? OnLight : OnDarkBold;
             GUIStyle body = current ? OnLight : OnDark;
 
@@ -1961,19 +1992,46 @@ namespace Seedfall
             DrawPluginSlots(s, slot, new Rect(box.x + px, y, box.width - 20f, 26f));
             y += 30f;
 
-            if (listPlugins)
-                GUI.Label(new Rect(box.x + px, y, box.width - 20f, 38f), InstalledPluginSummary(s, slot),
-                    current ? OnLight : OnDarkWrap);
+            GUI.Label(new Rect(box.x + px, y, box.width - 20f, 34f), InstalledPluginSummary(s, slot),
+                current ? OnLight : OnDarkWrap);
         }
+
+        /// <summary>当前武器（三处高亮同一把 ⇒ 判据只写一次 ✓）。</summary>
+        private static bool IsCurrentWeapon(RunSession s, WeaponSlot slot)
+            => s.World != null && s.World.Player != null && (int)slot == s.World.Player.WeaponIndex;
+
+        /// <summary>
+        /// ★ v172：一块"武器与插件"区（商店 / 菜单共用）★
+        /// 三把武器各一个框 ⇒ 每框 8 项 + 6 个插件槽 + 已装插件摘要 ✓
+        /// 高度不足时滚动（滚动条是既有皮肤 ✓ 不是新样式）—— 但三个界面的高度都按
+        /// `WeaponBoxH × 3 + 间距` 给 ⇒ 实际不会触发 ✓
+        /// </summary>
+        private void DrawWeaponSection(RunSession s, Rect area, string title)
+        {
+            Panel(area);
+            GUI.Label(new Rect(area.x + 12, area.y + 3, area.width - 24, 26), title, _bold);
+            float gap = 6f;
+            float need = WeaponBoxH * 3f + gap * 2f;
+            Rect view = new Rect(area.x + 3f, area.y + 32f, area.width - 6f, area.height - 38f);
+            _weaponScroll = GUI.BeginScrollView(view, _weaponScroll,
+                new Rect(0f, 0f, view.width - 18f, Mathf.Max(view.height, need)));
+            for (int i = 0; i < AllWeapons.Length; i++)
+                DrawWeaponBox(s, AllWeapons[i],
+                    new Rect(6f, i * (WeaponBoxH + gap), view.width - 28f, WeaponBoxH),
+                    IsCurrentWeapon(s, AllWeapons[i]));
+            GUI.EndScrollView();
+        }
+
+        private Vector2 _weaponScroll;
 
         /// <summary>
         /// ★ v172：主界面武器区 = 三大框 ★
         ///
         /// ★ 改前 → 改后（"更大"是可判定的数字，不是感觉）★
         ///   改前：`Rect(_virtualW-262-14, 150, 262, 198)`；三行各 44px；**每行只写一个名字** ✓
-        ///   改后：`Rect(_virtualW-380-14, 150, 380, 568)`；三个框各 172px；
-        ///         每框 **8 项 + 6 个插件槽** ✓
-        ///   ⇒ 宽 262→380（×1.45）／高 198→568（×2.87）／面积 51,876→215,840（**×4.16**）✓
+        ///   改后：`Rect(_virtualW-380-14, 150, 380, 558)`；三个框各 **168px**；
+        ///         每框 **8 项 + 6 个插件槽 + 已装插件摘要** ✓
+        ///   ⇒ 宽 262→380（×1.45）／高 198→558（×2.82）／面积 51,876→212,040（**×4.09**）✓
         ///
         /// ⚠️ 宽度为什么定在 380（而不是更宽）✗：
         ///   `DrawPlotPrompt` 的画布是 `x = 中-310, w = 620` ⇒ 虚宽 1422 时它的右边界 = 1021 ✓
@@ -1986,17 +2044,16 @@ namespace Seedfall
             float w = 380f;
             float x = _virtualW - w - 14f;
             float y = 150f;
-            float boxH = WeaponBoxHeight(false);
-            float gap = 6f;
-            float h = 30f + boxH * 3f + gap * 2f + 12f;
+            const float gap = 6f;
+            float h = 30f + WeaponBoxH * 3f + gap * 2f + 12f;
 
             Panel(new Rect(x, y, w, h));
             GUI.Label(new Rect(x + 12, y + 3, w - 24, 26), "武器（三把 · 含插件）", _bold);
 
             for (int i = 0; i < AllWeapons.Length; i++)
             {
-                Rect box = new Rect(x + 8f, y + 28f + i * (boxH + gap), w - 16f, boxH);
-                DrawWeaponBox(s, AllWeapons[i], box, i == p.WeaponIndex, false);
+                Rect box = new Rect(x + 8f, y + 28f + i * (WeaponBoxH + gap), w - 16f, WeaponBoxH);
+                DrawWeaponBox(s, AllWeapons[i], box, i == p.WeaponIndex);
             }
 
             string state = s.FarmingThisFrame
@@ -2005,6 +2062,153 @@ namespace Seedfall
                     ? $"切换前摇 {p.SwitchWindup:0.0}s（无法攻击）"
                     : (p.IsLocked ? "锁定目标中" : "按住鼠标左键：攻击 / 互动");
             GUI.Label(new Rect(x + 12, y + h - 24f, w - 24, 22f), state, _small);
+        }
+
+        // ------------------------------------------------------------ v172：植物区（6 个中格子）
+        /// <summary>这株植物有没有真机制（`None` 与空串都算"没有" ✓ 判据与自检同源 ✓）。</summary>
+        private static bool HasMechanicOf(SeedDef d)
+            => d != null && !string.IsNullOrEmpty(d.Mechanic)
+               && !string.Equals(d.Mechanic, PlantMechanics.None, System.StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// ★ v172：机制作用的**阶段** ★
+        ///
+        /// 用户标准（原话）："所有的植物机制作用于【成长或者收获阶段、或者缺水时】"✓
+        /// ⇒ 机制名后面**必须带阶段**：读到"丰收"要能立刻知道它"收获时才生效" ✓
+        /// 不写进 `PlantMechanics` 的理由：那是**行为解释器**（它管"算得对不对"✓）
+        /// 而"这句话是给玩家看的标签"属于呈现（两者的变更理由不同 ✓）
+        /// 而**措辞本身**仍然只取 `PlantMechanics.Describe` —— 唯一的说法来源 ✓
+        /// </summary>
+        private static string PlantMechanicStage(string mechanic)
+        {
+            if (string.Equals(mechanic, PlantMechanics.ThirstTolerant, System.StringComparison.OrdinalIgnoreCase)
+                || string.Equals(mechanic, PlantMechanics.ThirstBloom, System.StringComparison.OrdinalIgnoreCase))
+                return "缺水";
+            if (string.Equals(mechanic, PlantMechanics.RichHarvest, System.StringComparison.OrdinalIgnoreCase)
+                || string.Equals(mechanic, PlantMechanics.DewDrop, System.StringComparison.OrdinalIgnoreCase)
+                || string.Equals(mechanic, PlantMechanics.ChainHarvest, System.StringComparison.OrdinalIgnoreCase))
+                return "收获";
+            return "成长";     // Haste / NeighborBoost / WaterSave / ElderGrowth
+        }
+
+        /// <summary>
+        /// ★ v172：第 7 项"特殊效果" ★ —— 中/高品质写「机制〔阶段〕+ 说明」，
+        /// ★ 低品质不出现"机制"二字 ★
+        ///
+        /// 用户标准（原话）："低品质（普通、一般）提供**纯数值区别**，中品质（稀有、史诗）做小机制和
+        /// 微高的数值，高品质（传奇）做**大机制**和高数值；★ 植物合成等级 1/2/3 只做数值提升 ★"
+        ///
+        /// ⇒ 给普通/一般写"机制：无"会被读成"这个地方缺了东西"✗
+        ///   它们的定义就是纯数值 ⇒ 就写它们的**数值定位** ✓
+        /// ⇒ 等级那一行同理：只写「Lv N/3 ⇒ 收益 ×N.NN」，**不暗示等级会解锁新机制** ✓
+        /// </summary>
+        private static string PlantEffectLine(SeedDef d, int quality)
+        {
+            if (d == null) return "";
+            if (!HasMechanicOf(d))
+                return quality >= 4 ? "传奇：纯数值（收益最高档）"
+                                    : "定位：纯数值（靠等级与品质拿收益）";
+            string text = PlantMechanics.Describe(d.Mechanic);
+            string head = (quality >= 4 ? "机制〔大·" : "机制〔小·") + PlantMechanicStage(d.Mechanic) + "〕";
+            return string.IsNullOrEmpty(text) ? head + d.Mechanic : head + text;
+        }
+
+        /// <summary>
+        /// 植物格的信息行（名称与品质画在格子上方 ✓ 这里是剩下 5 项）
+        /// ⑤⑥ 金币 / 经验与 `Actors.HarvestPlot` 的**发放公式同一式**：
+        /// `max(1, round(price/5 × 等级倍率 × 机制倍率))` 与 `max(1, round(price/10 × 等级倍率))` ✓
+        /// （所以卡片上写的数**就是**收获时进账的数 ✓ 不是另算一份"给玩家看的数" ✓）
+        /// </summary>
+        private static string[] PlantCellInfoLines(SeedSlot slot)
+        {
+            var list = new System.Collections.Generic.List<string>();
+            SeedDef d = slot.Def;
+            if (d == null) { list.Add("（空格）"); return list.ToArray(); }
+            // ③ 等级 —— ★ 只做数值提升 ★ ⇒ 直接把"它给了多少"写在旁边
+            list.Add($"Lv {slot.Level}/{SeedSlot.MaxLevel}　收益 ×{slot.LevelYieldMult:0.00}");
+            // ④ 成熟时间
+            list.Add($"成熟 {d.GrowTime:0.#}s");
+            // ⑤⑥ 金币 / 经验
+            float gold = Mathf.Max(1f, Mathf.RoundToInt(d.Price / 5f * slot.LevelYieldMult
+                                                        * PlantMechanics.HarvestGoldMult(d, null)));
+            float exp = Mathf.Max(1f, Mathf.RoundToInt(d.Price / 10f * slot.LevelYieldMult));
+            list.Add($"金币 {gold:0} · 经验 {exp:0}");
+            // ⑦ 特殊效果（带阶段；低品质走"数值定位"）
+            list.Add(PlantEffectLine(d, slot.Quality));
+            return list.ToArray();
+        }
+
+        /// <summary>
+        /// ★ v172：一个植物格（6 格共用）★
+        /// 项：① 名称 ② 品质 ③ 等级 ④ 成熟时间 ⑤ 金币 ⑥ 经验 ⑦ 特殊效果 —— 七项一项不少 ✓
+        /// 矮格子的处置：最后一项（机制说明）**折行**（用户允许两行 ✓）
+        /// 而"等级"与"特殊效果"分别在信息区的**首行与末行**⇒ 任何高度下都不会被先挤掉 ✓
+        /// （那两项是这一次新增的信息 ✓ 挤掉它们等于没做 ✓）
+        /// </summary>
+        private void DrawPlantCell(RunSession s, SeedSlot slot, Rect cell)
+        {
+            Color pv = GUI.color;
+            GUI.color = slot.IsEmpty ? SlotBg : SlotBgFilled;
+            PaperFill(cell);
+            ScrollFrame(cell);
+            GUI.color = QualityColor(slot.Quality);
+            GUI.DrawTexture(new Rect(cell.x, cell.y, 5f, cell.height), White);   // 左侧品质条
+            GUI.color = pv;
+
+            float pad = 5f;
+            float iconS = 30f;
+            Rect icon = new Rect(cell.x + pad + 3f, cell.y + pad, iconS, iconS);
+            if (!slot.IsEmpty)
+                DrawOfferIcon(icon, QualityColor(slot.Quality), slot.Def != null ? "icon_plant_" + slot.Def.Id : null);
+
+            // ① 名称　② 品质
+            GUI.Label(new Rect(icon.xMax + 5f, cell.y + pad - 4f, cell.width - iconS - 18f, 20f),
+                slot.IsEmpty ? "空格" : slot.Label, OnDarkBold);
+            GUI.Label(new Rect(icon.xMax + 5f, cell.y + pad + 14f, cell.width - iconS - 18f, 18f),
+                slot.IsEmpty ? "商店买种子后自动种下" : s_rarityName(slot.Quality), OnDark);
+
+            if (slot.IsEmpty) return;
+
+            // ③④⑤⑥⑦
+            float ly = cell.y + pad + iconS + 4f;
+            string[] lines = PlantCellInfoLines(slot);
+            float textW = cell.width - pad * 2f;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                bool last = i == lines.Length - 1;
+                float lh = last ? 32f : 17f;
+                GUI.Label(new Rect(cell.x + pad, ly, textW, lh), lines[i], OnDarkWrap);
+                ly += lh;
+            }
+        }
+
+        /// <summary>
+        /// ★ v172：主界面**植物区** = 6 个中格子（2 列 × 3 行）★
+        ///
+        /// 用户标准（原话）："缩小植物区域，改成 6 个格子，中格子，显示名称、品质、等级、成熟时间、
+        /// 金币、经验、特殊效果"✓
+        /// ⇒ 格数 = `Bag.SlotCount`（= `Progress.MaxPlots` = 田地列数 6 ✓ 新玩法"一株植物独占一列"✓）
+        ///
+        /// ★ 位置为什么是 (10, 354) ✗ ★
+        ///   `DrawKeyHelp` 的底边 = 142 + 34 + 8×22 = 352 ✓
+        ///   `DrawPlotPrompt` 的左边 = 中−310 = 401（虚宽 1422）✓ 本面板右边界 390 < 401 ⇒ 不叠 ✓
+        ///   底边 794 < 底中弹药条的顶 710？✗ —— 弹药条横向只占 451..971，本面板只到 390 ⇒ 横向不相交 ✓
+        /// </summary>
+        private void DrawPlantPanel(RunSession s)
+        {
+            float x = 10f, y = 354f, w = 380f, h = 440f;
+            Panel(new Rect(x, y, w, h));
+            GUI.Label(new Rect(x + 10, y + 3, w - 20, 26),
+                $"植物（{s.Bag.OccupiedCount}/{s.Bag.SlotCount}）　一株独占一列", _bold);
+
+            float pad = 6f;
+            float cw = (w - pad * 3f) / 2f;
+            float ch = (h - 30f - pad * 4f) / 3f;
+            for (int i = 0; i < s.Bag.SlotCount && i < 6; i++)
+            {
+                Rect cell = new Rect(x + pad + (i % 2) * (cw + pad), y + 30f + (i / 2) * (ch + pad), cw, ch);
+                DrawPlantCell(s, s.Bag[i], cell);
+            }
         }
 
         // ------------------------------------------------------------ 顶部：只显示阶段
@@ -2209,7 +2413,9 @@ namespace Seedfall
             GUI.color = prev;
 
             float pad = 16f, top = 70f, bottom = _virtualH - 40f;
-            float leftW = 240f;
+            // ★ v172：左栏 240 → 380 ★ —— 武器框要放下"伤害算式 + 3 行数值 + 6 个插件槽"✓
+            // 中栏（植物 3×2 中格子）拿到剩余宽度 = 598 ⇒ 每格 190px ✓ 仍然够宽 ✓
+            float leftW = 380f;
             // v67：右栏**按内容定宽**，不要再吃剩余空间。
             // 旧版是 midW = 34%、右栏 = 剩下的全部（约 651px），而属性文字最长一行只有 ~300px，
             // 结果右半边整块空着，看着像面板没画完。现在：左栏固定 240、右栏固定 380、
@@ -2219,41 +2425,39 @@ namespace Seedfall
             float midW = rightX - pad - (pad + leftW) - pad;
             float h = bottom - top;
 
-            // 左：功能按键栏
-            Panel(new Rect(pad, top, leftW, h));
+            // ★ v172：左栏拆成"菜单按钮（上）＋ 武器总览（下）"★
+            //
+            // 用户标准（原话）："同步更新 UI 框…预留更大的区域给角色武器，★ 商店、菜单都是 ★"✓
+            // ⇒ 菜单里也要**看得到武器与角色**：三把武器 + 伤害算式 + 6 个插件槽 ✓
+            //   （角色属性本来就在右栏 `DrawStatsColumns` ✓ 两者合起来就是"武器与属性的总览"✓）
+            float menuBtnH = 124f;
+            Panel(new Rect(pad, top, leftW, menuBtnH));
             GUI.Label(new Rect(pad + 12, top + 6, leftW - 20, 30), "菜单", _bold);
-            if (GUI.Button(new Rect(pad + 16, top + 48, leftW - 32, 46), "继续游戏（Esc）")) PendingResume = true;
-            if (GUI.Button(new Rect(pad + 16, top + 104, leftW - 32, 46), "重新开始（Shift+R）")) PendingRestart = true;
-            GUI.Label(new Rect(pad + 16, top + 164, leftW - 32, 60),
-                "按 Esc 也可以关闭菜单", _small);
+            if (GUI.Button(new Rect(pad + 16, top + 40, leftW - 32, 40), "继续游戏（Esc）")) PendingResume = true;
+            if (GUI.Button(new Rect(pad + 16, top + 86, leftW - 32, 32), "重新开始（Shift+R）")) PendingRestart = true;
+            DrawWeaponSection(s, new Rect(pad, top + menuBtnH + 8f, leftW, h - menuBtnH - 8f),
+                "武器（三把 · 伤害算式 · 插件槽）");
 
             // 中：持有物种（种子大格子 + 道具小格子）
             Rect mid = new Rect(pad + leftW + pad, top, midW, h);
             Panel(mid);
-            GUI.Label(new Rect(mid.x + 12, mid.y + 6, mid.width - 20, 28), $"植物（{s.Bag.OccupiedCount}/{s.Bag.SlotCount}）", _bold);
+            GUI.Label(new Rect(mid.x + 12, mid.y + 6, mid.width - 20, 28),
+                $"植物（{s.Bag.OccupiedCount}/{s.Bag.SlotCount}）　一株独占一列 · 3×2 中格子", _bold);
 
-            // v18：植物用与商店一致的大格子（只展示，无出售/合成）
+            // ★ v172：从"6 张 210px 的大卡竖排 + 滚动"改成"6 个中格子 3×2 一屏铺满"★
+            //
+            // 用户标准（原话）："缩小植物区域，改成 6 个格子，中格子，显示名称、品质、等级、成熟时间、
+            // 金币、经验、特殊效果"✓
+            // 改前：内容高 6×218 = 1308px 塞进 ~379px 的视口 ⇒ 一次只看得见 **1.8 张** ✓
+            //       ⇒ "比较 6 株植物"这件事在物理上做不到 ✓
+            // 改后：6 个格子**一屏全见** ⇒ 每格 190×186 ✓ 七项齐全（与主界面同一个 `DrawPlantCell` ✓）
             Rect seedView = new Rect(mid.x + 8, mid.y + 38, mid.width - 16, h * 0.55f);
-            float cardH = 210f;
-            float seedContentH = Mathf.Max(seedView.height, s.Bag.SlotCount * (cardH + 8f) + 8f);
-            _invScroll = GUI.BeginScrollView(seedView, _invScroll, new Rect(0, 0, seedView.width - 18, seedContentH));
-            for (int i = 0; i < s.Bag.SlotCount; i++)
-            {
-                SeedSlot slot = s.Bag[i];
-                Rect card = new Rect(2, i * (cardH + 8f), seedView.width - 24f, cardH);
-                if (slot.IsEmpty)
-                {
-                    Color pv1 = GUI.color;
-                    GUI.color = SlotBg;
-                    PaperFill(card);   // v96：卷轴纸纹（空的库存格）
-                    GUI.color = pv1;
-                    GUI.Label(new Rect(card.x + 8, card.y + 6, card.width - 16, 24), $"第 {i + 1} 格　空", _label);
-                    continue;
-                }
-                // v19：统一卡片（信息区自带滑动条）
-                SeedCardPanel(s, slot, card, i, _menuSeedScroll);
-            }
-            GUI.EndScrollView();
+            float gpad = 6f;
+            float gw = (seedView.width - gpad * 2f) / 3f;
+            float gh = (seedView.height - gpad) / 2f;
+            for (int i = 0; i < s.Bag.SlotCount && i < 6; i++)
+                DrawPlantCell(s, s.Bag[i],
+                    new Rect(seedView.x + (i % 3) * (gw + gpad), seedView.y + (i / 3) * (gh + gpad), gw, gh));
 
             // v18：道具用小格子展示（图标 + 右上角 ×数量），点击查看详情
             GUI.Label(new Rect(mid.x + 12, mid.y + h * 0.55f + 44, mid.width - 20, 28), $"道具（{s.ItemStacks.Count}）", _bold);
