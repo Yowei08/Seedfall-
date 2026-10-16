@@ -436,9 +436,16 @@ namespace Seedfall
         //   它是"植物开火"的唯一弹道构造口 ✓ 调用者只有 `PlantAlly.Fire()` 两处（随类删除）✓
         //   ⇒ 删掉它之后，`OwnerTeam = Team.Player` 的子弹**只剩玩家武器那一条来源** ✓
         //   ⚠️ 玩家的弹道不走这里：走 `RunSession` 的武器开火路径（`new Projectile { ... }` 直接构造）✓
-        //   ⚠️ 连带删除：`Projectile.FromPlant` 字段（上面）、`Special` 的植物语义（`Pierce2`/`Bounce1`/`Splash`
-        //      /`Cleave`/`HeavyKnockback` 这些**只由种子表驱动的字符串**从此全工程无写入者）✓
-        //      ⇒ `Special` / `Pierce` / `Bounce` 三个字段本身**保留** —— 它们仍被武器的弹道设置使用 ✓
+        //   ⚠️ **查证过的连带影响**（我原来以为"武器还在用这三个字段"，grep 后不成立 ✗）：
+        //      `PlantShot` 是 `Pierce` / `Bounce` / `Special` 的**唯一写者** ✓
+        //      （查证方式：搜 `new Projectile` → 全工程只剩下面 `EnemyShot` 一处；
+        //        搜 `Pierce =` / `Bounce =` / `Special =` → 全工程 0 处）✓
+        //      ⇒ 删掉它之后这三个字段变成**静态无写者**（此前是"写者不可达"——弱一档）✓
+        //      ⇒ 它们的读者是 `TickPlayerShot` 里三条**恒假**的 `if`
+        //        （`Special == "Splash"` / `Bounce > 0` / `Pierce > 0`）✓
+        //      ★ 本轮**保留**这三个字段与那三条分支，只在此记录 ★ —— 它们属于
+        //        "玩家弹道"的地界（`PlayerActor` 的武器在 v162 之后走近战/激光/爆炸，
+        //        已经不再构造 Player 阵营的 `Projectile`）⇒ 是**独立于植物**的另一笔死代码 ✗
 
         public static Projectile EnemyShot(Actor source, Vector2 from, Vector2 dir, float damage, float speed, Color tint)
         {

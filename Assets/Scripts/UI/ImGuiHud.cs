@@ -2382,8 +2382,9 @@ namespace Seedfall
                 $"{s.ResultText}\n\n坚持 {FmtTime(s.RunTime)}（第 {s.WaveIndex} 分钟）　击杀 {s.Kills}\n" +
                 $"金币 {s.Gold}　等级 {s.Progress.Level}\n" +
                 // ★ v166：改成读**已占用的列数**（= 玩家实际种了几株）★
-                // 为什么不再读 `World.Plants.Count`：新玩法里"一株植物"住在**一列地块**上，
-                // 而 `World.Plants`（PlantAlly 实体）在新玩法里**已无生产者** ⇒ 恒为 0 ✗
+                // 为什么不再读植物实体数：新玩法里"一株植物"住在**一列地块**上 ✓
+                // ★ T2 更新：`World.Plants` 这个列表**本身已经删除**（不只是"无生产者"）✗
+                //   所以这里读 `Farm.PlantCount` 不再只是"口径更对"，而是**唯一读法** ✓
                 // 玩家在结算面板上会永远看到"剩余植物 0"，而他明明种了 3 株 ✓ 那就是在撒谎 ✗
                 // `Farm.PlantCount` = 有作物的列数 = 株数 ✓ `Farm.Columns` = 可种植株数上限 ✓
                 $"植物 {s.World.Farm.PlantCount}/{s.World.Farm.Columns} 株　耕地 {s.World.Farm.PlotCount} 格", _center);
