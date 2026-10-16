@@ -637,11 +637,22 @@ namespace Seedfall
             list.Add(new CheckResult("Boss 从【刷新】起计时（不因 Boss 存活而停）",
                 d1 < d0 - 59f && d1 > 0f, $"刚刷新 {d0:0}s → 1 分钟后 {d1:0}s"));
 
-            // ── ④ ShopTruck：时序必须正好配平 60 秒 ──
-            float sum = ShopTruck.EnterSeconds + ShopTruck.LoopSeconds + ShopTruck.DockSeconds + ShopTruck.ExitSeconds;
-            list.Add(new CheckResult("商店车时序配平（入场+绕场+停靠+离场 = 周期）",
+            // ── ④ ShopTruck：时序必须正好配平 60 秒（含"开走之后不在场"那段）──
+            //
+            // ★ 这条断言的语义在"不要常驻"之后变了 ★
+            //   旧：四段（入场+绕场+停靠+离场）之和 == 周期 ⇒ 间隙恒为 0 ⇒ 车永远在场 ✗
+            //   新：四段之和 + `IdleHoldSeconds` == 周期 ⇒ 每隔一轮有一段**真的不在场** ✓
+            //   ⇒ 判定必须把 `IdleHoldSeconds` 算进去，否则它测的是"常驻"而不是"配平" ✗
+            float sum = ShopTruck.EnterSeconds + ShopTruck.LoopSeconds + ShopTruck.DockSeconds
+                        + ShopTruck.ExitSeconds + ShopTruck.IdleHoldSeconds;
+            list.Add(new CheckResult("商店车时序配平（入场+绕场+停靠+离场+不在场 = 周期）",
                 Mathf.Abs(sum - ShopTruck.CycleSeconds) < 1e-3f,
-                $"{ShopTruck.EnterSeconds}+{ShopTruck.LoopSeconds}+{ShopTruck.DockSeconds}+{ShopTruck.ExitSeconds}={sum}s"));
+                $"{ShopTruck.EnterSeconds}+{ShopTruck.LoopSeconds}+{ShopTruck.DockSeconds}"
+                + $"+{ShopTruck.ExitSeconds}+{ShopTruck.IdleHoldSeconds}={sum}s"));
+            list.Add(new CheckResult("商店车【不常驻】：开走之后有一段不在场",
+                ShopTruck.IdleHoldSeconds > 0f,
+                $"不在场 {ShopTruck.IdleHoldSeconds:0.0}s / 周期 {ShopTruck.CycleSeconds:0}s"
+                + $" ⇒ 在场占比 {(ShopTruck.CycleSeconds - ShopTruck.IdleHoldSeconds) / ShopTruck.CycleSeconds * 100f:0.0}%"));
 
             // 状态机真的会走完一圈，并且每段时长与常量一致
             // ★ 时间预算必须覆盖到 Leaving 之后 ★

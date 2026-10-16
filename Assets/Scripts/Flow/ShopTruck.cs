@@ -19,9 +19,14 @@ namespace Seedfall
     /// **可交互的停留窗口 = 10 秒** —— 绕场是它的表现过程，不是可交互期 ✓
     ///
     /// ★ 时序配平：整周期必须正好 60 秒 ★
-    ///   入场 2.5s（对齐 shop_truck_enter.fbx）+ 绕场 45s + 停留 10s + 离场 2.5s（对齐 exit）= 60s
+    ///   入场 2.5s（对齐 shop_truck_enter.fbx）+ 绕场 35s + 停留 10s + 离场 2.5s（对齐 exit）
+    ///   + **不在场 10s** = 60s
     /// 入场/离场时长**取自动画实际长度**（subagent 交付的是 2.50s），
     /// 这样"动画播完车恰好到位"，不需要额外的等待逻辑 ✓
+    ///
+    /// ★ 最后那 10 秒"不在场"是用户明确要的（"就开走，不要常驻"）★
+    /// 它原先**不存在**（四段恰好凑满 60）⇒ 车在第一分钟之后**永远在场** ✗
+    /// 详见下方 `IdleHoldSeconds` 的说明与实测数字 ✓
     /// </summary>
     public sealed class ShopTruck
     {
@@ -123,11 +128,39 @@ namespace Seedfall
         }
 
         // ── 时序（秒）──
+        //
+        // ★ 用户的四句话就是这五个常量 ★
+        //   "每分钟刷新一次"   ⇒ `CycleSeconds = 60`（每 60 秒**到场一次**）✓
+        //   "转一圈到目的地"   ⇒ `LoopSeconds`（绕场一圈）✓
+        //   "接着停 10 秒"     ⇒ `DockSeconds = 10`（需求原文，不能动）✓
+        //   "就开走，不要常驻" ⇒ ★ `IdleHoldSeconds = 10` ★ —— 开走之后**真的不在场上** ✓
+        //
+        // ★ 为什么必须补 `IdleHoldSeconds` ★
+        // 原来四个阶段**恰好**加起来 = 60（2.5 + 45 + 10 + 2.5）✗
+        // ⇒ `Tick` 里那句 `_nextCycleAt = now + (CycleSeconds − 四段之和)` 算出来是 **0** ✓
+        // ⇒ 离场的下一帧立刻又入场 ⇒ ★ 第一分钟之后车**100% 在场上**★
+        //   实测（同一套观测、修前）：不在场累计 60.10s，其中开局等待 60.0s、
+        //   **轮与轮之间的间隙 ≈ 0.10s**（就是 1~2 个固定步）✗
+        //   玩家看到的因此是"一辆车永远在场上绕" ⇒ 正是用户说的**常驻** ✓
+        //
+        // ★ 为什么压缩的是绕场，而不是停靠或入/离场 ★
+        //   · `DockSeconds` 是需求原文写的 10 秒 ✗ 不能动 ✓
+        //   · `EnterSeconds` / `ExitSeconds` **等于动画的实际长度**（各 2.5s）✗
+        //     改短了动画播不完（车会在半路被瞬移）✓
+        //   · `LoopSeconds` 原本就写着"**配平项**"—— 它存在的唯一理由是把总和凑成 60 ✓
+        //     ⇒ 要腾出"不在场"的时间，只能从它身上腾 ✓ 它本来就是自由变量 ✓
+        //
+        // ⚠️ 代价（写明）：绕场从 45s 压到 35s ⇒ 车速 2.33 → **2.99 m/s**（路径 104.8m / 35s），
+        //    与玩家移动速度（约 3.0 m/s）同档 ✓
+        //    要改回去只需改 `IdleHoldSeconds`（0 = 旧行为，四段总和仍为 60）✓
         public const float CycleSeconds = 60f;
         public const float EnterSeconds = 2.5f;     // = shop_truck_enter 动画长度
-        public const float LoopSeconds = 45f;       // 配平项：60 − 2.5 − 10 − 2.5
+        /// <summary>开走之后**不在场上**的时长（用户："不要常驻"）。0 = 旧行为（等效于常驻）。</summary>
+        public const float IdleHoldSeconds = 10f;
         public const float DockSeconds = 10f;       // 需求：停留 10 秒
         public const float ExitSeconds = 2.5f;      // = shop_truck_exit 动画长度
+        /// <summary>配平项：整周期减去其它四段（必须 &gt; 0，否则车永不消失）。</summary>
+        public const float LoopSeconds = CycleSeconds - EnterSeconds - DockSeconds - ExitSeconds - IdleHoldSeconds;
 
         /// <summary>玩家进入交互的距离（米）。比车的尺寸略大一点，贴上去就能触发。</summary>
         public const float InteractRange = 4.0f;
