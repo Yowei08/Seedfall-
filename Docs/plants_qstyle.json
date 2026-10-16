@@ -1,0 +1,1743 @@
+{
+ "generator": "Tools/AssetPipeline/gen_plants_qstyle.py",
+ "command": "blender.exe -b --factory-startup -P gen_plants_qstyle.py -- all",
+ "stages": [
+  "young",
+  "grown"
+ ],
+ "stageSpec": {
+  "young": {
+   "body": 0.44,
+   "support": 0.1,
+   "crown": 0.08,
+   "detail": 0.35,
+   "h": [
+    0.35,
+    0.5
+   ],
+   "budget": 500
+  },
+  "grown": {
+   "body": 0.52,
+   "support": 0.26,
+   "crown": 0.22,
+   "detail": 0.7,
+   "h": [
+    0.95,
+    1.15
+   ],
+   "budget": 900
+  },
+  "mature": {
+   "body": 0.56,
+   "support": 0.26,
+   "crown": 0.26,
+   "detail": 1.0,
+   "h": [
+    1.68,
+    1.78
+   ],
+   "budget": 1500
+  }
+ },
+ "bodyMin": 0.45,
+ "satMin": 0.35,
+ "satTarget": 0.45,
+ "models": [
+  {
+   "id": "radish_guard",
+   "stage": "young",
+   "nameCN": "萝卜卫士",
+   "form": "bulb",
+   "height": 0.3731,
+   "dimX": 0.2304,
+   "dimY": 0.2547,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 488,
+   "budget": 500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.7097,
+   "bodySpan": [
+    0.0496,
+    0.3143
+   ],
+   "supportSpan": [
+    -0.021,
+    0.0632
+   ],
+   "supportRatio": 0.2257,
+   "crownRatio": 0.1574,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Petal",
+    "QLeafDeep"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Petal",
+    "QLeafDeep"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Petal": 0.5431,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.6448,
+   "minSatKey": "Petal",
+   "minSat": 0.5431,
+   "path": "Assets/Resources/Art/Plants/radish_guard_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "radish_guard",
+   "stage": "grown",
+   "nameCN": "萝卜卫士",
+   "form": "bulb",
+   "height": 0.9808,
+   "dimX": 0.5476,
+   "dimY": 0.5893,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 536,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.52,
+   "bodySpan": [
+    0.2346,
+    0.7446
+   ],
+   "supportSpan": [
+    -0.0442,
+    0.255
+   ],
+   "supportRatio": 0.305,
+   "crownRatio": 0.2408,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Petal",
+    "QLeafDeep"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Petal",
+    "QLeafDeep"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Petal": 0.5431,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.6448,
+   "minSatKey": "Petal",
+   "minSat": 0.5431,
+   "path": "Assets/Resources/Art/Plants/radish_guard_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "pea_shooter",
+   "stage": "young",
+   "nameCN": "豌豆射手",
+   "form": "pod",
+   "height": 0.3846,
+   "dimX": 0.3612,
+   "dimY": 0.2819,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 480,
+   "budget": 500,
+   "detailFloor": "mid",
+   "bodyRatio": 0.7666,
+   "bodySpan": [
+    0.0443,
+    0.3391
+   ],
+   "supportSpan": [
+    -0.0053,
+    0.0443
+   ],
+   "supportRatio": 0.1289,
+   "crownRatio": 0.1183,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Leaf",
+    "QIce",
+    "QLeafDeep"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Leaf",
+    "QIce",
+    "QLeafDeep"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Leaf": 0.5432,
+    "QIce": 0.584,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.6326,
+   "minSatKey": "Leaf",
+   "minSat": 0.5432,
+   "path": "Assets/Resources/Art/Plants/pea_shooter_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "pea_shooter",
+   "stage": "grown",
+   "nameCN": "豌豆射手",
+   "form": "pod",
+   "height": 0.9962,
+   "dimX": 0.7976,
+   "dimY": 0.6225,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 624,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5919,
+   "bodySpan": [
+    0.1947,
+    0.7843
+   ],
+   "supportSpan": [
+    -0.0234,
+    0.1947
+   ],
+   "supportRatio": 0.2189,
+   "crownRatio": 0.2126,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Leaf",
+    "QIce",
+    "QLeafDeep"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Leaf",
+    "QIce",
+    "QLeafDeep"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Leaf": 0.5432,
+    "QIce": 0.584,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.6326,
+   "minSatKey": "Leaf",
+   "minSat": 0.5432,
+   "path": "Assets/Resources/Art/Plants/pea_shooter_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "toxic_mushroom",
+   "stage": "young",
+   "nameCN": "毒蘑菇",
+   "form": "cap",
+   "height": 0.38,
+   "dimX": 0.3533,
+   "dimY": 0.3623,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 404,
+   "budget": 500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.7512,
+   "bodySpan": [
+    0.0525,
+    0.338
+   ],
+   "supportSpan": [
+    -0.0063,
+    0.0525
+   ],
+   "supportRatio": 0.1548,
+   "crownRatio": 0.1106,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Shroom",
+    "QGoo"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Shroom",
+    "QGoo"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Shroom": 0.5309,
+    "QGoo": 0.5431
+   },
+   "meanSat": 0.6101,
+   "minSatKey": "Shroom",
+   "minSat": 0.5309,
+   "path": "Assets/Resources/Art/Plants/toxic_mushroom_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "toxic_mushroom",
+   "stage": "grown",
+   "nameCN": "毒蘑菇",
+   "form": "cap",
+   "height": 0.99,
+   "dimX": 0.7637,
+   "dimY": 0.7834,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 452,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5723,
+   "bodySpan": [
+    0.2293,
+    0.7959
+   ],
+   "supportSpan": [
+    -0.0275,
+    0.2293
+   ],
+   "supportRatio": 0.2595,
+   "crownRatio": 0.196,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Shroom",
+    "QGoo"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Shroom",
+    "QGoo"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Shroom": 0.5309,
+    "QGoo": 0.5431
+   },
+   "meanSat": 0.6101,
+   "minSatKey": "Shroom",
+   "minSat": 0.5309,
+   "path": "Assets/Resources/Art/Plants/toxic_mushroom_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "frost_ivy",
+   "stage": "young",
+   "nameCN": "寒霜藤",
+   "form": "cluster",
+   "height": 0.35,
+   "dimX": 0.2004,
+   "dimY": 0.2202,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 412,
+   "budget": 500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.6763,
+   "bodySpan": [
+    0.0732,
+    0.3099
+   ],
+   "supportSpan": [
+    -0.0088,
+    0.0732
+   ],
+   "supportRatio": 0.2341,
+   "crownRatio": 0.1147,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "Leaf"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "Leaf"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QIce": 0.584,
+    "Leaf": 0.5432
+   },
+   "meanSat": 0.6234,
+   "minSatKey": "Leaf",
+   "minSat": 0.5432,
+   "path": "Assets/Resources/Art/Plants/frost_ivy_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "frost_ivy",
+   "stage": "grown",
+   "nameCN": "寒霜藤",
+   "form": "cluster",
+   "height": 0.95,
+   "dimX": 0.6591,
+   "dimY": 0.693,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 452,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.4646,
+   "bodySpan": [
+    0.3001,
+    0.7415
+   ],
+   "supportSpan": [
+    -0.036,
+    0.3001
+   ],
+   "supportRatio": 0.3538,
+   "crownRatio": 0.2195,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "Leaf"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "Leaf"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QIce": 0.584,
+    "Leaf": 0.5432
+   },
+   "meanSat": 0.6234,
+   "minSatKey": "Leaf",
+   "minSat": 0.5432,
+   "path": "Assets/Resources/Art/Plants/frost_ivy_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "thorn_pumpkin",
+   "stage": "young",
+   "nameCN": "荆棘南瓜",
+   "form": "gourd",
+   "height": 0.3892,
+   "dimX": 0.2868,
+   "dimY": 0.3027,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 472,
+   "budget": 500,
+   "detailFloor": "mid",
+   "bodyRatio": 0.736,
+   "bodySpan": [
+    0.0428,
+    0.3293
+   ],
+   "supportSpan": [
+    -0.0225,
+    0.0605
+   ],
+   "supportRatio": 0.2131,
+   "crownRatio": 0.1541,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Pumpkin": 0.7946,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.7076,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/thorn_pumpkin_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "thorn_pumpkin",
+   "stage": "grown",
+   "nameCN": "荆棘南瓜",
+   "form": "gourd",
+   "height": 1.0023,
+   "dimX": 0.6665,
+   "dimY": 0.6834,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 608,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5523,
+   "bodySpan": [
+    0.2085,
+    0.762
+   ],
+   "supportSpan": [
+    -0.0467,
+    0.2306
+   ],
+   "supportRatio": 0.2767,
+   "crownRatio": 0.2397,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Pumpkin": 0.7946,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.7076,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/thorn_pumpkin_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "stone_fist",
+   "stage": "young",
+   "nameCN": "石拳",
+   "form": "rock",
+   "height": 0.4123,
+   "dimX": 0.3894,
+   "dimY": 0.2518,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 428,
+   "budget": 500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5246,
+   "bodySpan": [
+    0.1315,
+    0.3478
+   ],
+   "supportSpan": [
+    -0.0099,
+    0.064
+   ],
+   "supportRatio": 0.1792,
+   "crownRatio": 0.1565,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QRock",
+    "Moss"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QRock",
+    "Moss"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QRock": 0.481,
+    "Moss": 0.4304
+   },
+   "meanSat": 0.5694,
+   "minSatKey": "Moss",
+   "minSat": 0.4304,
+   "path": "Assets/Resources/Art/Plants/stone_fist_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "stone_fist",
+   "stage": "grown",
+   "nameCN": "石拳",
+   "form": "rock",
+   "height": 1.0331,
+   "dimX": 1.0049,
+   "dimY": 0.5443,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 628,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.4985,
+   "bodySpan": [
+    0.2718,
+    0.7868
+   ],
+   "supportSpan": [
+    -0.0272,
+    0.2452
+   ],
+   "supportRatio": 0.2637,
+   "crownRatio": 0.2384,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QRock",
+    "Moss"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QRock",
+    "Moss"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QRock": 0.481,
+    "Moss": 0.4304
+   },
+   "meanSat": 0.5694,
+   "minSatKey": "Moss",
+   "minSat": 0.4304,
+   "path": "Assets/Resources/Art/Plants/stone_fist_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "chili_mage",
+   "stage": "young",
+   "nameCN": "辣椒法师",
+   "form": "taper",
+   "height": 0.3985,
+   "dimX": 0.2449,
+   "dimY": 0.2449,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 312,
+   "budget": 500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.7589,
+   "bodySpan": [
+    0.0387,
+    0.341
+   ],
+   "supportSpan": [
+    -0.0057,
+    0.0477
+   ],
+   "supportRatio": 0.1341,
+   "crownRatio": 0.1441,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QEmberDeep",
+    "Leaf"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QEmberDeep",
+    "Leaf"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Ember": 0.7414,
+    "QEmberDeep": 0.9509,
+    "Leaf": 0.5432
+   },
+   "meanSat": 0.7204,
+   "minSatKey": "Leaf",
+   "minSat": 0.5432,
+   "path": "Assets/Resources/Art/Plants/chili_mage_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "chili_mage",
+   "stage": "grown",
+   "nameCN": "辣椒法师",
+   "form": "taper",
+   "height": 1.0146,
+   "dimX": 0.5254,
+   "dimY": 0.5094,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 360,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5816,
+   "bodySpan": [
+    0.1872,
+    0.7773
+   ],
+   "supportSpan": [
+    -0.0246,
+    0.2049
+   ],
+   "supportRatio": 0.2262,
+   "crownRatio": 0.2339,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QEmberDeep",
+    "Leaf"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QEmberDeep",
+    "Leaf"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Ember": 0.7414,
+    "QEmberDeep": 0.9509,
+    "Leaf": 0.5432
+   },
+   "meanSat": 0.7204,
+   "minSatKey": "Leaf",
+   "minSat": 0.5432,
+   "path": "Assets/Resources/Art/Plants/chili_mage_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "starvine",
+   "stage": "young",
+   "nameCN": "星藤",
+   "form": "star",
+   "height": 0.3938,
+   "dimX": 0.3262,
+   "dimY": 0.2101,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 364,
+   "budget": 500,
+   "detailFloor": "low",
+   "bodyRatio": 0.7318,
+   "bodySpan": [
+    0.0679,
+    0.3561
+   ],
+   "supportSpan": [
+    -0.0073,
+    0.0605
+   ],
+   "supportRatio": 0.1721,
+   "crownRatio": 0.0958,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "PetalB"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "PetalB"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QIce": 0.584,
+    "PetalB": 0.433
+   },
+   "meanSat": 0.5958,
+   "minSatKey": "PetalB",
+   "minSat": 0.433,
+   "path": "Assets/Resources/Art/Plants/starvine_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "starvine",
+   "stage": "grown",
+   "nameCN": "星藤",
+   "form": "star",
+   "height": 1.0085,
+   "dimX": 0.6825,
+   "dimY": 0.5707,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 820,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5338,
+   "bodySpan": [
+    0.2562,
+    0.7944
+   ],
+   "supportSpan": [
+    -0.0296,
+    0.2467
+   ],
+   "supportRatio": 0.274,
+   "crownRatio": 0.2122,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "PetalB",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "PetalB",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QIce": 0.584,
+    "PetalB": 0.433,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6406,
+   "minSatKey": "PetalB",
+   "minSat": 0.433,
+   "path": "Assets/Resources/Art/Plants/starvine_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "moontree",
+   "stage": "young",
+   "nameCN": "月树",
+   "form": "canopy",
+   "height": 0.4446,
+   "dimX": 0.2221,
+   "dimY": 0.2335,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 480,
+   "budget": 500,
+   "detailFloor": "hi",
+   "bodyRatio": 0.7108,
+   "bodySpan": [
+    0.0999,
+    0.416
+   ],
+   "supportSpan": [
+    -0.0073,
+    0.0609
+   ],
+   "supportRatio": 0.1533,
+   "crownRatio": 0.0645,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QMoon"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QMoon"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QMoon": 0.5023
+   },
+   "meanSat": 0.6229,
+   "minSatKey": "QMoon",
+   "minSat": 0.5023,
+   "path": "Assets/Resources/Art/Plants/moontree_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "moontree",
+   "stage": "grown",
+   "nameCN": "月树",
+   "form": "canopy",
+   "height": 1.0762,
+   "dimX": 0.4403,
+   "dimY": 0.4629,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 776,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.6557,
+   "bodySpan": [
+    0.3057,
+    1.0114
+   ],
+   "supportSpan": [
+    -0.0284,
+    0.2366
+   ],
+   "supportRatio": 0.2463,
+   "crownRatio": 0.0602,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QMoon",
+    "QLeafDeep"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QMoon",
+    "QLeafDeep"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QMoon": 0.5023,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.6345,
+   "minSatKey": "QMoon",
+   "minSat": 0.5023,
+   "path": "Assets/Resources/Art/Plants/moontree_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "char_flower",
+   "stage": "young",
+   "nameCN": "炭花",
+   "form": "flower",
+   "height": 0.3985,
+   "dimX": 0.285,
+   "dimY": 0.2102,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 412,
+   "budget": 500,
+   "detailFloor": "low",
+   "bodyRatio": 0.7644,
+   "bodySpan": [
+    0.0564,
+    0.361
+   ],
+   "supportSpan": [
+    -0.0078,
+    0.0653
+   ],
+   "supportRatio": 0.1835,
+   "crownRatio": 0.0941,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QSunDisc"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QSunDisc"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Ember": 0.7414,
+    "QSunDisc": 0.8745
+   },
+   "meanSat": 0.7456,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/char_flower_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "char_flower",
+   "stage": "grown",
+   "nameCN": "炭花",
+   "form": "flower",
+   "height": 1.0146,
+   "dimX": 0.6769,
+   "dimY": 0.6032,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 508,
+   "budget": 900,
+   "detailFloor": "low",
+   "bodyRatio": 0.5508,
+   "bodySpan": [
+    0.2471,
+    0.806
+   ],
+   "supportSpan": [
+    -0.0316,
+    0.2635
+   ],
+   "supportRatio": 0.2909,
+   "crownRatio": 0.2057,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QSunDisc"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QSunDisc"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Ember": 0.7414,
+    "QSunDisc": 0.8745
+   },
+   "meanSat": 0.7456,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/char_flower_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "plague_mother",
+   "stage": "young",
+   "nameCN": "瘟疫之母",
+   "form": "dome",
+   "height": 0.4308,
+   "dimX": 0.2931,
+   "dimY": 0.3082,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 460,
+   "budget": 500,
+   "detailFloor": "mid",
+   "bodyRatio": 0.7569,
+   "bodySpan": [
+    0.0554,
+    0.3814
+   ],
+   "supportSpan": [
+    -0.0066,
+    0.0554
+   ],
+   "supportRatio": 0.144,
+   "crownRatio": 0.1146,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QGoo"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QGoo"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QBerry": 0.6062,
+    "QGoo": 0.5431
+   },
+   "meanSat": 0.6289,
+   "minSatKey": "QGoo",
+   "minSat": 0.5431,
+   "path": "Assets/Resources/Art/Plants/plague_mother_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "plague_mother",
+   "stage": "grown",
+   "nameCN": "瘟疫之母",
+   "form": "dome",
+   "height": 1.0577,
+   "dimX": 0.619,
+   "dimY": 0.6349,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 604,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.575,
+   "bodySpan": [
+    0.2272,
+    0.8354
+   ],
+   "supportSpan": [
+    -0.0273,
+    0.2272
+   ],
+   "supportRatio": 0.2406,
+   "crownRatio": 0.2102,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QGoo"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QGoo"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QBerry": 0.6062,
+    "QGoo": 0.5431
+   },
+   "meanSat": 0.6289,
+   "minSatKey": "QGoo",
+   "minSat": 0.5431,
+   "path": "Assets/Resources/Art/Plants/plague_mother_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "moss_shield",
+   "stage": "young",
+   "nameCN": "苔藓盾",
+   "form": "mossball",
+   "height": 0.3754,
+   "dimX": 0.2766,
+   "dimY": 0.3079,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 496,
+   "budget": 500,
+   "detailFloor": "mid",
+   "bodyRatio": 0.6796,
+   "bodySpan": [
+    0.0505,
+    0.3056
+   ],
+   "supportSpan": [
+    -0.0206,
+    0.0709
+   ],
+   "supportRatio": 0.2439,
+   "crownRatio": 0.1858,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Moss",
+    "QBlood"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Moss",
+    "QBlood"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Moss": 0.4304,
+    "QBlood": 0.6429
+   },
+   "meanSat": 0.6099,
+   "minSatKey": "Moss",
+   "minSat": 0.4304,
+   "path": "Assets/Resources/Art/Plants/moss_shield_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "moss_shield",
+   "stage": "grown",
+   "nameCN": "苔藓盾",
+   "form": "mossball",
+   "height": 0.9838,
+   "dimX": 0.7097,
+   "dimY": 0.7072,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 688,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.485,
+   "bodySpan": [
+    0.2537,
+    0.7309
+   ],
+   "supportSpan": [
+    -0.0427,
+    0.2919
+   ],
+   "supportRatio": 0.3401,
+   "crownRatio": 0.2571,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Moss",
+    "QBlood",
+    "QMossDeep"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Moss",
+    "QBlood",
+    "QMossDeep"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Moss": 0.4304,
+    "QBlood": 0.6429,
+    "QMossDeep": 0.7213
+   },
+   "meanSat": 0.6322,
+   "minSatKey": "Moss",
+   "minSat": 0.4304,
+   "path": "Assets/Resources/Art/Plants/moss_shield_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "healing_clover",
+   "stage": "young",
+   "nameCN": "治愈三叶草",
+   "form": "clover",
+   "height": 0.3892,
+   "dimX": 0.3458,
+   "dimY": 0.3728,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 484,
+   "budget": 500,
+   "detailFloor": "mid",
+   "bodyRatio": 0.6886,
+   "bodySpan": [
+    0.0673,
+    0.3354
+   ],
+   "supportSpan": [
+    -0.0081,
+    0.0673
+   ],
+   "supportRatio": 0.1937,
+   "crownRatio": 0.1384,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QClover": 0.6552,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.7103,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/healing_clover_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "healing_clover",
+   "stage": "grown",
+   "nameCN": "治愈三叶草",
+   "form": "clover",
+   "height": 1.0023,
+   "dimX": 0.8272,
+   "dimY": 0.8272,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 760,
+   "budget": 900,
+   "detailFloor": "hi",
+   "bodyRatio": 0.495,
+   "bodySpan": [
+    0.2742,
+    0.7703
+   ],
+   "supportSpan": [
+    -0.0329,
+    0.2742
+   ],
+   "supportRatio": 0.3064,
+   "crownRatio": 0.2315,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QClover": 0.6552,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.7103,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/healing_clover_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "life_spring",
+   "stage": "young",
+   "nameCN": "生命之泉",
+   "form": "basin",
+   "height": 0.4077,
+   "dimX": 0.2487,
+   "dimY": 0.2726,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 364,
+   "budget": 500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.6608,
+   "bodySpan": [
+    0.0683,
+    0.3377
+   ],
+   "supportSpan": [
+    -0.0221,
+    0.0699
+   ],
+   "supportRatio": 0.2258,
+   "crownRatio": 0.1716,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Water",
+    "QIce"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Water",
+    "QIce"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Water": 0.5278,
+    "QIce": 0.584
+   },
+   "meanSat": 0.6195,
+   "minSatKey": "Water",
+   "minSat": 0.5278,
+   "path": "Assets/Resources/Art/Plants/life_spring_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "life_spring",
+   "stage": "grown",
+   "nameCN": "生命之泉",
+   "form": "basin",
+   "height": 1.0269,
+   "dimX": 0.5599,
+   "dimY": 0.584,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 412,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.4701,
+   "bodySpan": [
+    0.2693,
+    0.7521
+   ],
+   "supportSpan": [
+    -0.0435,
+    0.2693
+   ],
+   "supportRatio": 0.3046,
+   "crownRatio": 0.2676,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Water",
+    "QIce"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Water",
+    "QIce"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Water": 0.5278,
+    "QIce": 0.584
+   },
+   "meanSat": 0.6195,
+   "minSatKey": "Water",
+   "minSat": 0.5278,
+   "path": "Assets/Resources/Art/Plants/life_spring_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "holy_tree_guard",
+   "stage": "young",
+   "nameCN": "圣树守卫",
+   "form": "tree",
+   "height": 0.4654,
+   "dimX": 0.2212,
+   "dimY": 0.2913,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 480,
+   "budget": 500,
+   "detailFloor": "hi",
+   "bodyRatio": 0.9473,
+   "bodySpan": [
+    0.016,
+    0.4569
+   ],
+   "supportSpan": [
+    -0.0083,
+    0.0688
+   ],
+   "supportRatio": 0.1655,
+   "crownRatio": 0.0182,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QCrownLeaf",
+    "QTrunk"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QCrownLeaf",
+    "QTrunk"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QCrownLeaf": 0.6375,
+    "QTrunk": 0.6667
+   },
+   "meanSat": 0.6676,
+   "minSatKey": "QCrownLeaf",
+   "minSat": 0.6375,
+   "path": "Assets/Resources/Art/Plants/holy_tree_guard_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "holy_tree_guard",
+   "stage": "grown",
+   "nameCN": "圣树守卫",
+   "form": "tree",
+   "height": 1.1038,
+   "dimX": 0.5519,
+   "dimY": 0.5736,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 632,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.692,
+   "bodySpan": [
+    0.1708,
+    0.9346
+   ],
+   "supportSpan": [
+    -0.0314,
+    0.2621
+   ],
+   "supportRatio": 0.2659,
+   "crownRatio": 0.1533,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QCrownLeaf",
+    "QTrunk"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QCrownLeaf",
+    "QTrunk"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QCrownLeaf": 0.6375,
+    "QTrunk": 0.6667
+   },
+   "meanSat": 0.6676,
+   "minSatKey": "QCrownLeaf",
+   "minSat": 0.6375,
+   "path": "Assets/Resources/Art/Plants/holy_tree_guard_grown.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "ironroot_colossus",
+   "stage": "young",
+   "nameCN": "铁根巨像",
+   "form": "colossus",
+   "height": 0.5,
+   "dimX": 0.3688,
+   "dimY": 0.2381,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 400,
+   "budget": 500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.64,
+   "bodySpan": [
+    0.1646,
+    0.4846
+   ],
+   "supportSpan": [
+    -0.0118,
+    0.0801
+   ],
+   "supportRatio": 0.1838,
+   "crownRatio": 0.0307,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QMetal",
+    "QRock",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QMetal",
+    "QRock",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QMetal": 0.3568,
+    "QRock": 0.481,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6047,
+   "minSatKey": "QMetal",
+   "minSat": 0.3568,
+   "path": "Assets/Resources/Art/Plants/ironroot_colossus_young.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "ironroot_colossus",
+   "stage": "grown",
+   "nameCN": "铁根巨像",
+   "form": "colossus",
+   "height": 1.15,
+   "dimX": 0.6671,
+   "dimY": 0.4543,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 440,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.4828,
+   "bodySpan": [
+    0.4277,
+    0.9829
+   ],
+   "supportSpan": [
+    -0.0312,
+    0.2803
+   ],
+   "supportRatio": 0.2709,
+   "crownRatio": 0.1453,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QMetal",
+    "QRock",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QMetal",
+    "QRock",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QMetal": 0.3568,
+    "QRock": 0.481,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6047,
+   "minSatKey": "QMetal",
+   "minSat": 0.3568,
+   "path": "Assets/Resources/Art/Plants/ironroot_colossus_grown.fbx",
+   "removedMeta": true
+  }
+ ],
+ "protection": {
+  "animFiles": 184,
+  "protectedCount": 188,
+  "changed": [],
+  "added": [],
+  "removed": [],
+  "intact": true,
+  "genPlantsPySha256": "949875cd8b7a2cc2e6c18da1bd4c4dc2ead826abe203f5b38fba7748873ea50b",
+  "genPlantsPyUnchanged": true
+ }
+}

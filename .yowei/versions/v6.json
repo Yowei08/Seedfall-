@@ -1,0 +1,45 @@
+{
+  "id": "v6",
+  "label": "seedfall-playable-v1",
+  "at": 1791899502109,
+  "why": "feature",
+  "note": "种地×幸存者核心循环可玩：耕地状态机/16 种子/S 级变异/四类敌人/10 波双 Boss/商店经济，含自检 41 项与 5 组回归数据",
+  "summary": "策划改动 1 篇",
+  "changes": {
+    "design": [
+      {
+        "id": "seedfall-garden-survivors",
+        "title": "Seedfall 守园者 · 种地×幸存者 策划案 v2",
+        "from": 0,
+        "to": 1
+      }
+    ],
+    "play": [],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 2,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 种地×幸存者 策划案 v2",
+      "index": 1,
+      "versions": 2
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 拓展方案 v1（12 条可独立施工的点子）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "waves": [
+    { "index": 1,  "isBoss": false, "tip": "种下即生长：水壶给土地补水 +50，成熟后用锄头收割 → 金币与经验" },
+    { "index": 2,  "isBoss": false, "tip": "土地蓄水会耗尽——耗尽后必须补水到满才能继续生长" },
+    { "index": 3,  "isBoss": false, "tip": "水分只从敌人身上掉落——击杀才有的拿，浇地还是当弹药由你选" },
+    { "index": 4,  "isBoss": false, "tip": "小猪不攻击，击败它掉落 1 个肥料" },
+    { "index": 5,  "isBoss": false, "tip": "肥料炸弹炸到土地立即催熟，炸到敌人造成爆炸伤害" },
+    { "index": 6,  "isBoss": false, "tip": "锄头只收割、水壶只补水、肥料只催熟" },
+    { "index": 7,  "isBoss": false, "tip": "被水壶激光扫到的土地都会补水，走位决定你浇到几块地" },
+    { "index": 8,  "isBoss": false, "tip": "植物不参战——它的机制只作用于【成长、收获、缺水】三处，产出金币与经验" },
+    { "index": 9,  "isBoss": false, "tip": "田地按【存活时间】扩张——活得越久，能种的株数越多" },
+    { "index": 10, "isBoss": true,  "tip": "BOSS 按时间表刷新：10 / 18 / 24 / 28 分钟……之后每 2 分钟一次" },
+    { "index": 11, "isBoss": false, "tip": "场上植物没有数量上限，但每一株都需要你补水维持" },
+    { "index": 12, "isBoss": false, "tip": "肥料只在小猪身上掉落，注意留弹" },
+    { "index": 13, "isBoss": false, "tip": "水壶打空就只能等敌人掉雨滴，别把水分浪费在空地上" },
+    { "index": 14, "isBoss": false, "tip": "稀有度越高，植物的耕作机制越特殊（加速生长 / 省水 / 掉露 / 连收 / 长老成长）" },
+    { "index": 15, "isBoss": false, "tip": "这一分钟你没变强，敌人却在变强——收割与升级都别停" },
+    { "index": 16, "isBoss": false, "tip": "生命之泉能全屏吸附掉落物，配合雨滴非常赚" },
+    { "index": 17, "isBoss": false, "tip": "铁根巨像让【该列】的蓄水消耗减半，是长期经营的核心" },
+    { "index": 18, "isBoss": false, "tip": "收割后土地需要重新补水，别停下你的水壶" },
+    { "index": 19, "isBoss": false, "tip": "BOSS 只由时间表刷——下次刷新看顶部的 ☠ 倒计时" },
+    { "index": 20, "isBoss": true,  "tip": "第 20 分钟之后没有终点：这一局只会因为你倒下而结束" }
+  ]
+}

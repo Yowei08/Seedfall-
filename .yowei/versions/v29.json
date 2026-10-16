@@ -1,0 +1,59 @@
+{
+  "id": "v29",
+  "label": "turn-1792044303409",
+  "at": 1792046391165,
+  "why": "",
+  "note": "工具：(request) current runtime context. this snapshot supersedes earlier ru x4、(request) <system-reminder>\na skill is a reusable set of task-specific x4、game_project、unity_log x8、(request) 你在分析一个 unity c# 游戏项目（路径：d:\\unity\\project\\seedfall守园者）。请只读取这些、(request) 你在分析一个 unity c# 游戏项目（路径：d:\\unity\\project\\seedfall守园者）。请只读取这一、(request) 你在分析一个 unity c# 游戏项目（路径：d:\\unity\\project\\seedfall守园者）。请只读取这三、(request) background subagent 2b1d95ec-1d19-4101-89e9-04bd5affd333 fin、(request) background subagent 0a85f8a6-30df-4f66-b841-cb97f0c49f25 fin、yowei_plan x2、(window) plans: all -> doc、yowei_expand x2、yowei_arch、unity_editor x10、unity_probe x4、unity_drive x23、unity_look、(request) background job pwsh-27 (pwsh: $dst=\"$env:temp\\seedfall-cites、(request) background job pwsh-30 (pwsh: $src='d:\\unity\\project\\seedfal、(request) background job pwsh-33 (pwsh: $src='d:\\unity\\project\\seedfal、(window) plans: code -> doc、yowei_version x2、(window) iterations: doc -> iter\n产出：架构案 x1、策划案 x2、拓展方案 x4、迭代 x2\n工程改动：无（只写了 .yowei 下的文档，未拍快照）\n耗时：2088 秒\n结束原因：本轮对话结束",
+  "summary": "与上一版相同",
+  "changes": {
+    "design": [],
+    "play": [],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 6,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-project-design",
+      "title": "Seedfall 守园者 · 完整项目设计与本次改版（已实现）",
+      "index": 1,
+      "versions": 2
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 策划案 v36（自动种植 · 攻击即互动）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-expansion",
+      "title": "Seedfall 守园者 · 拓展方案（v2，含本次实机排查的 7 项遗留问题）",
+      "index": 1,
+      "versions": 2
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 v16（新设计收尾清单）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-architecture",
+      "title": "Seedfall 守园者 · 架构案（子系统边界 / 接口 / 数据流 / 失败模式）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

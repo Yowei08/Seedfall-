@@ -1,0 +1,186 @@
+﻿==============================================================================
+回读验证：把导出的 FBX 重新导入 Blender（尺寸 / 轴向 / 材质名）
+==============================================================================
+FBX version: 7400
+  [OK ] radish_guard       dims(x,y,z)=(0.785, 0.947, 1.621) tris=1300 zmin=-0.0
+          材质: Bone, Ink, InkEye, Leaf, Petal
+FBX version: 7400
+  [OK ] pea_shooter        dims(x,y,z)=(0.806, 0.955, 1.662) tris=1164 zmin=-0.0
+          材质: Bone, Ink, InkEye, Leaf, LeafDark
+FBX version: 7400
+  [OK ] toxic_mushroom     dims(x,y,z)=(0.793, 0.952, 1.656) tris=1284 zmin=-0.0
+          材质: Bone, Ink, InkEye, Shroom
+FBX version: 7400
+  [OK ] frost_ivy          dims(x,y,z)=(0.759, 0.932, 1.62) tris=1356 zmin=-0.0
+          材质: Bone, Icicle, Ink, InkEye, LeafDark
+FBX version: 7400
+  [OK ] thorn_pumpkin      dims(x,y,z)=(0.798, 0.959, 1.667) tris=1388 zmin=-0.0
+          材质: Bone, Ink, InkEye, LeafDark, Pumpkin
+FBX version: 7400
+  [OK ] stone_fist         dims(x,y,z)=(0.945, 0.974, 1.695) tris=1360 zmin=-0.0
+          材质: Bone, Ink, InkEye, Moss, StoneDk, Stoner
+FBX version: 7400
+  [OK ] chili_mage         dims(x,y,z)=(0.81, 0.965, 1.678) tris=1200 zmin=-0.0
+          材质: Bone, Ember, Ink, InkEye, LeafDark
+FBX version: 7400
+  [OK ] starvine           dims(x,y,z)=(0.798, 0.962, 1.673) tris=1264 zmin=-0.0
+          材质: Bone, Ink, InkEye, Moon, PetalB
+FBX version: 7400
+  [OK ] moontree           dims(x,y,z)=(0.824, 0.989, 1.72) tris=1452 zmin=-0.0
+          材质: Bark, Bone, Ink, InkEye, Moon
+FBX version: 7400
+  [OK ] char_flower        dims(x,y,z)=(0.804, 0.965, 1.678) tris=1336 zmin=-0.0
+          材质: Bone, Ember, Ink, InkEye, LeafDark
+FBX version: 7400
+  [OK ] plague_mother      dims(x,y,z)=(0.822, 0.987, 1.717) tris=1404 zmin=-0.0
+          材质: Bone, Ink, InkEye, Moss, Purple
+FBX version: 7400
+  [OK ] moss_shield        dims(x,y,z)=(0.894, 0.949, 1.65) tris=1408 zmin=-0.0
+          材质: Bone, Ink, InkEye, Moss, Stoner
+FBX version: 7400
+  [OK ] healing_clover     dims(x,y,z)=(0.798, 0.959, 1.667) tris=1252 zmin=-0.0
+          材质: Bone, Gold, Ink, InkEye, Leaf
+FBX version: 7400
+  [OK ] life_spring        dims(x,y,z)=(0.809, 0.971, 1.689) tris=1264 zmin=-0.0
+          材质: Bone, Ink, InkEye, Stoner, Water
+FBX version: 7400
+  [OK ] holy_tree_guard    dims(x,y,z)=(0.888, 1.011, 1.758) tris=1324 zmin=-0.0
+          材质: Bark, BarkLite, Bone, Gold, Ink, InkEye, Leaf
+FBX version: 7400
+  [OK ] ironroot_colossus  dims(x,y,z)=(1.034, 1.035, 1.787) tris=1420 zmin=-0.0
+          材质: Bone, Ink, InkEye, Moss, StoneDk, Stoner
+==============================================================================
+逐帧关节角度：证明 _walk 的腿**真的在摆**（这条是决定性的）
+==============================================================================
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  radish_guard
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  pea_shooter
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  toxic_mushroom
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  frost_ivy
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  thorn_pumpkin
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  stone_fist
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  chili_mage
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  starvine
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  moontree
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  char_flower
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  plague_mother
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  moss_shield
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  healing_clover
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  life_spring
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  holy_tree_guard
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+FBX version: 7400
+FBX version: 7400
+FBX version: 7400
+  ironroot_colossus
+      idle 腿0.8° 躯干2.8° 头6.4° 循环=是
+      walk 髋X L[-30.0,30.0]° R[-30.0,30.0]° | 逐帧反相 23/25 帧 | 首尾一致=是
+           各轴摆幅 Lx=60.0 Rx=60.0 躯干x=4.4 头x=4.8
+      attack 躯干26.06° 头14.33°
+==============================================================================
+★ 全部通过：16 个模型尺寸/轴向/材质 OK，48 条动画的关节都在动 ★Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+==============================================================================

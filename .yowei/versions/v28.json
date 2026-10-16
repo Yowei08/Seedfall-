@@ -1,0 +1,59 @@
+{
+  "id": "v28",
+  "label": "pig-bounce-atkmult-blast-v45",
+  "at": 1792046373981,
+  "why": "feature",
+  "note": "",
+  "summary": "与上一版相同",
+  "changes": {
+    "design": [],
+    "play": [],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 6,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-project-design",
+      "title": "Seedfall 守园者 · 完整项目设计与本次改版（已实现）",
+      "index": 1,
+      "versions": 2
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 策划案 v36（自动种植 · 攻击即互动）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-expansion",
+      "title": "Seedfall 守园者 · 拓展方案（v2，含本次实机排查的 7 项遗留问题）",
+      "index": 1,
+      "versions": 2
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 v16（新设计收尾清单）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-architecture",
+      "title": "Seedfall 守园者 · 架构案（子系统边界 / 接口 / 数据流 / 失败模式）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

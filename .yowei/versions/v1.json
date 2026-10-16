@@ -1,0 +1,59 @@
+{
+  "id": "v1",
+  "label": "新策划 1 篇 · 新玩法 1 篇 · 新物品文档 1 篇",
+  "at": 1791898685128,
+  "why": "",
+  "note": "",
+  "summary": "新策划 1 篇 · 新玩法 1 篇 · 新物品文档 1 篇",
+  "changes": {
+    "design": [
+      {
+        "id": "seedfall-garden-survivors",
+        "title": "Seedfall 守园者 · 种地×幸存者 策划案 v1",
+        "added": true,
+        "index": 0
+      }
+    ],
+    "play": [
+      {
+        "id": "seedfall-garden-survivors-expand",
+        "title": "Seedfall 守园者 · 拓展方案 v1（12 条可独立施工的点子）",
+        "added": true,
+        "index": 0
+      }
+    ],
+    "items": [
+      {
+        "id": "seedfall-core-arch",
+        "title": "Seedfall 守园者 · 核心架构 v1",
+        "added": true,
+        "index": 0
+      }
+    ],
+    "removed": []
+  },
+  "unchanged": 0,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 种地×幸存者 策划案 v1",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 拓展方案 v1（12 条可独立施工的点子）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

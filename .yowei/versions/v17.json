@@ -1,0 +1,52 @@
+{
+  "id": "v17",
+  "label": "turn-1791910024328",
+  "at": 1791935575139,
+  "why": "",
+  "note": "工具：(window) iterations: doc -> iter、unity_editor x7、unity_drive x9、yowei_plan、(window) plans: iter -> doc、yowei_expand\n产出：策划案 x1、拓展方案 x2\n工程改动：无（只写了 .yowei 下的文档，未拍快照）\n耗时：25551 秒\n结束原因：本轮对话结束",
+  "summary": "策划改动 1 篇 · 新玩法 1 篇",
+  "changes": {
+    "design": [
+      {
+        "id": "seedfall-garden-survivors",
+        "title": "Seedfall 守园者 · 种地×幸存者 策划案 v7（合成自动化与操作收敛）",
+        "from": 5,
+        "to": 6
+      }
+    ],
+    "play": [
+      {
+        "id": "seedfall-garden-survivors-expand",
+        "title": "Seedfall 守园者 · 玩法方案 / 拓展 v6（合成手感与操作收敛）",
+        "from": 4,
+        "to": 5
+      }
+    ],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 1,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 种地×幸存者 策划案 v7（合成自动化与操作收敛）",
+      "index": 6,
+      "versions": 7
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 / 拓展 v6（合成手感与操作收敛）",
+      "index": 5,
+      "versions": 6
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

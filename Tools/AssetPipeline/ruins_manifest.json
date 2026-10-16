@@ -1,0 +1,137 @@
+{
+  "generator": "gen_ruins.py",
+  "blender": "5.2.2 LTS",
+  "dir": "D:\\Unity\\project\\Seedfall守园者\\Assets\\Resources\\Art\\Environment",
+  "modules": [
+    {
+      "id": "wall_ruin",
+      "label": "砖墙废墟·A",
+      "dims": [
+        2.0,
+        0.789,
+        1.606
+      ],
+      "tris": 372
+    },
+    {
+      "id": "wall_ruin_b",
+      "label": "砖墙废墟·B",
+      "dims": [
+        2.0,
+        0.789,
+        1.595
+      ],
+      "tris": 360
+    },
+    {
+      "id": "wall_ruin_c",
+      "label": "砖墙废墟·C",
+      "dims": [
+        2.0,
+        0.789,
+        1.575
+      ],
+      "tris": 312
+    },
+    {
+      "id": "haystack",
+      "label": "草垛",
+      "dims": [
+        1.27,
+        1.294,
+        1.3
+      ],
+      "tris": 304
+    },
+    {
+      "id": "well",
+      "label": "水井",
+      "dims": [
+        1.431,
+        1.2,
+        1.33
+      ],
+      "tris": 416
+    },
+    {
+      "id": "scarecrow",
+      "label": "稻草人",
+      "dims": [
+        1.437,
+        0.68,
+        1.815
+      ],
+      "tris": 440
+    },
+    {
+      "id": "wheelbarrow",
+      "label": "独轮车",
+      "dims": [
+        1.519,
+        0.614,
+        0.75
+      ],
+      "tris": 396
+    },
+    {
+      "id": "clay_jars",
+      "label": "陶罐堆",
+      "dims": [
+        0.976,
+        0.74,
+        0.502
+      ],
+      "tris": 468
+    },
+    {
+      "id": "crate_stack",
+      "label": "木箱堆",
+      "dims": [
+        1.798,
+        1.144,
+        0.908
+      ],
+      "tris": 352
+    },
+    {
+      "id": "chicken_coop",
+      "label": "鸡舍",
+      "dims": [
+        1.806,
+        1.622,
+        1.15
+      ],
+      "tris": 348
+    },
+    {
+      "id": "birdhouse",
+      "label": "鸟屋",
+      "dims": [
+        0.765,
+        0.669,
+        1.944
+      ],
+      "tris": 260
+    },
+    {
+      "id": "garden_gate",
+      "label": "园门",
+      "dims": [
+        2.06,
+        0.34,
+        1.039
+      ],
+      "tris": 260
+    },
+    {
+      "id": "laundry_line",
+      "label": "晾衣绳",
+      "dims": [
+        2.384,
+        0.962,
+        1.7
+      ],
+      "tris": 384
+    }
+  ]
+}

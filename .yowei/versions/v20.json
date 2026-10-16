@@ -1,0 +1,52 @@
+{
+  "id": "v20",
+  "label": "turn-1791955567500",
+  "at": 1791958199921,
+  "why": "",
+  "note": "工具：(window) iterations: doc -> iter、unity_editor x21、unity_drive x16、yowei_plan x2、(window) plans: iter -> doc、yowei_expand x2\n产出：策划案 x2、拓展方案 x4\n工程改动：无（只写了 .yowei 下的文档，未拍快照）\n耗时：2632 秒\n结束原因：本轮对话结束",
+  "summary": "策划改动 1 篇 · 新玩法 1 篇",
+  "changes": {
+    "design": [
+      {
+        "id": "seedfall-garden-survivors",
+        "title": "Seedfall 守园者 · 种地×幸存者 策划案 v11（道具整数约定与升级抽卡）",
+        "from": 8,
+        "to": 9
+      }
+    ],
+    "play": [
+      {
+        "id": "seedfall-garden-survivors-expand",
+        "title": "Seedfall 守园者 · 玩法方案 / 拓展 v10（抽卡节奏与数值口径）",
+        "from": 7,
+        "to": 9
+      }
+    ],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 1,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 种地×幸存者 策划案 v11（道具整数约定与升级抽卡）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 / 拓展 v10（抽卡节奏与数值口径）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

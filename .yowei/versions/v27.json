@@ -1,0 +1,80 @@
+{
+  "id": "v27",
+  "label": "pig-bounce-atkmult-blast-v45",
+  "at": 1792046355220,
+  "why": "feature",
+  "note": "小猪改为随机初始方向 + 撞墙镜面反射的弹球式移动（并修掉它从未以 WanderEnemy 生成的根因）；攻击伤害与攻击倍率拆成两条并列属性、删除伤害倍数；肥料爆炸伤害 1 → 19 点；删除无效道具水囊与死属性 WaterCap/WorkCap 并重建商店刷新池；顺带修掉商店空引用崩溃、跨会话事件泄漏、空种子卡崩溃。",
+  "summary": "新策划 1 篇 · 新玩法 1 篇 · 新物品文档 1 篇",
+  "changes": {
+    "design": [
+      {
+        "id": "seedfall-project-design",
+        "title": "Seedfall 守园者 · 完整项目设计与本次改版（已实现）",
+        "added": true,
+        "index": 1
+      }
+    ],
+    "play": [
+      {
+        "id": "seedfall-expansion",
+        "title": "Seedfall 守园者 · 拓展方案（v2，含本次实机排查的 7 项遗留问题）",
+        "added": true,
+        "index": 1
+      }
+    ],
+    "items": [
+      {
+        "id": "seedfall-architecture",
+        "title": "Seedfall 守园者 · 架构案（子系统边界 / 接口 / 数据流 / 失败模式）",
+        "added": true,
+        "index": 0
+      }
+    ],
+    "removed": []
+  },
+  "unchanged": 3,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-project-design",
+      "title": "Seedfall 守园者 · 完整项目设计与本次改版（已实现）",
+      "index": 1,
+      "versions": 2
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 策划案 v36（自动种植 · 攻击即互动）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-expansion",
+      "title": "Seedfall 守园者 · 拓展方案（v2，含本次实机排查的 7 项遗留问题）",
+      "index": 1,
+      "versions": 2
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 v16（新设计收尾清单）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-architecture",
+      "title": "Seedfall 守园者 · 架构案（子系统边界 / 接口 / 数据流 / 失败模式）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

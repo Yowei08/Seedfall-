@@ -1,0 +1,52 @@
+{
+  "id": "v15",
+  "label": "turn-1791905797366",
+  "at": 1791906436491,
+  "why": "",
+  "note": "工具：unity_editor x9、unity_drive x12、unity_probe、unity_log、yowei_plan、(window) plans: all -> doc、(request) this is an automatically generated checkpoint condensing an 、(request) current runtime context. this snapshot supersedes earlier ru、yowei_expand、(window) expansions: iter -> doc\n产出：策划案 x1、拓展方案 x2\n工程改动：无（只写了 .yowei 下的文档，未拍快照）\n耗时：639 秒\n结束原因：本轮对话结束",
+  "summary": "策划改动 1 篇 · 新玩法 1 篇",
+  "changes": {
+    "design": [
+      {
+        "id": "seedfall-garden-survivors",
+        "title": "Seedfall 守园者 · 种地×幸存者 策划案 v4（操作与呈现改版）",
+        "from": 2,
+        "to": 3
+      }
+    ],
+    "play": [
+      {
+        "id": "seedfall-garden-survivors-expand",
+        "title": "Seedfall 守园者 · 玩法方案 / 拓展 v3（含 v4 结构性议题）",
+        "from": 1,
+        "to": 2
+      }
+    ],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 1,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 种地×幸存者 策划案 v4（操作与呈现改版）",
+      "index": 3,
+      "versions": 4
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 / 拓展 v3（含 v4 结构性议题）",
+      "index": 2,
+      "versions": 3
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

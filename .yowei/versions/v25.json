@@ -1,0 +1,38 @@
+{
+  "id": "v25",
+  "label": "turn-1791977161731",
+  "at": 1791977185434,
+  "why": "",
+  "note": "工具：yowei_plan、yowei_expand\n产出：策划案 x1、拓展方案 x2\n工程改动：无（只写了 .yowei 下的文档，未拍快照）\n耗时：24 秒\n结束原因：本轮对话结束",
+  "summary": "与上一版相同",
+  "changes": {
+    "design": [],
+    "play": [],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 3,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 新设计方案 v23（自动种植 · 攻击即互动）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 v15（新设计施工分块）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

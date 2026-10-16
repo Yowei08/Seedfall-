@@ -1,0 +1,38 @@
+{
+  "id": "v9",
+  "label": "turn-1791897067362",
+  "at": 1791899595227,
+  "why": "",
+  "note": "工具：game_project x2、unity_scene x6、unity_log x17、yowei_plan x2、yowei_expand、yowei_arch、unity_editor x28、unity_drive x30、unity_test x2、unity_probe x6、unity_assert x2、unity_look x2、yowei_version x2\n产出：架构案 x1、策划案 x2、拓展方案 x2、迭代 x2\n工程改动：无（只写了 .yowei 下的文档，未拍快照）\n耗时：2528 秒\n结束原因：本轮对话结束",
+  "summary": "与上一版相同",
+  "changes": {
+    "design": [],
+    "play": [],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 3,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 种地×幸存者 策划案 v2",
+      "index": 1,
+      "versions": 2
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 拓展方案 v1（12 条可独立施工的点子）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

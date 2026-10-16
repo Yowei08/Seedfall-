@@ -1,0 +1,38 @@
+{
+  "id": "v8",
+  "label": "与上一版相同",
+  "at": 1791899540796,
+  "why": "",
+  "note": "",
+  "summary": "与上一版相同",
+  "changes": {
+    "design": [],
+    "play": [],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 3,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 种地×幸存者 策划案 v2",
+      "index": 1,
+      "versions": 2
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 拓展方案 v1（12 条可独立施工的点子）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

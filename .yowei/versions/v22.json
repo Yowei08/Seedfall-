@@ -1,0 +1,38 @@
+{
+  "id": "v22",
+  "label": "turn-1791962357179",
+  "at": 1791963628922,
+  "why": "",
+  "note": "工具：(window) iterations: doc -> iter、unity_test、unity_editor x8、(request) this is an automatically generated checkpoint condensing an 、(request) <system-reminder>\nthe available skill catalog changed. this 、(request) current runtime context. this snapshot supersedes earlier ru、unity_drive x5、yowei_plan、(window) plans: all -> doc、yowei_expand\n产出：策划案 x1、拓展方案 x2\n工程改动：无（只写了 .yowei 下的文档，未拍快照）\n耗时：1272 秒\n结束原因：本轮对话结束",
+  "summary": "与上一版相同",
+  "changes": {
+    "design": [],
+    "play": [],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 3,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 种地×幸存者 策划案 v15（属性规范与商店锁定）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 / 拓展 v12（平衡与表现）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

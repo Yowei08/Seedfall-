@@ -1,0 +1,52 @@
+{
+  "id": "v19",
+  "label": "turn-1791936436557",
+  "at": 1791955567497,
+  "why": "",
+  "note": "工具：(window) iterations: doc -> iter、unity_editor x13、unity_drive x15、yowei_plan、(window) plans: iter -> doc、yowei_expand\n产出：策划案 x1、拓展方案 x2\n工程改动：无（只写了 .yowei 下的文档，未拍快照）\n耗时：19131 秒\n结束原因：本轮对话结束",
+  "summary": "策划改动 1 篇 · 新玩法 1 篇",
+  "changes": {
+    "design": [
+      {
+        "id": "seedfall-garden-survivors",
+        "title": "Seedfall 守园者 · 种地×幸存者 策划案 v9（异常三系重做与养成收敛）",
+        "from": 7,
+        "to": 8
+      }
+    ],
+    "play": [
+      {
+        "id": "seedfall-garden-survivors-expand",
+        "title": "Seedfall 守园者 · 玩法方案 / 拓展 v8（异常手感与表现语言）",
+        "from": 6,
+        "to": 7
+      }
+    ],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 1,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 种地×幸存者 策划案 v9（异常三系重做与养成收敛）",
+      "index": 8,
+      "versions": 9
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 / 拓展 v8（异常手感与表现语言）",
+      "index": 7,
+      "versions": 8
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

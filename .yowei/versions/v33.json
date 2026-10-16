@@ -1,0 +1,108 @@
+{
+  "id": "v33",
+  "label": "turn-1792149030551",
+  "at": 1792149656184,
+  "why": "",
+  "note": "工具：(window) iterations: code -> iter、(request) time sampled while preparing turn 160, step 1: 2026-10-16t19、yowei_plan、(window) plans: asset -> doc、yowei_expand、(request) this is an automatically generated checkpoint condensing an \n产出：策划案 x1、拓展方案 x2\n工程改动：无（只写了 .yowei 下的文档，未拍快照）\n耗时：626 秒\n结束原因：本轮对话结束",
+  "summary": "新策划 1 篇 · 新玩法 1 篇",
+  "changes": {
+    "design": [
+      {
+        "id": "seedfall-attrs-v3",
+        "title": "Seedfall · 新版属性 / 植物 / 道具 / 田地 / UI 设计",
+        "added": true,
+        "index": 0
+      }
+    ],
+    "play": [
+      {
+        "id": "seedfall-attrs-v3-expand",
+        "title": "新版属性体系 · 拓展方案",
+        "added": true,
+        "index": 0
+      }
+    ],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 9,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-attrs-v3",
+      "title": "Seedfall · 新版属性 / 植物 / 道具 / 田地 / UI 设计",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-core-v2",
+      "title": "Seedfall 守园者 · 新版核心玩法（玩家武器战斗 + 植物经济）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-project-design",
+      "title": "Seedfall 守园者 · 完整项目设计与改版记录（v46）",
+      "index": 2,
+      "versions": 3
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 策划案 v36（自动种植 · 攻击即互动）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-attrs-v3-expand",
+      "title": "新版属性体系 · 拓展方案",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-core-v2-expand",
+      "title": "新版玩法 · 拓展方案",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-expansion",
+      "title": "Seedfall 守园者 · 拓展方案（v3）",
+      "index": 2,
+      "versions": 3
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 v16（新设计收尾清单）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-timebased-core",
+      "title": "Seedfall 计时制核心循环架构（替代回合制）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-architecture",
+      "title": "Seedfall 守园者 · 架构案（子系统边界 / 接口 / 数据流 / 失败模式）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

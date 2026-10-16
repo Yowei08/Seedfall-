@@ -1,0 +1,369 @@
+{
+  "pipeline": "Seedfall 守园者 · 美术资源流水线",
+  "principle": "产物 = 脚本 + 参数 + 工具版本，可整目录删除后重建；不使用随机数",
+  "externalTools": {
+    "blender": "5.2 (D:\\Steam\\steamapps\\common\\Blender\\blender.exe)",
+    "unity": "6000.4.6f1",
+    "renderPipeline": "URP"
+  },
+  "directoryContract": {
+    "Assets/Shaders/": "人类手写资产（着色器）。不参与程序化重建。",
+    "Assets/Scripts/Art/": "人类手写资产（材质转换、导入契约）。",
+    "Assets/Resources/Art/": "脚本产物。可整目录删除后由本流水线重建。",
+    "Tools/AssetPipeline/": "生成脚本本体，位于 Assets 之外，不进包体。"
+  },
+  "steps": [
+    {
+      "id": "characters",
+      "script": "Tools/AssetPipeline/gen_characters.py",
+      "library": "Tools/AssetPipeline/seedfall_kit.py",
+      "command": "blender.exe -b --factory-startup -P gen_characters.py -- player imp imp_archer brute",
+      "inputs": [
+        "CHARACTERS 参数表（脚本内）",
+        "PALETTE 调色板（seedfall_kit.py）"
+      ],
+      "outputs": [
+        "Assets/Resources/Art/Characters/player.fbx",
+        "Assets/Resources/Art/Characters/imp.fbx",
+        "Assets/Resources/Art/Characters/imp_archer.fbx",
+        "Assets/Resources/Art/Characters/brute.fbx"
+      ],
+      "budget": {
+        "totalTris": 12836,
+        "perModel": {
+          "player": 2960,
+          "imp": 3116,
+          "imp_archer": 3540,
+          "brute": 3220
+        }
+      },
+      "verified": "2026-10-15 · Unity 内实测高 0.96 / 0.67 / 0.70 / 1.47m，材质槽 11/7/8/6 全部换成 Seedfall/Toon"
+    },
+    {
+      "id": "animations",
+      "script": "Tools/AssetPipeline/gen_anim.py",
+      "command": "blender.exe -b --factory-startup -P gen_anim.py -- <角色id>",
+      "approach": "木偶层级（Root → Body → Head/Arm_L/Arm_R，Leg_* 挂 Root），每部件枢轴落在关节上；姿态是纯函数 pose(动画, 相位)，无随机、可复现。不建骨骼蒙皮——参考美术本身就是刚性部件在动。",
+      "animations": [
+        "idle 48帧 循环",
+        "walk 24帧 循环",
+        "attack 18帧",
+        "hit 12帧",
+        "death 36帧"
+      ],
+      "outputs": "Assets/Resources/Art/Anim/<角色>_<动画>.fbx（20 个，共约 2.8 MB）",
+      "unitySideMerge": {
+        "problem": "Blender 为每个被动画的物体各写一个 take，一个 FBX 进 Unity 变成 7 条片段（每部件一条），单独播任何一条都只有一只胳膊动。",
+        "solution": "Assets/Scripts/Art/AnimationMerge.cs：导入后处理把同名片段合并成一条完整 AnimationClip，写为 Assets/Resources/Art/AnimMerged/<名>.asset（20 个，各约 84KB）。",
+        "evidence": "player_walk 合并后时长 0.958s = 24帧@24fps；SampleAnimation 摆到 0.35s 时截图显示双腿分开、手臂反相、身体前倾（Docs/captures/v56_player_walk_pose.jpg）"
+      },
+      "pitfall": "轴修正必须放在**不参与动画**的 AxisFix 空节点上。曾把 -90° 放在 Root 上，而 Root 每帧都有旋转关键帧，修正被逐帧覆盖 → 动画版躺平（静态版正常，因为它的 Y-up 烘进了网格）。"
+    },
+    {
+      "id": "plants",
+      "script": "Tools/AssetPipeline/gen_plants.py",
+      "command": "blender.exe -b --factory-startup -P gen_plants.py -- all",
+      "approach": "轮廓按玩法定位选：近战=拳头/尖刺/厚盾，远程=朝向的炮口，辅助=光环/容器；体量与华丽度按稀有度递增（花瓣数、斑点数是稀有度的视觉语言）。参数表从 seeds.json 的 attackKind / attackType / grade 推导。",
+      "outputs": "Assets/Resources/Art/Plants/<id>.fbx ×16，共 873 KB",
+      "budget": {
+        "totalTris": 26000,
+        "range": "700（寒霜藤）~ 2728（月光树）",
+        "heightRange": "0.21m（寒霜藤，贴地蔓延）~ 1.19m（铁根巨像，S 级）"
+      },
+      "verified": "2026-10-15 · Unity 内 16/16 渲染成功、轮廓可区分、描边正常（Docs/captures/v57_plants_grid.jpg）"
+    },
+    {
+      "id": "environment",
+      "script": "Tools/AssetPipeline/gen_environment.py",
+      "command": "blender.exe -b --factory-startup -P gen_environment.py -- all",
+      "approach": "模块化道具而非整块地形。尺寸对齐玩法：农田 1.6m = FarmGrid 格距，栅栏 2.0m/段可首尾相接；相对角色（0.7~1.5m）形成层次——树 4.2m、风车 2.7m、灌木 0.7m。",
+      "outputs": [
+        "farm_plot 1.69×0.16×1.69 96 tris",
+        "fence 2.15×0.81×0.15 104 tris",
+        "rock_a/b/c 0.50~1.28m 各 520 tris",
+        "tree 4.23m 高 1160 tris",
+        "bush 0.72m 580 tris",
+        "grass 0.24m 100 tris",
+        "pond 3.05m 1652 tris",
+        "windmill 2.70m 高 204 tris"
+      ],
+      "budget": {
+        "files": 10,
+        "totalKB": 276,
+        "totalTris": 5476
+      },
+      "verified": "2026-10-15 · 24 个实例摆样：农田 3×2 无缝拼接、栅栏 6 段连成两排、风车/树/水塘/石头/灌木/草齐全（Docs/captures/v58_environment_diorama.jpg）"
+    },
+    {
+      "id": "gameplay-integration",
+      "script": "Assets/Scripts/Art/ModelView.cs + WorldView.cs 接入（人类手写，非生成）",
+      "what": "把 WorldView 的图元换成美术模型：玩家/小恶魔/小恶魔弓手/大恶魔（含动画）、16 种植物、耕地、栅栏；田里长出来的作物改用该种子自己的植物模型。",
+      "fallback": "BOSS 与野猪没有模型（按需求留空），自动退回图元；植物/环境模型缺失时同样退回。资源没做完不会阻塞玩法。",
+      "animation": "用 AnimationClip.SampleAnimation 手驱，不挂 Animator/不需要 AnimatorController。时间来自游戏帧，不走玩法时钟，因此不影响确定性与回放。状态：idle/walk（循环）+ attack/hit（一次性）+ death。",
+      "pitfalls": [
+        "MaterialPropertyBlock 按**渲染器**生效，而一个角色有 6~11 个材质槽；用 MPB 改 _BaseColor 会把所有槽位覆盖成同一色（实测：敌人变成深色一团）。解法是着色器里单开 _TintMul 染色乘数。",
+        "耕地上的『生长中树木』原本是 2m 立方体占位，比玩家还高、直接挡住角色。已改为按种子 id 加载对应植物模型并按生长进度缩放。"
+      ],
+      "verified": "2026-10-15 · Diagnose 实测场上 MDL_player 0.86×0.96×0.84（11 槽 Seedfall/Toon）、MDL_imp ×5 各 0.67m（7 槽）；染色验证图确认各部件颜色在整体变暗后仍各自保留（Docs/captures/v59_tint_verified.jpg）；自检 298/298 通过"
+    },
+    {
+      "id": "screen-outline",
+      "script": "Assets/Shaders/SeedfallScreenOutline.shader + Assets/Scripts/Art/ScreenOutlineFeature.cs + ScreenOutlineInstaller.cs（人类手写）",
+      "what": "深度 + 法线突变的屏幕空间描边（Roberts 十字采样，深度按中心视深归一，远景淡出，天空不画线）。",
+      "why": "与着色器里的反向外壳描边互补：外壳描边贴着模型长、粗细随物体尺寸，但立方体/岩石这类硬边会裂开；屏幕空间描边在画面上找边界，因此任何物体交界都连续——实测它补出了大恶魔腹部分段、草帽与头的交界、手臂与身体的边界这些外壳描边做不到的内部墨线。",
+      "unitySide": "走 Unity 6 的 RenderGraph 路径（RecordRenderGraph + AddRasterRenderPass + Blitter.BlitTexture）。旧的 Execute(ScriptableRenderContext, ref RenderingData) 重载在 URP 17 默认 RenderGraph 下不会被调用。",
+      "registration": "ScreenOutlineInstaller 在编辑器初始化时把 Feature 注册进 Assets/Settings/{PC,Mobile}_Renderer.asset；幂等、带 .bak 备份，并提供菜单 Seedfall/渲染/移除屏幕空间描边 作为退路。",
+      "pitfalls": [
+        "Seedfall.Runtime.asmdef 必须引用 Unity.RenderPipelines.Core.Runtime 与 Unity.RenderPipelines.Universal.Runtime，否则 URP 类型全部找不到。",
+        "注册子资产的顺序必须是『AddObjectToAsset → SaveAssets → 取 localId → 写引用列表 → 再 SaveAssets』。先 ImportAsset 会从磁盘重读文件，把还没落盘的子资产丢掉，结果是引用列表写成空。"
+      ],
+      "verified": "2026-10-15 · 同机位同模型的 A/B 对比：v59（无屏幕描边）vs v60（有），后者出现内部结构墨线（Docs/captures/v60_screen_outline.jpg）；自检 298/298 通过"
+    },
+    {
+      "id": "ui",
+      "script": "Tools/AssetPipeline/gen_ui.py（Pillow）",
+      "command": "python gen_ui.py all",
+      "approach": "程序化生成九宫格素材 + 图标。美术纪律：**每块面板都有墨线描边**，与 3D 侧的 Seedfall/Toon 描边呼应——界面与场景才像同一个世界，而不是『引擎默认 UI 盖在游戏上』。",
+      "outputs": "Assets/Resources/Art/UI/*.png ×23（面板 3 / 按钮 3 / 条 7 / 图标 10），共 8 KB",
+      "ninePatchRules": {
+        "texture": "wrapMode 必须 Clamp（Repeat 会让边缘像素绕回来，拉伸时出现鬼影）、关闭 mipmap、不压缩（压缩会在圆角与墨线上产生色块）",
+        "importer": "Assets/Scripts/Art/UiTextureImport.cs 自动施加以上设置——这些项在 Inspector 里很容易漏",
+        "usage": "Assets/Scripts/Art/UiSkin.cs 把贴图装成带 border 的 GUIStyle；IMGUI 的九宫格靠 GUIStyle.border 描述四边不拉伸的像素宽度"
+      },
+      "verified": "2026-10-15 · HUD 实机截图：面板全部换成奶油底+木色边+墨线，状态条有边框与彩色填充，按钮统一为九宫格三态（Docs/captures/v62_hud_ui_final.png）；自检 298/298 通过",
+      "remaining": "种子卡上的植物图标目前还是灰色占位方块——下一步把 16 个植物模型各渲一张缩略图接进去"
+    },
+    {
+      "id": "decorations",
+      "script": "Tools/AssetPipeline/gen_environment.py（v64 新增 8 个模块）",
+      "command": "blender.exe -b --factory-startup -P gen_environment.py -- all",
+      "added": [
+        "flower_a 野花·粉",
+        "flower_b 野花·蓝",
+        "mushroom 装饰蘑菇",
+        "reeds 芦苇丛",
+        "stump 树桩",
+        "log 倒木",
+        "barrel 木桶",
+        "lantern 路灯（带自发光）"
+      ],
+      "total": "18 个模块（原 10 + 新 8），共约 1.5 MB",
+      "usage": "WorldView.BuildScenery 按固定种子 Pcg32 铺满场地：外圈树/灌木/石 + 全场草/花/蘑菇 + 中景碎石 + 芦苇贴水塘 + 一圈路灯划边界。"
+    },
+    {
+      "id": "player-qstyle",
+      "script": "Tools/AssetPipeline/gen_player_q.py",
+      "library": "Tools/AssetPipeline/seedfall_kit.py",
+      "verifier": "Tools/AssetPipeline/verify_player_q.py（回读 + 射线遮挡审计 + 出图）",
+      "command": "blender.exe -b --factory-startup -P gen_player_q.py -- all",
+      "why": "需求：'玩家模型也重做，包括玩家动画资源，使用原本的 Q 版风格'。Q 版 = 头大身小（头含帽 ≥ 总高 40%）、四肢短粗圆头收尾、大圆弧无尖角、高饱和大色块。",
+      "approach": [
+        "真骨架 + 骨头父子绑定（不是蒙皮）：19 根命名骨骼与旧版**逐字相同**，Unity 侧 WorldView.AttachTools 靠名字找 Bone_Hand_R 挂武器，改名会断。",
+        "Q 版比例靠**椭球参数**做：头 rz=0.36 撑起 40% 的高度，rx/ry 压小以少挡身体；帽檐半径 0.345 = 头半宽 0.3312 × 1.0417（需求上限 1.1）。",
+        "头部把帽子做成'压扁圆顶 + 后仰 15°'而不是整颗球扣在头上：水平圆盘会在 60° 俯视下投出 0.87×半径 宽的死区，水平的帽檐会把整张脸盖住（实测眼睛可见 0/34）。",
+        "attack/swap 不写 Hips 的 location 曲线（角度照写、恒 0），这样游戏侧两段采样（move 先、attack 后）不会把跑动的髋部起伏压回静止。"
+      ],
+      "outputs": [
+        "Assets/Resources/Art/Characters/player.fbx",
+        "Assets/Resources/Art/Tools/tool_hoe.fbx",
+        "Assets/Resources/Art/Tools/tool_can.fbx",
+        "Assets/Resources/Art/Tools/tool_fert.fbx",
+        "Assets/Resources/Art/Anim/player_idle.fbx",
+        "Assets/Resources/Art/Anim/player_walk.fbx",
+        "Assets/Resources/Art/Anim/player_hit.fbx",
+        "Assets/Resources/Art/Anim/player_swap.fbx",
+        "Assets/Resources/Art/Anim/player_attack_hoe.fbx",
+        "Assets/Resources/Art/Anim/player_attack_can.fbx",
+        "Assets/Resources/Art/Anim/player_attack_fert.fbx"
+      ],
+      "budget": {
+        "playerTris": 1868,
+        "playerHeightM": 1.8385,
+        "headRatio": 0.4126,
+        "brimRatio": 1.0417,
+        "toolTris": {
+          "hoe": 160,
+          "can": 992,
+          "fert": 492
+        }
+      },
+      "animations": [
+        "idle 96帧 循环 4.00s 呼吸 0.25Hz（胸腔 X 摆幅 12.40°）",
+        "walk 96帧 循环 4.00s 步频 1.4845Hz + 呼吸 0.2474Hz（6:1，腿摆 ±30°）",
+        "hit 24帧 一次性 1.00s 后仰（胸腔 13.95°）",
+        "swap 9帧 0.375s 只上半身（腿骨 0.0000°）",
+        "attack_hoe/can/fert 各 36帧 1.50s 只上半身（腿骨 0.0000°，三套互异）"
+      ],
+      "verification": {
+        "reader_selftest": "把骨骼摆成已知 30.0°/-27.0°/12.5°，用同一个读数函数读回，误差 < 0.01°",
+        "static": "回读 FBX：高度 1.8385 在 Z 轴、zmin=0、1868 面、19 根骨骼逐名核对、材质名全在调色板内",
+        "anim_frames": "逐帧读回：三套 attack 的 7 根腿骨最大角 = 0.0000°；三套右上臂逐帧最大差 37.7~75.2°",
+        "visibility_audit": "按游戏相机（pitch 60°，正前方）逐面射线遮挡审计：可见面积 头 33.1% / 肩 59.1% / 手臂 25.8% / 躯干 20.5% / 腿 31.5%，屏幕纵向次序 头 → 肩 → 手臂 → 躯干 → 腿",
+        "captures": [
+          "Docs/captures/player_qstyle_top60.png（主验收：60° 俯视）",
+          "Docs/captures/player_qstyle_preview.png（旧版/新版同角度对照）",
+          "Docs/captures/player_qstyle_attack_poses.png（三套攻击姿态稿）"
+        ]
+      },
+      "pitfall": [
+        "GRIP 的基必须与上一版**逐字相同**：朝向会被烘进网格顶点，'等价但差 180°'的基会让工具在握把轴上翻半圈（锄刃朝后），而 Unity 侧那个固定的 Euler(0,180,0) 是按旧基试出来的。",
+        "跨版本复用函数时不要按位置解包：gen_player_v2.grip_frame() 返回 3 个值、本版 2 个，`q, _ = ...` 当场 ValueError。",
+        "验证指标要按**面积**加权而不是按顶点：UV 球两极顶点密集，按顶点算会把躯干报成 15.9%，而渲染图上躯干明明是一大块。",
+        "`view_transform` 必须是 Standard：Blender 4/5 默认 AgX 会把高饱和色压成灰白，而'高饱和大色块'正是 Q 版的卖点。"
+      ]
+    }
+  ],
+  "reproducibility": {
+    "policy": "可复现性分两级声明，不要混为一谈：①程序化产物（Pillow 生成的 UI）保证**位级可复现**；②DCC 产物（Blender 导出的 FBX）保证**语义可复现**（几何/尺寸/材质/片段时长一致），不保证字节一致。",
+    "evidence_Pillow": "全量重跑后 UI 的 23 张 PNG 全部 SHA256 一致（位级）。",
+    "evidence_Blender": "全量重跑后 FBX 字节不同：首次分歧在第 339 字节，位于 FBX 头的 CreationTimeStamp；两次导出文件大小也不同（90204 vs 90172 字节），因此逐字节比较在首个插入/删除点之后即失去意义。",
+    "evidence_semantic": "两次独立重跑的角色摘要在脚本输出里完全一致：player 2960 面/11 槽、imp 3116/7、imp_archer 3540/8、brute 3220/6，尺寸也一致（0.719×0.68×0.961 等）。这是几何层可复现的直接证据。",
+    "howToCheck": "重跑各 gen_*.py 并比对它们打印的 [SEEDFALL*] 摘要行（面数/材质槽数/尺寸）；UI 侧可直接比对 SHA256。",
+    "knownGap": "没有做 FBX 的语义对齐比较工具——若要 CI 化，应写一个解析 FBX 摘要（节点数/顶点数/材质名/包围盒）的比较器，而不是比字节。"
+  },
+  "knownIssues": [
+    {
+      "id": "axis-up",
+      "status": "RESOLVED (v55)",
+      "symptom": "FBX 进 Unity 后模型躺平",
+      "rootCause": "Unity 的 FBX 导入不做 Z-up→Y-up 转换；而导出器那三个轴向开关（默认 / axis_up='Y' / axis_up='Z'）产出的结果在 Unity 里完全一致，说明该路径不可控。",
+      "fix": "在 seedfall_kit.export_fbx 里导出前把几何绕 X 轴 -90° 并烘进网格数据（bake_yup=True），使 FBX 本身就是 Y-up。映射：Blender +Z(身高)→Unity +Y，Blender -Y(正面)→Unity +Z(transform.forward)。",
+      "evidence": "Unity 内实测直立，四角色高 0.96 / 0.67 / 0.70 / 1.47 m；截图 Docs/captures/v55_characters_toon_verified.jpg",
+      "falseLead": "过程中曾把『预览实例躺平』误判为资产问题——真因是预览代码 go.transform.rotation = ... 覆盖了根节点旋转，以及历次调用累积的旧实例叠在新模型上。教训：摆位代码不得改写资产自身的朝向；预览必须先清场。"
+    },
+    {
+      "id": "axis-up-superseded",
+      "status": "已作废（被 fbx-import-transform 取代）",
+      "note": "上面 axis-up 条目的结论是**错的**：当时以为「导出器轴向开关不可控」，于是自己在导出前烘 Y-up。v64 用 MeshProbe 拿到确凿数据后才看清——导出器没错，是导入器的 scale=100 + rot=270° 被我的代码覆盖掉了。bake_yup 现已默认关闭，保留参数仅作历史痕迹。"
+    },
+    {
+      "id": "ui-and-vfx",
+      "status": "DONE (v66–v67)",
+      "script": "人类手写：Assets/Scripts/UI/ImGuiHud.cs、Assets/Scripts/Bootstrap/WorldView.cs",
+      "uiCleanup": [
+        "删掉状态栏底部与底栏**完全重复**的弹药行（旧版残留），面板 142→122 高",
+        "按键说明面板起点 136→142：旧值会让它压住状态栏底边（152），两块面板是叠着的",
+        "浮动文字从 1 个偏移阴影改为**四向描边** + 弹出缩放——草甸背景全是中低明度的花草石，单阴影会糊进去",
+        "新增 LabelOutlined，只用在『直接压在场景上』的文字（波次提示 / 中央提示 / 浮动文字）"
+      ],
+      "cardDraw": {
+        "what": "升级抽卡的发牌动画：逐张延迟从下方 150px 滑入 + 淡入（缓出）+ 落位闪光 + 选中呼吸脉冲 + 文字同步淡入",
+        "pitfall": "动画计时必须挂在 EventType.Layout 上。OnGUI 一帧会被 Layout/Repaint 调用多次，直接把 Time.deltaTime 累加进去，动画速度会变成两三倍。",
+        "howToVerify": "SetBot(\"off\") 先关掉机器人（否则它瞬间选走卡牌、界面一闪而过），再 DebugApi.ForceReward()，再 Capture"
+      },
+      "attackVfx": {
+        "what": "近战挥击从『静止方板闪 0.14 秒』改成程序化扇形环网格（内半径 0.55 / 外半径 1.0 / 张角 110°，只建一次共享）+ 扫过动画（-55°→+55°，高度 0.50→0.12 贴地）",
+        "why": "旧版既读不出挥的方向，也读不出范围",
+        "howToVerify": "DebugApi.ForceSwing() 会把弧拉到 4 秒慢放（WorldView.DebugSwingHold）——0.20 秒的动画在桥接往返 1 秒以上的截图链路上根本抓不到；这是验收通道，不是效果本身"
+      },
+      "menuLayout": "菜单右栏改为按内容定宽（380）。旧版把剩余宽度全给了它（约 651px），而属性文字最长一行只有 ~300px，右半边整块空着。现在中间植物栏吃掉剩余宽度。",
+      "verified": "2026-10-15 · 截图 v66_swing.png（UI 修复 + 描边）、v66_swing_arc.jpg（挥击弧）、v67_reward.png（抽卡界面）、v67_menu.png（列宽）；MeleeArc 用 unity_probe 读到实时值确认动画；自检 298/298、无头 EditMode 16/16"
+    },
+    {
+      "id": "presentation-v3",
+      "status": "DONE (v74–v79)",
+      "scripts": [
+        "Assets/Scripts/Art/NightLighting.cs（夜晚/月亮阴影/角色火焰/特效光池）",
+        "Tools/AssetPipeline/gen_ruins.py（烂砖墙 ×3 + 农村装饰 ×10）",
+        "Tools/AssetPipeline/gen_pig.py（小猪 + 3 个动画）",
+        "Tools/AssetPipeline/make_blend.py（把 FBX 汇总成可打开的 .blend）",
+        "Tools/AssetPipeline/gen_textures.py（512 可平铺草/石/土）"
+      ],
+      "keyDecisions": [
+        "光照：卡通着色器原本**完全忽略灯光颜色与强度**，调暗主光画面纹丝不动。先接上 mainLight.color + GetAdditionalLight 循环，夜光/火光/子弹投光才可能生效。",
+        "URP 附加光源上限 4→8：火焰 1 + 光池 4 会超限，超出的被**静默丢弃**（症状是'有的子弹照亮有的不'，且随相机变化，极难排查）。",
+        "特效光池：子弹不各点一盏灯（数量不可控），共用固定 4 盏、池满抢占最早过期的。",
+        "夜光不用随机数做火焰抖动——两个不同频率正弦叠加，随机数会闪得像坏灯。",
+        "地图单位归一**按实测**：网格 Z ≥ 0.05 判为米制、根缩放压回 1，否则按 1/100 保留 100。不依赖目录名，重导多少次都稳。"
+      ],
+      "verified": "自检 299/299、无头 EditMode 16/16；截图 v74_night / v75_forest_night / v76_final / v77_plants_rain / v77_shop / v78_crop_centered / v79_uniform_growth / blend_all_models",
+      "notVerified": "**月光的投影阴影没有单独验证**——夜景里主光很暗，投在地面的影子肉眼分辨不出，没做开/关对比截图。"
+    },
+    {
+      "id": "crop-vs-ally-scale",
+      "status": "FIXED (v78)",
+      "symptom": "耕地里的作物比耕地本身还大、溢出格子",
+      "rootCause": "作物和**场上参战的植物帮手**被当成了同一种东西：作物的 ScaleToHeight 里多乘了一次 PlantScale（显示放大系数 2.5），1.8m 的作物长成 4.5m。",
+      "fix": "地里的作物以**耕地范围**为准（tile × 0.72），不乘 PlantScale；PlantScale 只用于场上参战的植物。两者现在是分开的两条路径。",
+      "howFound": "用专门做的垂直俯视机位（DebugApi.FocusFarm）拍的——斜视角下格子被压成梯形，中心点和溢出都看不出来。"
+    },
+    {
+      "id": "rain-marker-killed-by-camera",
+      "status": "FIXED (v77)",
+      "symptom": "雨滴顶部提示一次都不出现",
+      "rootCause": "旧逻辑是「雨滴在画面内就跳过」，那是按**相机贴近角色**设计的。v75 把相机拉远后雨滴基本永远在视野内，功能被自己的相机改动废掉了。",
+      "fix": "改为始终显示，形状从水滴图标改成**蓝色下指箭头**（水滴在 20px 下和场上拾取物长得一样，会误导），并加同列去重。",
+      "lesson": "改相机 = 改所有依赖「屏幕内/外」判断的 UI。这类耦合不会报错，只会静默失效。"
+    },
+    {
+      "id": "blend-not-saved",
+      "status": "FIXED (v77)",
+      "symptom": "在 Blender 里打开什么都看不到，怀疑模型不是 Blender 做的",
+      "rootCause": "整条流水线是**无头运行**（blender.exe -b --factory-startup -P gen_xxx.py）：模型在内存里建好、导出 FBX、进程退出。**从未调用 save_as_mainfile**，所以项目里一个 .blend 都没有。打开 Blender 得到的是默认空场景（还带个出厂 Cube）——这不是资源没做，是产物形态的问题。",
+      "evidence": "`Get-ChildItem -Recurse -Include *.blend` → 0 个；同时 FBX 有 91 个共 5.9 MB。",
+      "fix": "新增 Tools/AssetPipeline/make_blend.py：把已生成的 FBX 全部导回 Blender，按类别网格排布 + 打标签 + 架相机，存成 Docs/SeedfallModels.blend。三种模式：build / verify / preview。",
+      "verify": "`blender -b -P make_blend.py -- verify` 重新打开 .blend 并报内容：68 网格 / 68 标签 / 39056 面 / 304 材质，名字完整保留（CH_player、CH_pig、EN_birdhouse…）。这同时证明模型**确实过得了 Blender 自己的 FBX 导入器**。",
+      "lesson": "「程序化生成」的产物形态要显式设计：FBX 是给引擎的，.blend 是给人的。只产出前者，人在 DCC 里就看不到任何东西，会合理地怀疑整条链路。"
+    },
+    {
+      "id": "presentation-v2",
+      "status": "DONE (v68–v73)",
+      "scripts": [
+        "Assets/Shaders/SeedfallToon.shader（+Neon Pass）",
+        "Assets/Shaders/SeedfallToonSimple.shader（装饰专用，只有本体 Pass）",
+        "Assets/Shaders/SeedfallVfx.shader（战斗特效置顶）",
+        "Tools/AssetPipeline/gen_textures.py（草/石墙/松土，可无缝平铺）",
+        "Tools/AssetPipeline/gen_icons2d.py（16 个植物 2D 图标）",
+        "Tools/AssetPipeline/gen_item_icons.py（15 个道具 2D 图标）"
+      ],
+      "delivered": [
+        "近战挥击：静止方板 → 程序化扇形环网格 + 扫过动画（probe 实测过 Y 下沉与旋转）",
+        "敌人霓虹红描边 / 植物与种子按品质霓虹（4 层光晕）",
+        "植物成长模型：16 个 _young 幼苗模型，按 55% 生长度切换 + 呼吸/摆动动画",
+        "战斗特效置顶：Queue=Overlay + ZTest Always + ZWrite Off（三者缺一不可）",
+        "敌人子弹红色霓虹（菲涅尔边缘）",
+        "雨滴 0.26→0.42 + 顶部 UI 标记（只在雨滴落在视野外时打标记）",
+        "地面草贴图 + 墙体石砖贴图（范围绘制保证平铺无缝）",
+        "植物 16 + 道具 15 全部改 2D 手绘图标（取代 3D 渲染）",
+        "文本框内凹底 + 滑动条圆头滑块（改 GUI.skin，不是 BeginScrollView 参数）"
+      ],
+      "perf": "装饰改单 Pass 材质：drawCall 1948→906（−53%），fps 43→56。描边对装饰本身也无意义——每根草勾黑边近看是一团黑线，所以这是性能与观感同时受益。",
+      "verified": "自检 298/298、无头 EditMode 16/16；截图 v68_neon / v70_textures / v70_icons2d / v70_icons_ingame / v71_ui / v71_rain / v72_item_icons / v72_shop_items / v73_shop_items"
+    },
+    {
+      "id": "popup-style-table",
+      "status": "DONE (v69)",
+      "what": "浮动文字改为**声明类型**而不是各写颜色：发射点只传 PopupKind，颜色/字号/叹号由 PopupStyle 一处决定，改规则只改那一处。",
+      "rules": "敌人受击白 / 玩家受击红 / 回血绿 / 成熟黄 / 缺水红+放大+！ / 暴击黄+放大+！ / 肥料爆炸 bomb！！！",
+      "animation": "爆开(0→9%, 冲到 1.55 倍) → 回落(→26%) → 稳定(→68%) → 收回(→100%, 缩到 0.45 并淡出)",
+      "pitfall": "自检里有一条 `Popups[i].Text == \"缺水\"` 的全等断言。加了叹号规则后这条挂了——断言应该认**前缀**而不是全等，否则每调一次文案就要改一次测试。"
+    },
+    {
+      "id": "fbx-import-transform",
+      "status": "RESOLVED (v64)",
+      "symptom": "田地/栅栏/装饰不显示或躺倒；树木被放大 100 倍",
+      "rootCause": "Unity 从 FBX 导入出来的模型根节点带 **scale=100 + rotation=270°绕X**，两者都是**必需的**：网格按 1/100 存储（Z-up），靠它们还原成米制与 Y-up。我曾误判为冗余——把 rotation 抹成 identity、把 localScale 直接赋成 1.35，等于把必需的转换删掉。角色/耕地/植物因为各自设了 rotation/scale 而『碰巧』还行，装饰没人管，于是要么躺倒要么放大 100 倍。",
+      "evidence": "MeshProbe 实测：player 根 scale 100 / rot (270,0,0) / 网格本地 size 0.007×0.007×0.01 —— ×100 = 0.7×0.7×1.0，与建模的 0.719×0.68×0.961 吻合。",
+      "fix": "ModelView.Spawn 原样保留根节点的 rotation 与 scale 作为 BaseRotation / BaseScale；对外只给 SetFacing(yaw) 与 SetScaleFactor(k)，两者都是**乘**在原始值上。WorldView 里不再直接给 transform.rotation / localScale 赋值。",
+      "rule": "★ 不要覆盖模型实例的根变换，只做组合 ★ 覆盖会连带抹掉导入器的轴向与单位换算。",
+      "falseLead": "中途把导出器的 axis_up/axis_forward 改了三种组合、useFileScale 也关过——都没用，因为问题从来不在导出侧。教训：当『改参数没有反应』时，应先怀疑自己代码覆盖了结果，而不是继续调参数。"
+    },
+    {
+      "id": "scenery-density",
+      "status": "TUNED (v65)",
+      "note": "装饰密度是**可玩性**问题不是美术问题。首版 320 丛草 + 40 块石 + 170 朵花把整屏铺满，角色被淹没；压到 170/14/90 后战场可读性恢复。放大系数也一并收了一档（rock_b 1.4→1.05、rock_c 1.8→1.3）。"
+    },
+    {
+      "id": "renderer-bounds-timing",
+      "symptom": "实例化当帧读 renderer.bounds 得到的尺寸与画面不符（读数说 0.96m 高，画面是扁的）",
+      "impact": "仅影响诊断读数，不影响渲染",
+      "rule": "实例化后同一帧内的 bounds 不可信；判断朝向/直立性一律以截图为准，不要用 bounds。"
+    }
+  ],
+  "pending": [
+    "16 个植物模型",
+    "环境模块",
+    "UI 资源包",
+    "两个 BOSS 模型（按需求留空）"
+  ]
+}

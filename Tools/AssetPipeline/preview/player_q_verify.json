@@ -1,0 +1,401 @@
+{
+  "static": {
+    "ok": true,
+    "problems": [],
+    "dims": [
+      0.975,
+      0.6737,
+      1.8385
+    ],
+    "zmin": 0.0,
+    "zmax": 1.8385,
+    "tris": 1868,
+    "head_lo": 1.08,
+    "head_hi": 1.8385,
+    "head_ratio": 0.4126,
+    "brim_r": 0.345,
+    "head_hw": 0.3312,
+    "brim_ratio": 1.0417,
+    "mats": [
+      "QBoot",
+      "QCloth",
+      "QClothDk",
+      "QHat",
+      "QHatDk",
+      "QInk",
+      "QScarf",
+      "QSkin",
+      "QSprout"
+    ],
+    "bones": [
+      "Bone_Hips",
+      "Bone_Spine",
+      "Bone_Chest",
+      "Bone_Neck",
+      "Bone_Head",
+      "Bone_Shoulder_L",
+      "Bone_UpperArm_L",
+      "Bone_LowerArm_L",
+      "Bone_Hand_L",
+      "Bone_Shoulder_R",
+      "Bone_UpperArm_R",
+      "Bone_LowerArm_R",
+      "Bone_Hand_R",
+      "Bone_Thigh_L",
+      "Bone_LowerLeg_L",
+      "Bone_Foot_L",
+      "Bone_Thigh_R",
+      "Bone_LowerLeg_R",
+      "Bone_Foot_R"
+    ],
+    "parts": 29
+  },
+  "tools": [
+    {
+      "kind": "hoe",
+      "dims": [
+        0.305,
+        0.104,
+        1.265
+      ],
+      "tris": 160,
+      "mats": [
+        "QBoot",
+        "QHaft",
+        "QMetal"
+      ],
+      "grip_pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "grip_identity": true
+    },
+    {
+      "kind": "can",
+      "dims": [
+        0.326,
+        0.183,
+        0.291
+      ],
+      "tris": 992,
+      "mats": [
+        "QCan",
+        "QMetal"
+      ],
+      "grip_pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "grip_identity": true
+    },
+    {
+      "kind": "fert",
+      "dims": [
+        0.276,
+        0.3,
+        0.504
+      ],
+      "tris": 492,
+      "mats": [
+        "QBoot",
+        "QBurlap",
+        "QToolDirt"
+      ],
+      "grip_pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "grip_identity": true
+    }
+  ],
+  "grip_delta": {
+    "palm_axis_deg": 0.0,
+    "grip_frame_deg": 0.0
+  },
+  "anims": {
+    "idle": {
+      "chest_span": 12.40000353248305,
+      "chest_min": -6.200001766241525,
+      "chest_max": 6.200001766241525,
+      "spine_span": 6.000001020738857,
+      "shoulder_span": 8.157849451729469,
+      "hz": 0.24742268041237112,
+      "frames": 97
+    },
+    "walk": {
+      "thighR_span": 60.0000050847467,
+      "thighL_span": 60.0000050847467,
+      "leg_hz": 1.4845360824742266,
+      "breath_hz": 0.24742268041237112,
+      "anti": 84,
+      "frames": 97,
+      "spine_slow_span": 8.734289619813062,
+      "spine_raw_span": 9.200000142176837,
+      "freq_ratio": 6.0
+    },
+    "attack_hoe": {
+      "leg_max": 8.529400864806759e-07,
+      "legs": {
+        "Bone_Hips": 0.0,
+        "Bone_Thigh_L": 0.0,
+        "Bone_Thigh_R": 0.0,
+        "Bone_LowerLeg_L": 0.0,
+        "Bone_LowerLeg_R": 0.0,
+        "Bone_Foot_L": 0.0,
+        "Bone_Foot_R": 0.0
+      },
+      "upper_max": 61.826640140523644,
+      "frames": 36
+    },
+    "attack_can": {
+      "leg_max": 8.529400864806759e-07,
+      "legs": {
+        "Bone_Hips": 0.0,
+        "Bone_Thigh_L": 0.0,
+        "Bone_Thigh_R": 0.0,
+        "Bone_LowerLeg_L": 0.0,
+        "Bone_LowerLeg_R": 0.0,
+        "Bone_Foot_L": 0.0,
+        "Bone_Foot_R": 0.0
+      },
+      "upper_max": 77.99699005712377,
+      "frames": 36
+    },
+    "attack_fert": {
+      "leg_max": 8.529400864806759e-07,
+      "legs": {
+        "Bone_Hips": 0.0,
+        "Bone_Thigh_L": 0.0,
+        "Bone_Thigh_R": 0.0,
+        "Bone_LowerLeg_L": 0.0,
+        "Bone_LowerLeg_R": 0.0,
+        "Bone_Foot_L": 0.0,
+        "Bone_Foot_R": 0.0
+      },
+      "upper_max": 119.43720941207351,
+      "frames": 36
+    },
+    "distinct": {
+      "attack_hoe|attack_can": 69.62,
+      "attack_hoe|attack_fert": 56.89,
+      "attack_can|attack_fert": 27.92
+    },
+    "swap": {
+      "leg_max": 8.529400864806759e-07,
+      "upper_max": 48.29630177210601,
+      "seconds": 0.375,
+      "frames": 9
+    },
+    "hit": {
+      "chest_span": 13.954418837568197,
+      "head_span": 19.93488722482811,
+      "frames": 24
+    }
+  },
+  "swing": {
+    "handR_vs_footR": -0.980791843194414,
+    "handL_vs_footL": -0.9809171894820101,
+    "handR_vs_handL": -0.9697276549015282,
+    "handR_vs_footL": 0.9939659732952375,
+    "hand_swing_m": 0.4841100126504898
+  },
+  "audit": {
+    "rows": [
+      {
+        "group": "头(含帽)",
+        "parts": 8,
+        "visible": 0.331,
+        "area": 3.853,
+        "screen_up_min": 0.43,
+        "screen_up_med": 0.728,
+        "screen_up_max": 1.072,
+        "blocked_by_hat_pct": 58.6,
+        "blocked_by_brim_pct": 13.4
+      },
+      {
+        "group": "肩",
+        "parts": 2,
+        "visible": 0.591,
+        "area": 0.303,
+        "screen_up_min": 0.402,
+        "screen_up_med": 0.5,
+        "screen_up_max": 0.603,
+        "blocked_by_hat_pct": 8.1,
+        "blocked_by_brim_pct": 4.4
+      },
+      {
+        "group": "手臂",
+        "parts": 6,
+        "visible": 0.258,
+        "area": 0.683,
+        "screen_up_min": 0.219,
+        "screen_up_med": 0.321,
+        "screen_up_max": 0.432,
+        "blocked_by_hat_pct": 0.0,
+        "blocked_by_brim_pct": 0.0
+      },
+      {
+        "group": "躯干",
+        "parts": 6,
+        "visible": 0.201,
+        "area": 1.821,
+        "screen_up_min": 0.164,
+        "screen_up_med": 0.309,
+        "screen_up_max": 0.477,
+        "blocked_by_hat_pct": 25.9,
+        "blocked_by_brim_pct": 9.7
+      },
+      {
+        "group": "腿",
+        "parts": 6,
+        "visible": 0.315,
+        "area": 1.097,
+        "screen_up_min": -0.122,
+        "screen_up_med": 0.036,
+        "screen_up_max": 0.29,
+        "blocked_by_hat_pct": 0.0,
+        "blocked_by_brim_pct": 0.0
+      }
+    ],
+    "per_part": {
+      "Part_Hips": [
+        0.294,
+        0.3874
+      ],
+      "Part_Belly": [
+        0.275,
+        0.3286
+      ],
+      "Part_Chest": [
+        0.145,
+        0.4644
+      ],
+      "Part_Mantle": [
+        0.244,
+        0.3764
+      ],
+      "Part_Neck": [
+        0.0,
+        0.0965
+      ],
+      "Part_Scarf": [
+        0.011,
+        0.1672
+      ],
+      "Part_Head": [
+        0.125,
+        1.2259
+      ],
+      "Part_Eye_L": [
+        0.416,
+        0.0308
+      ],
+      "Part_Eye_R": [
+        0.419,
+        0.0308
+      ],
+      "Part_Mouth": [
+        0.519,
+        0.0066
+      ],
+      "Part_HatCrown": [
+        0.823,
+        0.9876
+      ],
+      "Part_HatBand": [
+        0.064,
+        0.7752
+      ],
+      "Part_HatBrim": [
+        0.289,
+        0.7891
+      ],
+      "Part_Sprout": [
+        0.322,
+        0.0068
+      ],
+      "Part_Shoulder_L": [
+        0.591,
+        0.1514
+      ],
+      "Part_UpperArm_L": [
+        0.09,
+        0.1357
+      ],
+      "Part_LowerArm_L": [
+        0.272,
+        0.1133
+      ],
+      "Part_Hand_L": [
+        0.459,
+        0.0923
+      ],
+      "Part_Shoulder_R": [
+        0.591,
+        0.1514
+      ],
+      "Part_UpperArm_R": [
+        0.106,
+        0.1357
+      ],
+      "Part_LowerArm_R": [
+        0.296,
+        0.1133
+      ],
+      "Part_Hand_R": [
+        0.464,
+        0.0923
+      ],
+      "Part_Thigh_L": [
+        0.179,
+        0.2437
+      ],
+      "Part_Calf_L": [
+        0.32,
+        0.1804
+      ],
+      "Part_Foot_L": [
+        0.55,
+        0.1245
+      ],
+      "Part_Thigh_R": [
+        0.207,
+        0.2437
+      ],
+      "Part_Calf_R": [
+        0.32,
+        0.1804
+      ],
+      "Part_Foot_R": [
+        0.547,
+        0.1245
+      ],
+      "Part_Shadow": [
+        0.326,
+        0.5605
+      ]
+    },
+    "pitch": 60.0
+  },
+  "failures": [],
+  "facts": [
+    "idle  胸腔X 区间 [-6.20°, +6.20°] 摆幅 12.40°  脊柱 6.00°  肩 8.16°  主频 0.247Hz（目标 0.25）",
+    "      idle 循环首尾差 0.000°（97 帧 = 4.04s）",
+    "walk  大腿X R[-30.00°, +30.00°] 摆幅 60.00°  L 摆幅 60.00°  逐帧反相 84/97 帧",
+    "      步频 1.485Hz（目标 1.5）  呼吸层 0.247Hz（目标 0.25，已滤步频）  比值 6.00:1（目标 6:1）",
+    "      Spine.x 原始摆幅 9.20° → 慢层摆幅 8.73°（这一层就是呼吸）",
+    "attack_hoe  腿骨最大角 = 0.0000°（7 根）  上半身最大角 = 61.83°",
+    "        逐根腿骨最大角: Hips=0.000°  Thigh_L=0.000°  Thigh_R=0.000°  LowerLeg_L=0.000°  LowerLeg_R=0.000°  Foot_L=0.000°  Foot_R=0.000°",
+    "attack_can  腿骨最大角 = 0.0000°（7 根）  上半身最大角 = 78.00°",
+    "        逐根腿骨最大角: Hips=0.000°  Thigh_L=0.000°  Thigh_R=0.000°  LowerLeg_L=0.000°  LowerLeg_R=0.000°  Foot_L=0.000°  Foot_R=0.000°",
+    "attack_fert  腿骨最大角 = 0.0000°（7 根）  上半身最大角 = 119.44°",
+    "        逐根腿骨最大角: Hips=0.000°  Thigh_L=0.000°  Thigh_R=0.000°  LowerLeg_L=0.000°  LowerLeg_R=0.000°  Foot_L=0.000°  Foot_R=0.000°",
+    "三套 attack 的差异（右上臂 X 逐帧最大差）: attack_hoe|attack_can=69.62°  attack_hoe|attack_fert=56.89°  attack_can|attack_fert=27.92°",
+    "swap  时长 0.375s（9 帧，目标 0.3~0.4s）  腿骨最大角 = 0.0000°  上半身最大角 = 48.30°",
+    "hit   胸腔X 摆幅 13.95°  头X 摆幅 19.93°  24 帧一次性（1.00s，不循环）",
+    "      hit 首尾都回到静止（一次性，接回 idle 不跳）"
+  ]
+}

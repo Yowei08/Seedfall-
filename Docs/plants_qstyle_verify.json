@@ -1,0 +1,2158 @@
+{
+ "models": [
+  {
+   "id": "radish_guard",
+   "stage": "young",
+   "nameCN": "萝卜卫士",
+   "form": "bulb",
+   "file": "radish_guard_young.fbx",
+   "height": 0.3731,
+   "dimX": 0.2304,
+   "dimY": 0.2547,
+   "aspect": 0.618,
+   "zmin": -0.0,
+   "zmax": 0.37308,
+   "tris": 488,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Petal",
+    "QLeafDeep"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Petal": 0.5431,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.6448,
+   "minSat": 0.5431,
+   "minSatKey": "Petal"
+  },
+  {
+   "id": "radish_guard",
+   "stage": "grown",
+   "nameCN": "萝卜卫士",
+   "form": "bulb",
+   "file": "radish_guard_grown.fbx",
+   "height": 0.9808,
+   "dimX": 0.5476,
+   "dimY": 0.5893,
+   "aspect": 0.558,
+   "zmin": -0.0,
+   "zmax": 0.98077,
+   "tris": 536,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Petal",
+    "QLeafDeep"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Petal": 0.5431,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.6448,
+   "minSat": 0.5431,
+   "minSatKey": "Petal"
+  },
+  {
+   "id": "radish_guard",
+   "stage": "mature",
+   "nameCN": "萝卜卫士",
+   "form": "bulb",
+   "file": "radish_guard.fbx",
+   "height": 1.7415,
+   "dimX": 1.5427,
+   "dimY": 1.089,
+   "aspect": 0.886,
+   "zmin": 0.0,
+   "zmax": 1.74152,
+   "tris": 1268,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Petal",
+    "Leaf",
+    "InkEye",
+    "Ink"
+   ],
+   "matSats": {
+    "Petal": 0.5431,
+    "Leaf": 0.5432,
+    "InkEye": 0.4048,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.459,
+   "minSat": 0.3448,
+   "minSatKey": "Ink"
+  },
+  {
+   "id": "pea_shooter",
+   "stage": "young",
+   "nameCN": "豌豆射手",
+   "form": "pod",
+   "file": "pea_shooter_young.fbx",
+   "height": 0.3846,
+   "dimX": 0.3612,
+   "dimY": 0.2819,
+   "aspect": 0.939,
+   "zmin": 0.0,
+   "zmax": 0.38462,
+   "tris": 480,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Leaf",
+    "QIce",
+    "QLeafDeep"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Leaf": 0.5432,
+    "QIce": 0.584,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.6326,
+   "minSat": 0.5432,
+   "minSatKey": "Leaf"
+  },
+  {
+   "id": "pea_shooter",
+   "stage": "grown",
+   "nameCN": "豌豆射手",
+   "form": "pod",
+   "file": "pea_shooter_grown.fbx",
+   "height": 0.9962,
+   "dimX": 0.7976,
+   "dimY": 0.6225,
+   "aspect": 0.801,
+   "zmin": 0.0,
+   "zmax": 0.99615,
+   "tris": 624,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Leaf",
+    "QIce",
+    "QLeafDeep"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Leaf": 0.5432,
+    "QIce": 0.584,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.6326,
+   "minSat": 0.5432,
+   "minSatKey": "Leaf"
+  },
+  {
+   "id": "pea_shooter",
+   "stage": "mature",
+   "nameCN": "豌豆射手",
+   "form": "pod",
+   "file": "pea_shooter.fbx",
+   "height": 1.79,
+   "dimX": 1.3433,
+   "dimY": 1.5383,
+   "aspect": 0.75,
+   "zmin": 0.0,
+   "zmax": 1.79,
+   "tris": 1360,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Leaf",
+    "LeafDark",
+    "Ink",
+    "InkEye",
+    "LeafDim"
+   ],
+   "matSats": {
+    "Leaf": 0.5432,
+    "LeafDark": 0.582,
+    "Ink": 0.3448,
+    "InkEye": 0.4048,
+    "LeafDim": 0.4741
+   },
+   "meanSat": 0.4698,
+   "minSat": 0.3448,
+   "minSatKey": "Ink"
+  },
+  {
+   "id": "toxic_mushroom",
+   "stage": "young",
+   "nameCN": "毒蘑菇",
+   "form": "cap",
+   "file": "toxic_mushroom_young.fbx",
+   "height": 0.38,
+   "dimX": 0.3533,
+   "dimY": 0.3623,
+   "aspect": 0.93,
+   "zmin": 0.0,
+   "zmax": 0.38,
+   "tris": 404,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Shroom",
+    "QGoo"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Shroom": 0.5309,
+    "QGoo": 0.5431
+   },
+   "meanSat": 0.6101,
+   "minSat": 0.5309,
+   "minSatKey": "Shroom"
+  },
+  {
+   "id": "toxic_mushroom",
+   "stage": "grown",
+   "nameCN": "毒蘑菇",
+   "form": "cap",
+   "file": "toxic_mushroom_grown.fbx",
+   "height": 0.99,
+   "dimX": 0.7637,
+   "dimY": 0.7834,
+   "aspect": 0.771,
+   "zmin": 0.0,
+   "zmax": 0.99,
+   "tris": 452,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Shroom",
+    "QGoo"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Shroom": 0.5309,
+    "QGoo": 0.5431
+   },
+   "meanSat": 0.6101,
+   "minSat": 0.5309,
+   "minSatKey": "Shroom"
+  },
+  {
+   "id": "toxic_mushroom",
+   "stage": "mature",
+   "nameCN": "毒蘑菇",
+   "form": "cap",
+   "file": "toxic_mushroom.fbx",
+   "height": 1.7186,
+   "dimX": 2.3397,
+   "dimY": 2.3093,
+   "aspect": 1.361,
+   "zmin": 0.0,
+   "zmax": 1.71862,
+   "tris": 1272,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Bone",
+    "Shroom",
+    "Glow",
+    "InkEye",
+    "Ink"
+   ],
+   "matSats": {
+    "Bone": 0.1213,
+    "Shroom": 0.5309,
+    "Glow": 0.3725,
+    "InkEye": 0.4048,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.3549,
+   "minSat": 0.1213,
+   "minSatKey": "Bone"
+  },
+  {
+   "id": "frost_ivy",
+   "stage": "young",
+   "nameCN": "寒霜藤",
+   "form": "cluster",
+   "file": "frost_ivy_young.fbx",
+   "height": 0.35,
+   "dimX": 0.2004,
+   "dimY": 0.2202,
+   "aspect": 0.573,
+   "zmin": 0.0,
+   "zmax": 0.35,
+   "tris": 412,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "Leaf"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QIce": 0.584,
+    "Leaf": 0.5432
+   },
+   "meanSat": 0.6234,
+   "minSat": 0.5432,
+   "minSatKey": "Leaf"
+  },
+  {
+   "id": "frost_ivy",
+   "stage": "grown",
+   "nameCN": "寒霜藤",
+   "form": "cluster",
+   "file": "frost_ivy_grown.fbx",
+   "height": 0.95,
+   "dimX": 0.6591,
+   "dimY": 0.693,
+   "aspect": 0.694,
+   "zmin": 0.0,
+   "zmax": 0.95,
+   "tris": 452,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "Leaf"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QIce": 0.584,
+    "Leaf": 0.5432
+   },
+   "meanSat": 0.6234,
+   "minSat": 0.5432,
+   "minSatKey": "Leaf"
+  },
+  {
+   "id": "frost_ivy",
+   "stage": "mature",
+   "nameCN": "寒霜藤",
+   "form": "cluster",
+   "file": "frost_ivy.fbx",
+   "height": 1.6645,
+   "dimX": 1.4354,
+   "dimY": 1.2279,
+   "aspect": 0.862,
+   "zmin": 0.0,
+   "zmax": 1.66449,
+   "tris": 1232,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Icicle",
+    "LeafDark",
+    "InkEye",
+    "Ink"
+   ],
+   "matSats": {
+    "Icicle": 0.2107,
+    "LeafDark": 0.582,
+    "InkEye": 0.4048,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.3856,
+   "minSat": 0.2107,
+   "minSatKey": "Icicle"
+  },
+  {
+   "id": "thorn_pumpkin",
+   "stage": "young",
+   "nameCN": "荆棘南瓜",
+   "form": "gourd",
+   "file": "thorn_pumpkin_young.fbx",
+   "height": 0.3892,
+   "dimX": 0.2868,
+   "dimY": 0.3027,
+   "aspect": 0.737,
+   "zmin": -0.0,
+   "zmax": 0.38923,
+   "tris": 472,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Pumpkin": 0.7946,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.7076,
+   "minSat": 0.645,
+   "minSatKey": "SoilRich"
+  },
+  {
+   "id": "thorn_pumpkin",
+   "stage": "grown",
+   "nameCN": "荆棘南瓜",
+   "form": "gourd",
+   "file": "thorn_pumpkin_grown.fbx",
+   "height": 1.0023,
+   "dimX": 0.6665,
+   "dimY": 0.6834,
+   "aspect": 0.665,
+   "zmin": -0.0,
+   "zmax": 1.00231,
+   "tris": 608,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Pumpkin": 0.7946,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.7076,
+   "minSat": 0.645,
+   "minSatKey": "SoilRich"
+  },
+  {
+   "id": "thorn_pumpkin",
+   "stage": "mature",
+   "nameCN": "荆棘南瓜",
+   "form": "gourd",
+   "file": "thorn_pumpkin.fbx",
+   "height": 1.79,
+   "dimX": 1.4809,
+   "dimY": 1.4252,
+   "aspect": 0.827,
+   "zmin": 0.0,
+   "zmax": 1.79,
+   "tris": 1200,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Pumpkin",
+    "LeafDark",
+    "LeafDim",
+    "InkEye",
+    "Ink"
+   ],
+   "matSats": {
+    "Pumpkin": 0.7946,
+    "LeafDark": 0.582,
+    "LeafDim": 0.4741,
+    "InkEye": 0.4048,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.5201,
+   "minSat": 0.3448,
+   "minSatKey": "Ink"
+  },
+  {
+   "id": "stone_fist",
+   "stage": "young",
+   "nameCN": "石拳",
+   "form": "rock",
+   "file": "stone_fist_young.fbx",
+   "height": 0.4123,
+   "dimX": 0.3894,
+   "dimY": 0.2518,
+   "aspect": 0.944,
+   "zmin": -0.0,
+   "zmax": 0.41231,
+   "tris": 428,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QRock",
+    "Moss"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QRock": 0.481,
+    "Moss": 0.4304
+   },
+   "meanSat": 0.5694,
+   "minSat": 0.4304,
+   "minSatKey": "Moss"
+  },
+  {
+   "id": "stone_fist",
+   "stage": "grown",
+   "nameCN": "石拳",
+   "form": "rock",
+   "file": "stone_fist_grown.fbx",
+   "height": 1.0331,
+   "dimX": 1.0049,
+   "dimY": 0.5443,
+   "aspect": 0.973,
+   "zmin": 0.0,
+   "zmax": 1.03308,
+   "tris": 628,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QRock",
+    "Moss"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QRock": 0.481,
+    "Moss": 0.4304
+   },
+   "meanSat": 0.5694,
+   "minSat": 0.4304,
+   "minSatKey": "Moss"
+  },
+  {
+   "id": "stone_fist",
+   "stage": "mature",
+   "nameCN": "石拳",
+   "form": "rock",
+   "file": "stone_fist.fbx",
+   "height": 1.79,
+   "dimX": 2.6239,
+   "dimY": 0.9998,
+   "aspect": 1.466,
+   "zmin": -0.0,
+   "zmax": 1.79,
+   "tris": 1204,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Stoner",
+    "StoneDk",
+    "Moss",
+    "InkEye",
+    "Ink"
+   ],
+   "matSats": {
+    "Stoner": 0.0909,
+    "StoneDk": 0.065,
+    "Moss": 0.4304,
+    "InkEye": 0.4048,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.2672,
+   "minSat": 0.065,
+   "minSatKey": "StoneDk"
+  },
+  {
+   "id": "chili_mage",
+   "stage": "young",
+   "nameCN": "辣椒法师",
+   "form": "taper",
+   "file": "chili_mage_young.fbx",
+   "height": 0.3985,
+   "dimX": 0.2449,
+   "dimY": 0.2449,
+   "aspect": 0.615,
+   "zmin": 0.0,
+   "zmax": 0.39846,
+   "tris": 312,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QEmberDeep",
+    "Leaf"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Ember": 0.7414,
+    "QEmberDeep": 0.9509,
+    "Leaf": 0.5432
+   },
+   "meanSat": 0.7204,
+   "minSat": 0.5432,
+   "minSatKey": "Leaf"
+  },
+  {
+   "id": "chili_mage",
+   "stage": "grown",
+   "nameCN": "辣椒法师",
+   "form": "taper",
+   "file": "chili_mage_grown.fbx",
+   "height": 1.0146,
+   "dimX": 0.5254,
+   "dimY": 0.5094,
+   "aspect": 0.518,
+   "zmin": 0.0,
+   "zmax": 1.01462,
+   "tris": 360,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QEmberDeep",
+    "Leaf"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Ember": 0.7414,
+    "QEmberDeep": 0.9509,
+    "Leaf": 0.5432
+   },
+   "meanSat": 0.7204,
+   "minSat": 0.5432,
+   "minSatKey": "Leaf"
+  },
+  {
+   "id": "chili_mage",
+   "stage": "mature",
+   "nameCN": "辣椒法师",
+   "form": "taper",
+   "file": "chili_mage.fbx",
+   "height": 1.7789,
+   "dimX": 1.5985,
+   "dimY": 0.9943,
+   "aspect": 0.899,
+   "zmin": 0.0,
+   "zmax": 1.77889,
+   "tris": 1320,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Ember",
+    "EmberDk",
+    "LeafDark",
+    "InkEye",
+    "LeafDim",
+    "Ink"
+   ],
+   "matSats": {
+    "Ember": 0.7414,
+    "EmberDk": 0.7465,
+    "LeafDark": 0.582,
+    "InkEye": 0.4048,
+    "LeafDim": 0.4741,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.5489,
+   "minSat": 0.3448,
+   "minSatKey": "Ink"
+  },
+  {
+   "id": "starvine",
+   "stage": "young",
+   "nameCN": "星藤",
+   "form": "star",
+   "file": "starvine_young.fbx",
+   "height": 0.3938,
+   "dimX": 0.3262,
+   "dimY": 0.2101,
+   "aspect": 0.828,
+   "zmin": 0.0,
+   "zmax": 0.39385,
+   "tris": 364,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "PetalB"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QIce": 0.584,
+    "PetalB": 0.433
+   },
+   "meanSat": 0.5958,
+   "minSat": 0.433,
+   "minSatKey": "PetalB"
+  },
+  {
+   "id": "starvine",
+   "stage": "grown",
+   "nameCN": "星藤",
+   "form": "star",
+   "file": "starvine_grown.fbx",
+   "height": 1.0085,
+   "dimX": 0.6825,
+   "dimY": 0.5707,
+   "aspect": 0.677,
+   "zmin": 0.0,
+   "zmax": 1.00846,
+   "tris": 820,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "PetalB",
+    "QGold"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QIce": 0.584,
+    "PetalB": 0.433,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6406,
+   "minSat": 0.433,
+   "minSatKey": "PetalB"
+  },
+  {
+   "id": "starvine",
+   "stage": "mature",
+   "nameCN": "星藤",
+   "form": "star",
+   "file": "starvine.fbx",
+   "height": 1.7216,
+   "dimX": 1.5301,
+   "dimY": 1.1757,
+   "aspect": 0.889,
+   "zmin": 0.0,
+   "zmax": 1.7216,
+   "tris": 1144,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Moon",
+    "PetalB",
+    "InkEye",
+    "LeafDim",
+    "Ink"
+   ],
+   "matSats": {
+    "Moon": 0.1379,
+    "PetalB": 0.433,
+    "InkEye": 0.4048,
+    "LeafDim": 0.4741,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.3589,
+   "minSat": 0.1379,
+   "minSatKey": "Moon"
+  },
+  {
+   "id": "moontree",
+   "stage": "young",
+   "nameCN": "月树",
+   "form": "canopy",
+   "file": "moontree_young.fbx",
+   "height": 0.4446,
+   "dimX": 0.2221,
+   "dimY": 0.2335,
+   "aspect": 0.499,
+   "zmin": 0.0,
+   "zmax": 0.44462,
+   "tris": 480,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QMoon"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QMoon": 0.5023
+   },
+   "meanSat": 0.6229,
+   "minSat": 0.5023,
+   "minSatKey": "QMoon"
+  },
+  {
+   "id": "moontree",
+   "stage": "grown",
+   "nameCN": "月树",
+   "form": "canopy",
+   "file": "moontree_grown.fbx",
+   "height": 1.0762,
+   "dimX": 0.4403,
+   "dimY": 0.4629,
+   "aspect": 0.409,
+   "zmin": 0.0,
+   "zmax": 1.07615,
+   "tris": 776,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QMoon",
+    "QLeafDeep"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QMoon": 0.5023,
+    "QLeafDeep": 0.6696
+   },
+   "meanSat": 0.6345,
+   "minSat": 0.5023,
+   "minSatKey": "QMoon"
+  },
+  {
+   "id": "moontree",
+   "stage": "mature",
+   "nameCN": "月树",
+   "form": "canopy",
+   "file": "moontree.fbx",
+   "height": 1.79,
+   "dimX": 1.0645,
+   "dimY": 1.1401,
+   "aspect": 0.595,
+   "zmin": 0.0,
+   "zmax": 1.79,
+   "tris": 1000,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Moon",
+    "Bark",
+    "InkEye",
+    "BarkLite",
+    "Ink"
+   ],
+   "matSats": {
+    "Moon": 0.1379,
+    "Bark": 0.5327,
+    "InkEye": 0.4048,
+    "BarkLite": 0.5,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.384,
+   "minSat": 0.1379,
+   "minSatKey": "Moon"
+  },
+  {
+   "id": "char_flower",
+   "stage": "young",
+   "nameCN": "炭花",
+   "form": "flower",
+   "file": "char_flower_young.fbx",
+   "height": 0.3985,
+   "dimX": 0.285,
+   "dimY": 0.2102,
+   "aspect": 0.715,
+   "zmin": 0.0,
+   "zmax": 0.39846,
+   "tris": 412,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QSunDisc"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Ember": 0.7414,
+    "QSunDisc": 0.8745
+   },
+   "meanSat": 0.7456,
+   "minSat": 0.645,
+   "minSatKey": "SoilRich"
+  },
+  {
+   "id": "char_flower",
+   "stage": "grown",
+   "nameCN": "炭花",
+   "form": "flower",
+   "file": "char_flower_grown.fbx",
+   "height": 1.0146,
+   "dimX": 0.6769,
+   "dimY": 0.6032,
+   "aspect": 0.667,
+   "zmin": 0.0,
+   "zmax": 1.01462,
+   "tris": 508,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Ember",
+    "QSunDisc"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Ember": 0.7414,
+    "QSunDisc": 0.8745
+   },
+   "meanSat": 0.7456,
+   "minSat": 0.645,
+   "minSatKey": "SoilRich"
+  },
+  {
+   "id": "char_flower",
+   "stage": "mature",
+   "nameCN": "炭花",
+   "form": "flower",
+   "file": "char_flower.fbx",
+   "height": 1.79,
+   "dimX": 1.7665,
+   "dimY": 1.0879,
+   "aspect": 0.987,
+   "zmin": 0.0,
+   "zmax": 1.79,
+   "tris": 980,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Ink",
+    "EmberDk",
+    "Ember",
+    "InkEye"
+   ],
+   "matSats": {
+    "Ink": 0.3448,
+    "EmberDk": 0.7465,
+    "Ember": 0.7414,
+    "InkEye": 0.4048
+   },
+   "meanSat": 0.5594,
+   "minSat": 0.3448,
+   "minSatKey": "Ink"
+  },
+  {
+   "id": "plague_mother",
+   "stage": "young",
+   "nameCN": "瘟疫之母",
+   "form": "dome",
+   "file": "plague_mother_young.fbx",
+   "height": 0.4308,
+   "dimX": 0.2931,
+   "dimY": 0.3082,
+   "aspect": 0.68,
+   "zmin": 0.0,
+   "zmax": 0.43077,
+   "tris": 460,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QGoo"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QBerry": 0.6063,
+    "QGoo": 0.5431
+   },
+   "meanSat": 0.6289,
+   "minSat": 0.5431,
+   "minSatKey": "QGoo"
+  },
+  {
+   "id": "plague_mother",
+   "stage": "grown",
+   "nameCN": "瘟疫之母",
+   "form": "dome",
+   "file": "plague_mother_grown.fbx",
+   "height": 1.0577,
+   "dimX": 0.619,
+   "dimY": 0.6349,
+   "aspect": 0.585,
+   "zmin": 0.0,
+   "zmax": 1.05769,
+   "tris": 604,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QGoo"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QBerry": 0.6063,
+    "QGoo": 0.5431
+   },
+   "meanSat": 0.6289,
+   "minSat": 0.5431,
+   "minSatKey": "QGoo"
+  },
+  {
+   "id": "plague_mother",
+   "stage": "mature",
+   "nameCN": "瘟疫之母",
+   "form": "dome",
+   "file": "plague_mother.fbx",
+   "height": 1.79,
+   "dimX": 1.3319,
+   "dimY": 1.3156,
+   "aspect": 0.744,
+   "zmin": -0.0,
+   "zmax": 1.79,
+   "tris": 1284,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Bone",
+    "Purple",
+    "Moss",
+    "Glow",
+    "InkEye",
+    "Ink"
+   ],
+   "matSats": {
+    "Bone": 0.1213,
+    "Purple": 0.4541,
+    "Moss": 0.4304,
+    "Glow": 0.3725,
+    "InkEye": 0.4048,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.3546,
+   "minSat": 0.1213,
+   "minSatKey": "Bone"
+  },
+  {
+   "id": "moss_shield",
+   "stage": "young",
+   "nameCN": "苔藓盾",
+   "form": "mossball",
+   "file": "moss_shield_young.fbx",
+   "height": 0.3754,
+   "dimX": 0.2766,
+   "dimY": 0.3079,
+   "aspect": 0.737,
+   "zmin": -0.0,
+   "zmax": 0.37538,
+   "tris": 496,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Moss",
+    "QBlood"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Moss": 0.4304,
+    "QBlood": 0.6429
+   },
+   "meanSat": 0.6099,
+   "minSat": 0.4304,
+   "minSatKey": "Moss"
+  },
+  {
+   "id": "moss_shield",
+   "stage": "grown",
+   "nameCN": "苔藓盾",
+   "form": "mossball",
+   "file": "moss_shield_grown.fbx",
+   "height": 0.9838,
+   "dimX": 0.7097,
+   "dimY": 0.7072,
+   "aspect": 0.721,
+   "zmin": -0.0,
+   "zmax": 0.98385,
+   "tris": 688,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Moss",
+    "QBlood",
+    "QMossDeep"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Moss": 0.4304,
+    "QBlood": 0.6429,
+    "QMossDeep": 0.7213
+   },
+   "meanSat": 0.6322,
+   "minSat": 0.4304,
+   "minSatKey": "Moss"
+  },
+  {
+   "id": "moss_shield",
+   "stage": "mature",
+   "nameCN": "苔藓盾",
+   "form": "mossball",
+   "file": "moss_shield.fbx",
+   "height": 1.62,
+   "dimX": 1.7271,
+   "dimY": 1.717,
+   "aspect": 1.066,
+   "zmin": 0.0,
+   "zmax": 1.62,
+   "tris": 1336,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Moss",
+    "Stoner",
+    "InkEye",
+    "Ink"
+   ],
+   "matSats": {
+    "Moss": 0.4304,
+    "Stoner": 0.0909,
+    "InkEye": 0.4048,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.3177,
+   "minSat": 0.0909,
+   "minSatKey": "Stoner"
+  },
+  {
+   "id": "healing_clover",
+   "stage": "young",
+   "nameCN": "治愈三叶草",
+   "form": "clover",
+   "file": "healing_clover_young.fbx",
+   "height": 0.3892,
+   "dimX": 0.3458,
+   "dimY": 0.3728,
+   "aspect": 0.889,
+   "zmin": 0.0,
+   "zmax": 0.38923,
+   "tris": 484,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QGold"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QClover": 0.6552,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.7103,
+   "minSat": 0.645,
+   "minSatKey": "SoilRich"
+  },
+  {
+   "id": "healing_clover",
+   "stage": "grown",
+   "nameCN": "治愈三叶草",
+   "form": "clover",
+   "file": "healing_clover_grown.fbx",
+   "height": 1.0023,
+   "dimX": 0.8272,
+   "dimY": 0.8272,
+   "aspect": 0.825,
+   "zmin": 0.0,
+   "zmax": 1.00231,
+   "tris": 760,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QGold"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QClover": 0.6552,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.7103,
+   "minSat": 0.645,
+   "minSatKey": "SoilRich"
+  },
+  {
+   "id": "healing_clover",
+   "stage": "mature",
+   "nameCN": "治愈三叶草",
+   "form": "clover",
+   "file": "healing_clover.fbx",
+   "height": 1.79,
+   "dimX": 1.4352,
+   "dimY": 1.0676,
+   "aspect": 0.802,
+   "zmin": 0.0,
+   "zmax": 1.79,
+   "tris": 984,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Gold",
+    "Leaf",
+    "InkEye",
+    "Ink"
+   ],
+   "matSats": {
+    "Gold": 0.681,
+    "Leaf": 0.5432,
+    "InkEye": 0.4048,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.4934,
+   "minSat": 0.3448,
+   "minSatKey": "Ink"
+  },
+  {
+   "id": "life_spring",
+   "stage": "young",
+   "nameCN": "生命之泉",
+   "form": "basin",
+   "file": "life_spring_young.fbx",
+   "height": 0.4077,
+   "dimX": 0.2487,
+   "dimY": 0.2726,
+   "aspect": 0.61,
+   "zmin": -0.0,
+   "zmax": 0.40769,
+   "tris": 364,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Water",
+    "QIce"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Water": 0.5278,
+    "QIce": 0.584
+   },
+   "meanSat": 0.6195,
+   "minSat": 0.5278,
+   "minSatKey": "Water"
+  },
+  {
+   "id": "life_spring",
+   "stage": "grown",
+   "nameCN": "生命之泉",
+   "form": "basin",
+   "file": "life_spring_grown.fbx",
+   "height": 1.0269,
+   "dimX": 0.5599,
+   "dimY": 0.584,
+   "aspect": 0.545,
+   "zmin": -0.0,
+   "zmax": 1.02692,
+   "tris": 412,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "Water",
+    "QIce"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Water": 0.5278,
+    "QIce": 0.584
+   },
+   "meanSat": 0.6195,
+   "minSat": 0.5278,
+   "minSatKey": "Water"
+  },
+  {
+   "id": "life_spring",
+   "stage": "mature",
+   "nameCN": "生命之泉",
+   "form": "basin",
+   "file": "life_spring.fbx",
+   "height": 1.6529,
+   "dimX": 1.0158,
+   "dimY": 0.7045,
+   "aspect": 0.615,
+   "zmin": 0.0,
+   "zmax": 1.65293,
+   "tris": 808,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Water",
+    "Stoner",
+    "InkEye",
+    "Ink"
+   ],
+   "matSats": {
+    "Water": 0.5278,
+    "Stoner": 0.0909,
+    "InkEye": 0.4048,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.3421,
+   "minSat": 0.0909,
+   "minSatKey": "Stoner"
+  },
+  {
+   "id": "holy_tree_guard",
+   "stage": "young",
+   "nameCN": "圣树守卫",
+   "form": "tree",
+   "file": "holy_tree_guard_young.fbx",
+   "height": 0.4654,
+   "dimX": 0.2212,
+   "dimY": 0.2913,
+   "aspect": 0.475,
+   "zmin": 0.0,
+   "zmax": 0.46538,
+   "tris": 480,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QCrownLeaf",
+    "QTrunk"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QCrownLeaf": 0.6375,
+    "QTrunk": 0.6667
+   },
+   "meanSat": 0.6676,
+   "minSat": 0.6375,
+   "minSatKey": "QCrownLeaf"
+  },
+  {
+   "id": "holy_tree_guard",
+   "stage": "grown",
+   "nameCN": "圣树守卫",
+   "form": "tree",
+   "file": "holy_tree_guard_grown.fbx",
+   "height": 1.1038,
+   "dimX": 0.5519,
+   "dimY": 0.5736,
+   "aspect": 0.5,
+   "zmin": 0.0,
+   "zmax": 1.10385,
+   "tris": 632,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QCrownLeaf",
+    "QTrunk"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QCrownLeaf": 0.6375,
+    "QTrunk": 0.6667
+   },
+   "meanSat": 0.6676,
+   "minSat": 0.6375,
+   "minSatKey": "QCrownLeaf"
+  },
+  {
+   "id": "holy_tree_guard",
+   "stage": "mature",
+   "nameCN": "圣树守卫",
+   "form": "tree",
+   "file": "holy_tree_guard.fbx",
+   "height": 1.79,
+   "dimX": 1.6528,
+   "dimY": 1.2721,
+   "aspect": 0.923,
+   "zmin": 0.0,
+   "zmax": 1.79,
+   "tris": 1228,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "Bark",
+    "BarkLite",
+    "Leaf",
+    "Gold",
+    "InkEye",
+    "Ink"
+   ],
+   "matSats": {
+    "Bark": 0.5327,
+    "BarkLite": 0.5,
+    "Leaf": 0.5432,
+    "Gold": 0.681,
+    "InkEye": 0.4048,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.5011,
+   "minSat": 0.3448,
+   "minSatKey": "Ink"
+  },
+  {
+   "id": "ironroot_colossus",
+   "stage": "young",
+   "nameCN": "铁根巨像",
+   "form": "colossus",
+   "file": "ironroot_colossus_young.fbx",
+   "height": 0.5,
+   "dimX": 0.3688,
+   "dimY": 0.2381,
+   "aspect": 0.738,
+   "zmin": -0.0,
+   "zmax": 0.5,
+   "tris": 400,
+   "budget": 500,
+   "hRange": [
+    0.35,
+    0.5
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QMetal",
+    "QRock",
+    "QGold"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QMetal": 0.3568,
+    "QRock": 0.481,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6047,
+   "minSat": 0.3568,
+   "minSatKey": "QMetal"
+  },
+  {
+   "id": "ironroot_colossus",
+   "stage": "grown",
+   "nameCN": "铁根巨像",
+   "form": "colossus",
+   "file": "ironroot_colossus_grown.fbx",
+   "height": 1.15,
+   "dimX": 0.6671,
+   "dimY": 0.4543,
+   "aspect": 0.58,
+   "zmin": 0.0,
+   "zmax": 1.15,
+   "tris": 440,
+   "budget": 900,
+   "hRange": [
+    0.95,
+    1.15
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "SoilRich",
+    "SoilDeep",
+    "QMetal",
+    "QRock",
+    "QGold"
+   ],
+   "matSats": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QMetal": 0.3568,
+    "QRock": 0.481,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6047,
+   "minSat": 0.3568,
+   "minSatKey": "QMetal"
+  },
+  {
+   "id": "ironroot_colossus",
+   "stage": "mature",
+   "nameCN": "铁根巨像",
+   "form": "colossus",
+   "file": "ironroot_colossus.fbx",
+   "height": 1.79,
+   "dimX": 1.9222,
+   "dimY": 1.2032,
+   "aspect": 1.074,
+   "zmin": 0.0,
+   "zmax": 1.79,
+   "tris": 1308,
+   "budget": 1500,
+   "hRange": [
+    1.62,
+    1.8
+   ],
+   "hOK": true,
+   "triOK": true,
+   "zminOK": true,
+   "mats": [
+    "MetalDk",
+    "Stoner",
+    "Moss",
+    "InkEye",
+    "Ink"
+   ],
+   "matSats": {
+    "MetalDk": 0.0282,
+    "Stoner": 0.0909,
+    "Moss": 0.4304,
+    "InkEye": 0.4048,
+    "Ink": 0.3448
+   },
+   "meanSat": 0.2598,
+   "minSat": 0.0282,
+   "minSatKey": "MetalDk"
+  }
+ ],
+ "growth": [
+  {
+   "id": "radish_guard",
+   "nameCN": "萝卜卫士",
+   "youngHeight": 0.3731,
+   "grownHeight": 0.9808,
+   "matureHeight": 1.7415,
+   "ratioYG": 2.629,
+   "ratioGM": 1.776,
+   "monotonic": true
+  },
+  {
+   "id": "pea_shooter",
+   "nameCN": "豌豆射手",
+   "youngHeight": 0.3846,
+   "grownHeight": 0.9962,
+   "matureHeight": 1.79,
+   "ratioYG": 2.59,
+   "ratioGM": 1.797,
+   "monotonic": true
+  },
+  {
+   "id": "toxic_mushroom",
+   "nameCN": "毒蘑菇",
+   "youngHeight": 0.38,
+   "grownHeight": 0.99,
+   "matureHeight": 1.7186,
+   "ratioYG": 2.605,
+   "ratioGM": 1.736,
+   "monotonic": true
+  },
+  {
+   "id": "frost_ivy",
+   "nameCN": "寒霜藤",
+   "youngHeight": 0.35,
+   "grownHeight": 0.95,
+   "matureHeight": 1.6645,
+   "ratioYG": 2.714,
+   "ratioGM": 1.752,
+   "monotonic": true
+  },
+  {
+   "id": "thorn_pumpkin",
+   "nameCN": "荆棘南瓜",
+   "youngHeight": 0.3892,
+   "grownHeight": 1.0023,
+   "matureHeight": 1.79,
+   "ratioYG": 2.575,
+   "ratioGM": 1.786,
+   "monotonic": true
+  },
+  {
+   "id": "stone_fist",
+   "nameCN": "石拳",
+   "youngHeight": 0.4123,
+   "grownHeight": 1.0331,
+   "matureHeight": 1.79,
+   "ratioYG": 2.506,
+   "ratioGM": 1.733,
+   "monotonic": true
+  },
+  {
+   "id": "chili_mage",
+   "nameCN": "辣椒法师",
+   "youngHeight": 0.3985,
+   "grownHeight": 1.0146,
+   "matureHeight": 1.7789,
+   "ratioYG": 2.546,
+   "ratioGM": 1.753,
+   "monotonic": true
+  },
+  {
+   "id": "starvine",
+   "nameCN": "星藤",
+   "youngHeight": 0.3938,
+   "grownHeight": 1.0085,
+   "matureHeight": 1.7216,
+   "ratioYG": 2.561,
+   "ratioGM": 1.707,
+   "monotonic": true
+  },
+  {
+   "id": "moontree",
+   "nameCN": "月树",
+   "youngHeight": 0.4446,
+   "grownHeight": 1.0762,
+   "matureHeight": 1.79,
+   "ratioYG": 2.421,
+   "ratioGM": 1.663,
+   "monotonic": true
+  },
+  {
+   "id": "char_flower",
+   "nameCN": "炭花",
+   "youngHeight": 0.3985,
+   "grownHeight": 1.0146,
+   "matureHeight": 1.79,
+   "ratioYG": 2.546,
+   "ratioGM": 1.764,
+   "monotonic": true
+  },
+  {
+   "id": "plague_mother",
+   "nameCN": "瘟疫之母",
+   "youngHeight": 0.4308,
+   "grownHeight": 1.0577,
+   "matureHeight": 1.79,
+   "ratioYG": 2.455,
+   "ratioGM": 1.692,
+   "monotonic": true
+  },
+  {
+   "id": "moss_shield",
+   "nameCN": "苔藓盾",
+   "youngHeight": 0.3754,
+   "grownHeight": 0.9838,
+   "matureHeight": 1.62,
+   "ratioYG": 2.621,
+   "ratioGM": 1.647,
+   "monotonic": true
+  },
+  {
+   "id": "healing_clover",
+   "nameCN": "治愈三叶草",
+   "youngHeight": 0.3892,
+   "grownHeight": 1.0023,
+   "matureHeight": 1.79,
+   "ratioYG": 2.575,
+   "ratioGM": 1.786,
+   "monotonic": true
+  },
+  {
+   "id": "life_spring",
+   "nameCN": "生命之泉",
+   "youngHeight": 0.4077,
+   "grownHeight": 1.0269,
+   "matureHeight": 1.6529,
+   "ratioYG": 2.519,
+   "ratioGM": 1.61,
+   "monotonic": true
+  },
+  {
+   "id": "holy_tree_guard",
+   "nameCN": "圣树守卫",
+   "youngHeight": 0.4654,
+   "grownHeight": 1.1038,
+   "matureHeight": 1.79,
+   "ratioYG": 2.372,
+   "ratioGM": 1.622,
+   "monotonic": true
+  },
+  {
+   "id": "ironroot_colossus",
+   "nameCN": "铁根巨像",
+   "youngHeight": 0.5,
+   "grownHeight": 1.15,
+   "matureHeight": 1.79,
+   "ratioYG": 2.3,
+   "ratioGM": 1.557,
+   "monotonic": true
+  }
+ ],
+ "missing": [],
+ "iou": {
+  "sameStageTop": [
+   [
+    0.8290547024952015,
+    "healing_clover/grown",
+    "toxic_mushroom/grown"
+   ],
+   [
+    0.8268260573771216,
+    "life_spring/young",
+    "radish_guard/young"
+   ],
+   [
+    0.825307250281818,
+    "pea_shooter/grown",
+    "toxic_mushroom/grown"
+   ],
+   [
+    0.8122593921886962,
+    "healing_clover/young",
+    "toxic_mushroom/young"
+   ],
+   [
+    0.8053786687631027,
+    "moss_shield/young",
+    "thorn_pumpkin/young"
+   ],
+   [
+    0.7816758864505027,
+    "pea_shooter/young",
+    "toxic_mushroom/young"
+   ],
+   [
+    0.7755752073876976,
+    "radish_guard/young",
+    "thorn_pumpkin/young"
+   ],
+   [
+    0.7745896179635577,
+    "char_flower/grown",
+    "moss_shield/grown"
+   ]
+  ],
+  "sameIdCrossStageTop": [
+   [
+    0.805788823052986,
+    "chili_mage/grown",
+    "chili_mage/young"
+   ],
+   [
+    0.7740114395291939,
+    "plague_mother/grown",
+    "plague_mother/young"
+   ],
+   [
+    0.7737663433150569,
+    "pea_shooter/grown",
+    "pea_shooter/young"
+   ],
+   [
+    0.7715223414239392,
+    "toxic_mushroom/grown",
+    "toxic_mushroom/young"
+   ],
+   [
+    0.7705717389656653,
+    "moss_shield/grown",
+    "moss_shield/young"
+   ],
+   [
+    0.7611931217534813,
+    "thorn_pumpkin/grown",
+    "thorn_pumpkin/young"
+   ],
+   [
+    0.7587900750966201,
+    "holy_tree_guard/grown",
+    "holy_tree_guard/young"
+   ],
+   [
+    0.7222928834090417,
+    "radish_guard/grown",
+    "radish_guard/young"
+   ]
+  ],
+  "crossStageMax": 0.805788823052986,
+  "sameStageMaxNextBest": 0.8268260573771216
+ },
+ "projIoU": {
+  "sameStageTop": [
+   [
+    0.11386138613861387,
+    "life_spring/young",
+    "radish_guard/young"
+   ],
+   [
+    0.10431654676258993,
+    "stone_fist/grown",
+    "toxic_mushroom/grown"
+   ],
+   [
+    0.0930817610062893,
+    "life_spring/mature",
+    "radish_guard/mature"
+   ],
+   [
+    0.08695652173913043,
+    "holy_tree_guard/grown",
+    "plague_mother/grown"
+   ],
+   [
+    0.08502024291497975,
+    "holy_tree_guard/young",
+    "moontree/young"
+   ],
+   [
+    0.0847457627118644,
+    "moontree/young",
+    "plague_mother/young"
+   ],
+   [
+    0.08472803347280335,
+    "frost_ivy/mature",
+    "holy_tree_guard/mature"
+   ],
+   [
+    0.08235294117647059,
+    "frost_ivy/mature",
+    "pea_shooter/mature"
+   ]
+  ],
+  "sameIdTop": [
+   [
+    0.04861111111111111,
+    "holy_tree_guard/grown",
+    "holy_tree_guard/young"
+   ],
+   [
+    0.03753753753753754,
+    "pea_shooter/grown",
+    "pea_shooter/mature"
+   ],
+   [
+    0.03498542274052478,
+    "pea_shooter/grown",
+    "pea_shooter/young"
+   ],
+   [
+    0.03070175438596491,
+    "toxic_mushroom/grown",
+    "toxic_mushroom/young"
+   ],
+   [
+    0.02973977695167286,
+    "plague_mother/grown",
+    "plague_mother/young"
+   ],
+   [
+    0.02912621359223301,
+    "char_flower/grown",
+    "char_flower/young"
+   ],
+   [
+    0.02512562814070352,
+    "chili_mage/grown",
+    "chili_mage/young"
+   ],
+   [
+    0.02510460251046025,
+    "ironroot_colossus/grown",
+    "ironroot_colossus/young"
+   ]
+  ]
+ },
+ "composeePlan": "D:\\Unity\\project\\Seedfall守园者\\Tools\\AssetPipeline\\qstyle_renders\\compose_plan.json"
+}

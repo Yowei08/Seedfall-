@@ -1,0 +1,73 @@
+{
+  "id": "v30",
+  "label": "turn-1792046937585",
+  "at": 1792047345477,
+  "why": "",
+  "note": "工具：unity_editor x4、unity_drive x6、(request) background job pwsh-38 (pwsh: $src='d:\\unity\\project\\seedfal、unity_look、unity_log、yowei_plan、(window) plans: asset -> doc、yowei_expand\n产出：策划案 x1、拓展方案 x2\n工程改动：无（只写了 .yowei 下的文档，未拍快照）\n耗时：408 秒\n结束原因：本轮对话结束",
+  "summary": "策划改动 1 篇 · 新玩法 1 篇",
+  "changes": {
+    "design": [
+      {
+        "id": "seedfall-project-design",
+        "title": "Seedfall 守园者 · 完整项目设计与改版记录（v46）",
+        "from": 1,
+        "to": 2
+      }
+    ],
+    "play": [
+      {
+        "id": "seedfall-expansion",
+        "title": "Seedfall 守园者 · 拓展方案（v3）",
+        "from": 1,
+        "to": 2
+      }
+    ],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 4,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "seedfall-project-design",
+      "title": "Seedfall 守园者 · 完整项目设计与改版记录（v46）",
+      "index": 2,
+      "versions": 3
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 策划案 v36（自动种植 · 攻击即互动）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-expansion",
+      "title": "Seedfall 守园者 · 拓展方案（v3）",
+      "index": 2,
+      "versions": 3
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 v16（新设计收尾清单）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-architecture",
+      "title": "Seedfall 守园者 · 架构案（子系统边界 / 接口 / 数据流 / 失败模式）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}

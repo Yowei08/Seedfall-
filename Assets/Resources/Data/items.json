@@ -1,0 +1,106 @@
+{
+  "_note": "v168 道具表（20 件，严格按三类别）。★ category ★ 1 = 纯数值增加（只有 effects，小价格、普通/一般品质；传奇可有【全属性小幅度增加】的特例）；2 = 有牺牲的增加（effects + costs 两半都要有，且同一属性上增益必须严格大于减益；可带 rule 小机制与 growPerWave 成长）；3 = 机制拓展（只有 rule，不许动全局玩法，规则的解释器见 Defs.cs 的 ItemRules）。★ 每条 rule 都必须有真消费点，未登记的 rule 会被 TableDatabase.Validate 拒绝 ★ 数值约定：add 一律整数（Add=点数，Percent=百分点）。",
+  "items": [
+    { "id": "iron_hoe", "name": "磨刀石", "grade": "D", "category": 1, "price": 22, "maxStack": 8,
+      "desc": "近战伤害 +1（只影响锄头那条线，水壶与肥料不动）",
+      "effects": [ { "mode": "Add", "stat": "MeleeDamage", "add": 1 } ] },
+
+    { "id": "water_pouch", "name": "水囊", "grade": "D", "category": 1, "price": 22, "maxStack": 8,
+      "desc": "远程伤害 +1（只影响水壶那条线）",
+      "effects": [ { "mode": "Add", "stat": "RangedDamage", "add": 1 } ] },
+
+    { "id": "ash_pouch", "name": "火药袋", "grade": "D", "category": 1, "price": 22, "maxStack": 8,
+      "desc": "爆炸伤害 +1（只影响肥料那条线）",
+      "effects": [ { "mode": "Add", "stat": "BlastDamage", "add": 1 } ] },
+
+    { "id": "scarecrow", "name": "稻草人", "grade": "D", "category": 1, "price": 20, "maxStack": 8,
+      "desc": "最大生命 +1",
+      "effects": [ { "mode": "Add", "stat": "MaxHp", "add": 1 } ] },
+
+    { "id": "snail_shell", "name": "蜗牛壳", "grade": "D", "category": 1, "price": 18, "maxStack": 6,
+      "desc": "护盾 +1",
+      "effects": [ { "mode": "Add", "stat": "Shield", "add": 1 } ] },
+
+    { "id": "sprinter_boots", "name": "疾行靴", "grade": "D", "category": 1, "price": 18, "maxStack": 5,
+      "desc": "移动速度 +5%",
+      "effects": [ { "mode": "Percent", "stat": "MoveSpeed", "add": 5 } ] },
+
+    { "id": "hardwood_haft", "name": "硬木柄", "grade": "C", "category": 1, "price": 30, "maxStack": 6,
+      "desc": "近战伤害 +2（磨刀石的加强版）",
+      "effects": [ { "mode": "Add", "stat": "MeleeDamage", "add": 2 } ] },
+
+    { "id": "lens", "name": "放大镜", "grade": "C", "category": 1, "price": 28, "maxStack": 5,
+      "desc": "攻击范围 +8%",
+      "effects": [ { "mode": "Percent", "stat": "AtkRange", "add": 8 } ] },
+
+    { "id": "heirloom", "name": "传家宝", "grade": "S", "category": 1, "price": 120, "maxStack": 1,
+      "desc": "传奇特例：全属性小幅度增加 —— 近战/远程/爆炸伤害各 +1、最大生命 +1、护盾 +1、移动速度 +3%、暴击率 +3%。每一项都小，但一次加满七条。",
+      "effects": [
+        { "mode": "Add", "stat": "MeleeDamage", "add": 1 },
+        { "mode": "Add", "stat": "RangedDamage", "add": 1 },
+        { "mode": "Add", "stat": "BlastDamage", "add": 1 },
+        { "mode": "Add", "stat": "MaxHp", "add": 1 },
+        { "mode": "Add", "stat": "Shield", "add": 1 },
+        { "mode": "Percent", "stat": "MoveSpeed", "add": 3 },
+        { "mode": "Add", "stat": "CritRate", "add": 3 }
+      ] },
+
+    { "id": "glass_cannon", "name": "玻璃大炮", "grade": "C", "category": 2, "price": 34, "maxStack": 4,
+      "desc": "近战伤害 +3，最大生命 −1 —— 换来的攻击力是减益的三倍。",
+      "effects": [ { "mode": "Add", "stat": "MeleeDamage", "add": 3 } ],
+      "costs":   [ { "mode": "Add", "stat": "MaxHp", "add": 1 } ] },
+
+    { "id": "plow_weight", "name": "配重犁", "grade": "C", "category": 2, "price": 32, "maxStack": 4,
+      "desc": "爆炸伤害 +2，移动速度 −5% —— 慢下来，但肥料更疼。",
+      "effects": [ { "mode": "Add", "stat": "BlastDamage", "add": 2 } ],
+      "costs":   [ { "mode": "Percent", "stat": "MoveSpeed", "add": 5 } ] },
+
+    { "id": "twin_blade", "name": "双刃护腕", "grade": "B", "category": 2, "price": 46, "maxStack": 4,
+      "desc": "近战伤害 +2 且远程伤害 +2，护盾 −1 —— 两条武器线一起加，代价是一条护盾。",
+      "effects": [
+        { "mode": "Add", "stat": "MeleeDamage", "add": 2 },
+        { "mode": "Add", "stat": "RangedDamage", "add": 2 }
+      ],
+      "costs": [ { "mode": "Add", "stat": "Shield", "add": 1 } ] },
+
+    { "id": "ferment_jar", "name": "发酵罐", "grade": "B", "category": 2, "price": 50, "maxStack": 4,
+      "desc": "攻击速度 +15%，护盾 −1 —— 出刀更快，但更脆。",
+      "effects": [ { "mode": "Percent", "stat": "AtkSpeed", "add": 15 } ],
+      "costs":   [ { "mode": "Add", "stat": "Shield", "add": 1 } ] },
+
+    { "id": "overclock_core", "name": "超载核心", "grade": "B", "category": 2, "price": 52, "maxStack": 3,
+      "desc": "攻击倍率 +18%，最大生命 −2 —— 高品质的大数值修改。",
+      "effects": [ { "mode": "Percent", "stat": "AtkMult", "add": 18 } ],
+      "costs":   [ { "mode": "Add", "stat": "MaxHp", "add": 2 } ] },
+
+    { "id": "wax_seal", "name": "蜡封符", "grade": "A", "category": 2, "price": 70, "maxStack": 2,
+      "desc": "近战伤害 +1、最大生命 −1，并且【成长】每过 1 个回合近战伤害再 +1（第 5 回合时 = +5）。前 1 回合略亏，之后一路赚。",
+      "effects": [ { "mode": "Add", "stat": "MeleeDamage", "add": 1 } ],
+      "costs":   [ { "mode": "Add", "stat": "MaxHp", "add": 1 } ],
+      "growPerWave": 1 },
+
+    { "id": "blood_pact", "name": "血契", "grade": "A", "category": 2, "price": 78, "maxStack": 2,
+      "desc": "攻击倍率 +25%、最大生命 −2，并且【成长】每过 1 个回合攻击倍率再 +3%（第 6 回合时 = +40%）。",
+      "effects": [ { "mode": "Percent", "stat": "AtkMult", "add": 25 } ],
+      "costs":   [ { "mode": "Add", "stat": "MaxHp", "add": 2 } ],
+      "growPerWave": 3 },
+
+    { "id": "greedy_sickle", "name": "贪婪镰", "grade": "A", "category": 2, "price": 82, "maxStack": 3,
+      "desc": "攻击速度 +8%、收割金币 +25%，移动速度 −10% —— 一条【小机制】加两半数值，增益明显大于减益。",
+      "effects": [ { "mode": "Percent", "stat": "AtkSpeed", "add": 8 } ],
+      "costs":   [ { "mode": "Percent", "stat": "MoveSpeed", "add": 10 } ],
+      "rule": "harvest_gold_pct", "ruleValue": 25 },
+
+    { "id": "dew_flask", "name": "露水壶", "grade": "C", "category": 3, "price": 36, "maxStack": 4,
+      "desc": "机制拓展：每次收割成熟作物时，该格额外返还 4 点蓄水（每层 +4）。只改这一条局部规则，不动任何全局流程。",
+      "rule": "harvest_dew", "ruleValue": 4 },
+
+    { "id": "haggle_charm", "name": "议价符", "grade": "B", "category": 3, "price": 48, "maxStack": 3,
+      "desc": "机制拓展：商店刷新费 −1 金币（每层 −1，最低 1 金币）。只改刷新这一处定价，不改商店的商品、权重与流程。",
+      "rule": "reroll_discount", "ruleValue": 1 },
+
+    { "id": "golden_sickle", "name": "金镰", "grade": "A", "category": 3, "price": 76, "maxStack": 3,
+      "desc": "机制拓展：收割金币 +25%（每层 +25%）。只改收益结算这一处，不改成长、蓄水或商店。",
+      "rule": "harvest_gold_pct", "ruleValue": 25 }
+  ]
+}
