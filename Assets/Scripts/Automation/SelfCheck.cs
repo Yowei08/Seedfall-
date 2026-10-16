@@ -1064,12 +1064,25 @@ namespace Seedfall
             {
                 EnemyDef d = TableDatabase.GetEnemy(id);
                 int hits1 = Mathf.CeilToInt(d.HpForWave(1, 1) / perHit);
-                int hits2 = Mathf.CeilToInt(d.HpForWave(2, 1) / perHit);
-                int hits4 = Mathf.CeilToInt(d.HpForWave(4, 1) / perHit);
-                list.Add(new CheckResult($"{id} 第 1 波需要 3–5 次锄头击杀",
-                    hits1 >= 3 && hits1 <= 5, $"{hits1} 次 × {perHit:0.00}（血 {d.HpForWave(1, 1):0.#}）"));
-                list.Add(new CheckResult($"{id} 第 2 波难度不变", hits2 == hits1, $"{hits2} 次"));
-                list.Add(new CheckResult($"{id} 第 4 波开始变肉", hits4 > hits2, $"{hits4} 次（血 {d.HpForWave(4, 1):0.#}）"));
+                // ★ v174：敌人【开局】基础血量降到"玩家近战一下打死"（用户要求）★
+                // ⇒ 旧的"第 1 波 3–5 次击杀 / 第 2 波难度不变 / 第 4 波开始变肉"是按血 10 写的 ✗
+                //   而血 4 时三次击杀数是 1 / 2 / 2 ⇒ 后两条【必然】为假 ✓
+                // ⇒ 所以换成【按血量比较】✗ —— 这样以后调 `baseHp` 不会再让它们挂 ✓
+                //   （★ 与上面 `:346` 那条"首波血量 = 基础值"同一个做法 ✓）
+                // ★ v174 补：判据要与**实际机制**等价，而不是"差不多"★
+                //   伤害是浮点、血量也是浮点，所以"一刀死"的真正判据是
+                //   `CeilToInt(血 / 每击) ≤ 1`（= 血 ≤ 每击）✗ 不是 `血 ≤ 每击 + 1e-3` ✓
+                //   后者在"血比每击大一丝"时会**放行**一个实际要两下的配置 ✗
+                //   而这正是必须由断言抓住的那类漂移（改 `baseHp` 时最容易踩）✓
+                list.Add(new CheckResult($"{id} 开局一刀死（首波血 ≤ 玩家一次近战）",
+                    hits1 == 1,
+                    $"血 {d.HpForWave(1, 1):0.#} ≤ 每击 {perHit:0.00} ⇒ {hits1} 次"));
+                list.Add(new CheckResult($"{id} 第 2 波血量高于第 1 波",
+                    d.HpForWave(2, 1) > d.HpForWave(1, 1),
+                    $"血 {d.HpForWave(1, 1):0.#} → {d.HpForWave(2, 1):0.#}"));
+                list.Add(new CheckResult($"{id} 第 4 波血量高于第 2 波",
+                    d.HpForWave(4, 1) > d.HpForWave(2, 1),
+                    $"血 {d.HpForWave(2, 1):0.#} → {d.HpForWave(4, 1):0.#}"));
             }
         }
 
