@@ -123,7 +123,10 @@ namespace Seedfall
             try { sess = bootForTime != null ? bootForTime.Session : null; } catch { sess = null; }
             if (sess != null)
                 sb.Append("  [时间] RunTime=").Append(sess.RunTime.ToString("0.0")).Append("s")
-                  .Append("  回合=").Append(sess.WaveIndex)
+                  // ★ v173：这一栏原来写"回合="✗ —— 而"回合"这个词在本工程里已不存在 ✓
+                  // 底层是 `WaveIndex` ✓ 计时制下【每分钟 +1】⇒ 叫"波次"✓
+                  // （★ 同一条日志里"派生波"也是它 ✓ 所以原来那两个名字指同一个量 ✗）
+                  .Append("  波次=").Append(sess.WaveIndex)
                   .Append("  暂停=").Append(sess.Paused)
                   .Append("  阶段=").Append(sess.Phase).Append('\n');
             Debug.Log(sb.ToString());
