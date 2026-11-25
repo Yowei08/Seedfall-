@@ -263,7 +263,7 @@ namespace Seedfall
             {
                 _lastWave = s.WaveIndex;
                 MinuteMarks.Add(string.Format(CultureInfo.InvariantCulture,
-                    "  t={0,7:0.0}s  第 {1} 分钟开始（StartWave ⇒ 满血 + 满盾 + 传送回 (0,0) + 水 +50）",
+                    "  t={0,7:0.0}s  第 {1} 分钟开始（StartWave ⇒ 满血 + 满盾 + 水 +50；★ v178：位置不再重置 —— 原「传送回 (0,0)」已删除 ✓）",
                     t, s.WaveIndex));
             }
 

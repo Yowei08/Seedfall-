@@ -1,0 +1,24 @@
+{
+  "name": "FxCrescent",
+  "version": "v187",
+  "unit": "外径归一 1.0（由 MeshBit.SclAxis 贴到判定框）",
+  "params": {
+    "segs": 24,
+    "half_deg": 55.0,
+    "thickness": 0.46,
+    "half_thick_y": 0.035,
+    "taper_pow": 0.45,
+    "outer": 1.0,
+    "outer_thin": 0.3,
+    "hy_floor": 0.0008,
+    "quads_per_seg": 4
+  },
+  "counts": {
+    "quads": 96,
+    "tris": 384,
+    "verts": 1152
+  },
+  "csharp": "Assets/Scripts/Bootstrap/WorldView.cs :: FxCrescentMesh / CrescentSection / CrescentTaper",
+  "cache_key": 5800,
+  "obj": "fx_crescent.obj"
+}

@@ -1,0 +1,1393 @@
+{
+ "generator": "Tools/icon_gen/gen_plant_meshes_8.py",
+ "command": "blender.exe -b --factory-startup -P Tools/icon_gen/gen_plant_meshes_8.py -- all",
+ "stages": [
+  "young",
+  "grown",
+  "mature"
+ ],
+ "species": {
+  "dusk_berry": [
+   "暮莓",
+   "berry",
+   "QBerry",
+   "QBerryDeep",
+   "QGold"
+  ],
+  "tide_gourd": [
+   "潮瓜",
+   "melon",
+   "Pumpkin",
+   "QLeafDeep",
+   "QIce"
+  ],
+  "hollow_vine": [
+   "空藤",
+   "hoop",
+   "QClover",
+   "QLeafDeep",
+   "QSunDisc"
+  ],
+  "dune_cactus": [
+   "沙掌",
+   "paddle",
+   "QMossDeep",
+   "Moss",
+   "QGold"
+  ],
+  "harvest_bell": [
+   "丰收铃",
+   "bell",
+   "QGold",
+   "QSunDisc",
+   "QEmberDeep"
+  ],
+  "star_ladder": [
+   "星梯",
+   "ladder",
+   "QIce",
+   "QMoon",
+   "QGold"
+  ],
+  "elder_oak": [
+   "古木",
+   "oaktree",
+   "QTrunk",
+   "QCrownLeaf",
+   "QSunDisc"
+  ],
+  "quick_reed": [
+   "疾苇",
+   "reed",
+   "QLeafDeep",
+   "Water",
+   "QGold"
+  ]
+ },
+ "sizes": {
+  "dusk_berry": 0.72,
+  "tide_gourd": 0.74,
+  "hollow_vine": 0.7,
+  "dune_cactus": 0.78,
+  "harvest_bell": 0.88,
+  "star_ladder": 0.9,
+  "elder_oak": 1.02,
+  "quick_reed": 0.92
+ },
+ "models": [
+  {
+   "id": "dusk_berry",
+   "stage": "young",
+   "nameCN": "暮莓",
+   "form": "berry",
+   "height": 0.4123,
+   "dimX": 0.2794,
+   "dimY": 0.2505,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 336,
+   "budget": 500,
+   "detailFloor": "low",
+   "bodyRatio": 0.757,
+   "bodySpan": [
+    0.0418,
+    0.3539
+   ],
+   "supportSpan": [
+    -0.0068,
+    0.3772
+   ],
+   "supportRatio": 0.9314,
+   "crownRatio": 0.1418,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QBerryDeep",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QBerryDeep",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QBerry": 0.6062,
+    "QBerryDeep": 0.6348,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6854,
+   "minSatKey": "QBerry",
+   "minSat": 0.6062,
+   "path": "Assets/Resources/Art/Plants/dusk_berry_young.fbx"
+  },
+  {
+   "id": "dusk_berry",
+   "stage": "grown",
+   "nameCN": "暮莓",
+   "form": "berry",
+   "height": 1.0331,
+   "dimX": 0.5389,
+   "dimY": 0.4882,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 736,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5626,
+   "bodySpan": [
+    0.2045,
+    0.7857
+   ],
+   "supportSpan": [
+    -0.0279,
+    0.8292
+   ],
+   "supportRatio": 0.8296,
+   "crownRatio": 0.2395,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QBerryDeep",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QBerryDeep",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QBerry": 0.6062,
+    "QBerryDeep": 0.6348,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6854,
+   "minSatKey": "QBerry",
+   "minSat": 0.6062,
+   "path": "Assets/Resources/Art/Plants/dusk_berry_grown.fbx"
+  },
+  {
+   "id": "dusk_berry",
+   "stage": "mature",
+   "nameCN": "暮莓",
+   "form": "berry",
+   "height": 1.7215,
+   "dimX": 0.9031,
+   "dimY": 0.8182,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 736,
+   "budget": 1500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5588,
+   "bodySpan": [
+    0.311,
+    1.2729
+   ],
+   "supportSpan": [
+    -0.0429,
+    1.3449
+   ],
+   "supportRatio": 0.8061,
+   "crownRatio": 0.2606,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QBerryDeep",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QBerry",
+    "QBerryDeep",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QBerry": 0.6062,
+    "QBerryDeep": 0.6348,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6854,
+   "minSatKey": "QBerry",
+   "minSat": 0.6062,
+   "path": "Assets/Resources/Art/Plants/dusk_berry.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "tide_gourd",
+   "stage": "young",
+   "nameCN": "潮瓜",
+   "form": "melon",
+   "height": 0.4169,
+   "dimX": 0.3216,
+   "dimY": 0.2995,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 488,
+   "budget": 500,
+   "detailFloor": "hi",
+   "bodyRatio": 0.7476,
+   "bodySpan": [
+    0.0477,
+    0.3594
+   ],
+   "supportSpan": [
+    -0.0243,
+    0.3796
+   ],
+   "supportRatio": 0.9688,
+   "crownRatio": 0.1379,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep",
+    "QIce"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep",
+    "QIce"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Pumpkin": 0.7946,
+    "QLeafDeep": 0.6696,
+    "QIce": 0.584
+   },
+   "meanSat": 0.6829,
+   "minSatKey": "QIce",
+   "minSat": 0.584,
+   "path": "Assets/Resources/Art/Plants/tide_gourd_young.fbx"
+  },
+  {
+   "id": "tide_gourd",
+   "stage": "grown",
+   "nameCN": "潮瓜",
+   "form": "melon",
+   "height": 1.0392,
+   "dimX": 0.6747,
+   "dimY": 0.6552,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 580,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.567,
+   "bodySpan": [
+    0.2127,
+    0.8019
+   ],
+   "supportSpan": [
+    -0.0492,
+    0.84
+   ],
+   "supportRatio": 0.8556,
+   "crownRatio": 0.2284,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep",
+    "QIce"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep",
+    "QIce"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Pumpkin": 0.7946,
+    "QLeafDeep": 0.6696,
+    "QIce": 0.584
+   },
+   "meanSat": 0.6829,
+   "minSatKey": "QIce",
+   "minSat": 0.584,
+   "path": "Assets/Resources/Art/Plants/tide_gourd_grown.fbx"
+  },
+  {
+   "id": "tide_gourd",
+   "stage": "mature",
+   "nameCN": "潮瓜",
+   "form": "melon",
+   "height": 1.7246,
+   "dimX": 1.1215,
+   "dimY": 1.0847,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 580,
+   "budget": 1500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5638,
+   "bodySpan": [
+    0.3245,
+    1.2968
+   ],
+   "supportSpan": [
+    -0.0805,
+    1.3597
+   ],
+   "supportRatio": 0.835,
+   "crownRatio": 0.2481,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep",
+    "QIce"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "Pumpkin",
+    "QLeafDeep",
+    "QIce"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "Pumpkin": 0.7946,
+    "QLeafDeep": 0.6696,
+    "QIce": 0.584
+   },
+   "meanSat": 0.6829,
+   "minSatKey": "QIce",
+   "minSat": 0.584,
+   "path": "Assets/Resources/Art/Plants/tide_gourd.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "hollow_vine",
+   "stage": "young",
+   "nameCN": "空藤",
+   "form": "hoop",
+   "height": 0.4077,
+   "dimX": 0.2616,
+   "dimY": 0.1816,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 380,
+   "budget": 500,
+   "detailFloor": "tiny",
+   "bodyRatio": 0.698,
+   "bodySpan": [
+    0.0582,
+    0.3427
+   ],
+   "supportSpan": [
+    -0.0076,
+    0.0631
+   ],
+   "supportRatio": 0.1732,
+   "crownRatio": 0.1593,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QLeafDeep",
+    "QSunDisc"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QLeafDeep",
+    "QSunDisc"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QClover": 0.6552,
+    "QLeafDeep": 0.6696,
+    "QSunDisc": 0.8745
+   },
+   "meanSat": 0.7131,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/hollow_vine_young.fbx"
+  },
+  {
+   "id": "hollow_vine",
+   "stage": "grown",
+   "nameCN": "空藤",
+   "form": "hoop",
+   "height": 1.0269,
+   "dimX": 0.5465,
+   "dimY": 0.5035,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 844,
+   "budget": 900,
+   "detailFloor": "low",
+   "bodyRatio": 0.5074,
+   "bodySpan": [
+    0.245,
+    0.7661
+   ],
+   "supportSpan": [
+    -0.0305,
+    0.254
+   ],
+   "supportRatio": 0.277,
+   "crownRatio": 0.254,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QLeafDeep",
+    "QSunDisc"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QLeafDeep",
+    "QSunDisc"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QClover": 0.6552,
+    "QLeafDeep": 0.6696,
+    "QSunDisc": 0.8745
+   },
+   "meanSat": 0.7131,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/hollow_vine_grown.fbx"
+  },
+  {
+   "id": "hollow_vine",
+   "stage": "mature",
+   "nameCN": "空藤",
+   "form": "hoop",
+   "height": 1.7185,
+   "dimX": 0.9091,
+   "dimY": 0.789,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 1320,
+   "budget": 1500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5044,
+   "bodySpan": [
+    0.3774,
+    1.2442
+   ],
+   "supportSpan": [
+    -0.0471,
+    0.3924
+   ],
+   "supportRatio": 0.2557,
+   "crownRatio": 0.276,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QLeafDeep",
+    "QSunDisc"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QClover",
+    "QLeafDeep",
+    "QSunDisc"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QClover": 0.6552,
+    "QLeafDeep": 0.6696,
+    "QSunDisc": 0.8745
+   },
+   "meanSat": 0.7131,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/hollow_vine.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "dune_cactus",
+   "stage": "young",
+   "nameCN": "沙掌",
+   "form": "paddle",
+   "height": 0.4262,
+   "dimX": 0.2771,
+   "dimY": 0.3036,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 396,
+   "budget": 500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.6563,
+   "bodySpan": [
+    0.0587,
+    0.3384
+   ],
+   "supportSpan": [
+    -0.0248,
+    0.0637
+   ],
+   "supportRatio": 0.2078,
+   "crownRatio": 0.2059,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QMossDeep",
+    "QGold",
+    "Moss"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QMossDeep",
+    "QGold",
+    "Moss"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QMossDeep": 0.7213,
+    "QGold": 0.8196,
+    "Moss": 0.4304
+   },
+   "meanSat": 0.6675,
+   "minSatKey": "Moss",
+   "minSat": 0.4304,
+   "path": "Assets/Resources/Art/Plants/dune_cactus_young.fbx"
+  },
+  {
+   "id": "dune_cactus",
+   "stage": "grown",
+   "nameCN": "沙掌",
+   "form": "paddle",
+   "height": 1.0515,
+   "dimX": 0.589,
+   "dimY": 0.662,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 476,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.4969,
+   "bodySpan": [
+    0.2343,
+    0.7568
+   ],
+   "supportSpan": [
+    -0.0496,
+    0.2284
+   ],
+   "supportRatio": 0.2644,
+   "crownRatio": 0.2803,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QMossDeep",
+    "QGold",
+    "Moss"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QMossDeep",
+    "QGold",
+    "Moss"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QMossDeep": 0.7213,
+    "QGold": 0.8196,
+    "Moss": 0.4304
+   },
+   "meanSat": 0.6675,
+   "minSatKey": "Moss",
+   "minSat": 0.4304,
+   "path": "Assets/Resources/Art/Plants/dune_cactus_grown.fbx"
+  },
+  {
+   "id": "dune_cactus",
+   "stage": "mature",
+   "nameCN": "沙掌",
+   "form": "paddle",
+   "height": 1.7308,
+   "dimX": 0.9714,
+   "dimY": 1.0882,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 476,
+   "budget": 1500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.494,
+   "bodySpan": [
+    0.3567,
+    1.2118
+   ],
+   "supportSpan": [
+    -0.0805,
+    0.347
+   ],
+   "supportRatio": 0.247,
+   "crownRatio": 0.2998,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QMossDeep",
+    "QGold",
+    "Moss"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QMossDeep",
+    "QGold",
+    "Moss"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QMossDeep": 0.7213,
+    "QGold": 0.8196,
+    "Moss": 0.4304
+   },
+   "meanSat": 0.6675,
+   "minSatKey": "Moss",
+   "minSat": 0.4304,
+   "path": "Assets/Resources/Art/Plants/dune_cactus.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "harvest_bell",
+   "stage": "young",
+   "nameCN": "丰收铃",
+   "form": "bell",
+   "height": 0.4492,
+   "dimX": 0.278,
+   "dimY": 0.2887,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 332,
+   "budget": 500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.7128,
+   "bodySpan": [
+    0.059,
+    0.3792
+   ],
+   "supportSpan": [
+    -0.0074,
+    0.0614
+   ],
+   "supportRatio": 0.1531,
+   "crownRatio": 0.156,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QGold",
+    "QSunDisc",
+    "QEmberDeep"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QGold",
+    "QSunDisc",
+    "QEmberDeep"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QGold": 0.8196,
+    "QSunDisc": 0.8745,
+    "QEmberDeep": 0.9509
+   },
+   "meanSat": 0.8023,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/harvest_bell_young.fbx"
+  },
+  {
+   "id": "harvest_bell",
+   "stage": "grown",
+   "nameCN": "丰收铃",
+   "form": "bell",
+   "height": 1.0823,
+   "dimX": 0.5074,
+   "dimY": 0.5269,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 332,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5272,
+   "bodySpan": [
+    0.2364,
+    0.8071
+   ],
+   "supportSpan": [
+    -0.0289,
+    0.2408
+   ],
+   "supportRatio": 0.2492,
+   "crownRatio": 0.2543,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QGold",
+    "QSunDisc",
+    "QEmberDeep"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QGold",
+    "QSunDisc",
+    "QEmberDeep"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QGold": 0.8196,
+    "QSunDisc": 0.8745,
+    "QEmberDeep": 0.9509
+   },
+   "meanSat": 0.8023,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/harvest_bell_grown.fbx"
+  },
+  {
+   "id": "harvest_bell",
+   "stage": "mature",
+   "nameCN": "丰收铃",
+   "form": "bell",
+   "height": 1.7462,
+   "dimX": 0.8202,
+   "dimY": 0.8517,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 332,
+   "budget": 1500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5231,
+   "bodySpan": [
+    0.351,
+    1.2645
+   ],
+   "supportSpan": [
+    -0.0429,
+    0.3579
+   ],
+   "supportRatio": 0.2296,
+   "crownRatio": 0.2759,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QGold",
+    "QSunDisc",
+    "QEmberDeep"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QGold",
+    "QSunDisc",
+    "QEmberDeep"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QGold": 0.8196,
+    "QSunDisc": 0.8745,
+    "QEmberDeep": 0.9509
+   },
+   "meanSat": 0.8023,
+   "minSatKey": "SoilRich",
+   "minSat": 0.645,
+   "path": "Assets/Resources/Art/Plants/harvest_bell.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "star_ladder",
+   "stage": "young",
+   "nameCN": "星梯",
+   "form": "ladder",
+   "height": 0.4538,
+   "dimX": 0.2298,
+   "dimY": 0.225,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 424,
+   "budget": 500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.6904,
+   "bodySpan": [
+    0.0722,
+    0.3855
+   ],
+   "supportSpan": [
+    -0.0083,
+    0.069
+   ],
+   "supportRatio": 0.1703,
+   "crownRatio": 0.1505,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "QMoon",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "QMoon",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QIce": 0.584,
+    "QMoon": 0.5023,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6544,
+   "minSatKey": "QMoon",
+   "minSat": 0.5023,
+   "path": "Assets/Resources/Art/Plants/star_ladder_young.fbx"
+  },
+  {
+   "id": "star_ladder",
+   "stage": "grown",
+   "nameCN": "星梯",
+   "form": "ladder",
+   "height": 1.0885,
+   "dimX": 0.5087,
+   "dimY": 0.5348,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 460,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.5029,
+   "bodySpan": [
+    0.2709,
+    0.8182
+   ],
+   "supportSpan": [
+    -0.0318,
+    0.2653
+   ],
+   "supportRatio": 0.273,
+   "crownRatio": 0.2483,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "QMoon",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "QMoon",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QIce": 0.584,
+    "QMoon": 0.5023,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6544,
+   "minSatKey": "QMoon",
+   "minSat": 0.5023,
+   "path": "Assets/Resources/Art/Plants/star_ladder_grown.fbx"
+  },
+  {
+   "id": "star_ladder",
+   "stage": "mature",
+   "nameCN": "星梯",
+   "form": "ladder",
+   "height": 1.7492,
+   "dimX": 0.7669,
+   "dimY": 0.8063,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 460,
+   "budget": 1500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.4997,
+   "bodySpan": [
+    0.4023,
+    1.2765
+   ],
+   "supportSpan": [
+    -0.0472,
+    0.3934
+   ],
+   "supportRatio": 0.2519,
+   "crownRatio": 0.2703,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "QMoon",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QIce",
+    "QMoon",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QIce": 0.584,
+    "QMoon": 0.5023,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6544,
+   "minSatKey": "QMoon",
+   "minSat": 0.5023,
+   "path": "Assets/Resources/Art/Plants/star_ladder.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "elder_oak",
+   "stage": "young",
+   "nameCN": "古木",
+   "form": "oaktree",
+   "height": 0.4815,
+   "dimX": 0.2815,
+   "dimY": 0.1971,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 348,
+   "budget": 500,
+   "detailFloor": "low",
+   "bodyRatio": 0.6705,
+   "bodySpan": [
+    0.0774,
+    0.4002
+   ],
+   "supportSpan": [
+    -0.0089,
+    0.098
+   ],
+   "supportRatio": 0.222,
+   "crownRatio": 0.1688,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QTrunk",
+    "QCrownLeaf",
+    "QSunDisc"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QTrunk",
+    "QCrownLeaf",
+    "QSunDisc"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QTrunk": 0.6667,
+    "QCrownLeaf": 0.6375,
+    "QSunDisc": 0.8745
+   },
+   "meanSat": 0.709,
+   "minSatKey": "QCrownLeaf",
+   "minSat": 0.6375,
+   "path": "Assets/Resources/Art/Plants/elder_oak_young.fbx"
+  },
+  {
+   "id": "elder_oak",
+   "stage": "grown",
+   "nameCN": "古木",
+   "form": "oaktree",
+   "height": 1.1254,
+   "dimX": 0.4828,
+   "dimY": 0.4582,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 580,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.4791,
+   "bodySpan": [
+    0.2777,
+    0.8168
+   ],
+   "supportSpan": [
+    -0.0327,
+    0.3121
+   ],
+   "supportRatio": 0.3064,
+   "crownRatio": 0.2742,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QTrunk",
+    "QCrownLeaf",
+    "QSunDisc"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QTrunk",
+    "QCrownLeaf",
+    "QSunDisc"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QTrunk": 0.6667,
+    "QCrownLeaf": 0.6375,
+    "QSunDisc": 0.8745
+   },
+   "meanSat": 0.709,
+   "minSatKey": "QCrownLeaf",
+   "minSat": 0.6375,
+   "path": "Assets/Resources/Art/Plants/elder_oak_grown.fbx"
+  },
+  {
+   "id": "elder_oak",
+   "stage": "mature",
+   "nameCN": "古木",
+   "form": "oaktree",
+   "height": 1.7677,
+   "dimX": 0.7562,
+   "dimY": 0.6664,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 580,
+   "budget": 1500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.4748,
+   "bodySpan": [
+    0.4021,
+    1.2414
+   ],
+   "supportSpan": [
+    -0.0472,
+    0.4557
+   ],
+   "supportRatio": 0.2845,
+   "crownRatio": 0.2977,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QTrunk",
+    "QCrownLeaf",
+    "QSunDisc"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QTrunk",
+    "QCrownLeaf",
+    "QSunDisc"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QTrunk": 0.6667,
+    "QCrownLeaf": 0.6375,
+    "QSunDisc": 0.8745
+   },
+   "meanSat": 0.709,
+   "minSatKey": "QCrownLeaf",
+   "minSat": 0.6375,
+   "path": "Assets/Resources/Art/Plants/elder_oak.fbx",
+   "removedMeta": true
+  },
+  {
+   "id": "quick_reed",
+   "stage": "young",
+   "nameCN": "疾苇",
+   "form": "reed",
+   "height": 0.4585,
+   "dimX": 0.3094,
+   "dimY": 0.2324,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 484,
+   "budget": 500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.8264,
+   "bodySpan": [
+    0.0748,
+    0.4537
+   ],
+   "supportSpan": [
+    -0.009,
+    0.0748
+   ],
+   "supportRatio": 0.1828,
+   "crownRatio": 0.0104,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QLeafDeep",
+    "Water",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QLeafDeep",
+    "Water",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QLeafDeep": 0.6696,
+    "Water": 0.5278,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6767,
+   "minSatKey": "Water",
+   "minSat": 0.5278,
+   "path": "Assets/Resources/Art/Plants/quick_reed_young.fbx"
+  },
+  {
+   "id": "quick_reed",
+   "stage": "grown",
+   "nameCN": "疾苇",
+   "form": "reed",
+   "height": 1.0946,
+   "dimX": 0.6068,
+   "dimY": 0.6046,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 484,
+   "budget": 900,
+   "detailFloor": "hero",
+   "bodyRatio": 0.6147,
+   "bodySpan": [
+    0.2923,
+    0.9652
+   ],
+   "supportSpan": [
+    -0.0351,
+    0.2923
+   ],
+   "supportRatio": 0.2991,
+   "crownRatio": 0.1182,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QLeafDeep",
+    "Water",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QLeafDeep",
+    "Water",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QLeafDeep": 0.6696,
+    "Water": 0.5278,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6767,
+   "minSatKey": "Water",
+   "minSat": 0.5278,
+   "path": "Assets/Resources/Art/Plants/quick_reed_grown.fbx"
+  },
+  {
+   "id": "quick_reed",
+   "stage": "mature",
+   "nameCN": "疾苇",
+   "form": "reed",
+   "height": 1.7523,
+   "dimX": 0.9946,
+   "dimY": 0.9203,
+   "zmin": 0.0,
+   "origin": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tris": 484,
+   "budget": 1500,
+   "detailFloor": "hero",
+   "bodyRatio": 0.6149,
+   "bodySpan": [
+    0.4347,
+    1.5121
+   ],
+   "supportSpan": [
+    -0.0522,
+    0.4347
+   ],
+   "supportRatio": 0.2778,
+   "crownRatio": 0.1371,
+   "materials": [
+    "SoilRich",
+    "SoilDeep",
+    "QLeafDeep",
+    "Water",
+    "QGold"
+   ],
+   "materialKeys": [
+    "SoilRich",
+    "SoilDeep",
+    "QLeafDeep",
+    "Water",
+    "QGold"
+   ],
+   "saturation": {
+    "SoilRich": 0.645,
+    "SoilDeep": 0.7213,
+    "QLeafDeep": 0.6696,
+    "Water": 0.5278,
+    "QGold": 0.8196
+   },
+   "meanSat": 0.6767,
+   "minSatKey": "Water",
+   "minSat": 0.5278,
+   "path": "Assets/Resources/Art/Plants/quick_reed.fbx",
+   "removedMeta": true
+  }
+ ],
+ "sizeRangeUntouched": [
+  0.45,
+  1.1
+ ],
+ "protected": {
+  "count": 92,
+  "changed": [],
+  "added": [],
+  "removed": []
+ }
+}

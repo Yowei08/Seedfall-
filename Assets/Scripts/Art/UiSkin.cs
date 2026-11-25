@@ -58,10 +58,13 @@ namespace Seedfall
             IconStar = Load("icon_star");
 
             // 面板 border=18（贴图 64×64，四边各留 18px 不拉伸）
-            PanelStyle = Nine(Panel, 18, 6);
-            PanelDarkStyle = Nine(PanelDark, 18, 6);
-            CardStyle = Nine(Card, 16, 4);
-            ButtonStyle = Nine(Button, 14, 4);
+            // ★ v220：面板贴图从 64px 变成 76px —— 外圈 6px 是「面板外投影」（见 gen_ui.py）★
+            //   本体仍是 64px / 圆角 18px，所以视觉上的面板大小、内容位置都没变；
+            //   border 必须跟着 18 → **24**（= 6 阴影 + 18 圆角），否则九宫格会把阴影拉伸变形。
+            PanelStyle = Nine(Panel, 24, 6);
+            PanelDarkStyle = Nine(PanelDark, 24, 6);
+            CardStyle = Nine(Card, 22, 4);          // 卡片本体 64 / 圆角 16 ⇒ 16 + 6 = 22
+            ButtonStyle = Nine(Button, 14, 4);      // 按钮**没有影子**（标签跟样式一起画，内缩会推走文字）
             ButtonHoverStyle = Nine(ButtonHover, 14, 4);
             ButtonPressStyle = Nine(ButtonPress, 14, 4);
             BarFrameStyle = Nine(BarFrame, 6, 0);

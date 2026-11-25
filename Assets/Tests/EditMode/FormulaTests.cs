@@ -36,11 +36,12 @@ namespace Seedfall.Tests
             Assert.AreEqual(50f, DamageResolver.AttackFormula(30f, 20f, 1f, false, 2f), 1e-3f, "基准 30 + 属性 20 = 50");
             Assert.AreEqual(60f, DamageResolver.AttackFormula(30f, 20f, 1.2f, false, 2f), 1e-3f, "再乘 120% = 60");
 
-            // v109：爆炸 = 普通伤害 × 爆炸倍率（不再是独立公式）。
-            // 期望值沿用旧数字以证明"100% 倍率时行为不变"。
-            Assert.AreEqual(19f, DamageResolver.ExplodeFormula(19f, 1f), 1e-3f, "100% = 原样");
-            Assert.AreEqual(38f, DamageResolver.ExplodeFormula(19f, 2f), 1e-3f, "200%");
-            Assert.AreEqual(28.5f, DamageResolver.ExplodeFormula(19f, 1.5f), 1e-3f, "150%");
+            // ★ v195：`ExplodeFormula`（爆炸倍率）整条删除 ⇒ 肥料与锄头/水壶**同一个式子** ★
+            //   断言**没有删**，改的是它们钉的那件事：从"爆炸 = 普通 × 倍率"变成
+            //   "肥料 = (基础 + 爆炸伤害) × 倍率，没有第二层乘区" ✓
+            Assert.AreEqual(19f, DamageResolver.WeaponBlastDamage(19f, 0f, 1f, false, 2f, 0.1f), 1e-3f, "倍率已删除：基础原样");
+            Assert.AreEqual(22f, DamageResolver.WeaponBlastDamage(19f, 3f, 1f, false, 2f, 0.1f), 1e-3f, "吃爆炸伤害：19 + 3");
+            Assert.AreEqual(33f, DamageResolver.WeaponBlastDamage(19f, 3f, 1.5f, false, 2f, 0.1f), 1e-3f, "再乘伤害倍率 150%");
         }
 
         [Test]
@@ -73,9 +74,11 @@ namespace Seedfall.Tests
         {
             GrowthDef g = TableDatabase.Tuning.growth;
             // round(expBase + expLinear·(level-1)^expExponent)；v48：expBase 24→20、expLinear 12→11
-            Assert.AreEqual(20f, PlayerProgress.ExpToNextFor(1, g));   // 20 + 11×0^1.35
-            Assert.AreEqual(31f, PlayerProgress.ExpToNextFor(2, g));   // 20 + 11×1
-            Assert.AreEqual(48f, PlayerProgress.ExpToNextFor(3, g));   // 20 + 11×2^1.35 ≈ 48.04 → 48
+            // ★ v209（用户原话"降低前期升级需要经验值"）：expBase 20→12，而 expLinear 11 与 expExponent 1.35
+            //   未动 ⇒ 只降"每级固定底"（L1 -40.0%、L10 -3.4%）。三条期望值随之更新，**一条没删** ✓
+            Assert.AreEqual(12f, PlayerProgress.ExpToNextFor(1, g));   // 12 + 11×0^1.35
+            Assert.AreEqual(23f, PlayerProgress.ExpToNextFor(2, g));   // 12 + 11×1
+            Assert.AreEqual(40f, PlayerProgress.ExpToNextFor(3, g));   // 12 + 11×2^1.35 ≈ 40.04 → 40
             Assert.Greater(PlayerProgress.ExpToNextFor(10, g), PlayerProgress.ExpToNextFor(5, g));
         }
 

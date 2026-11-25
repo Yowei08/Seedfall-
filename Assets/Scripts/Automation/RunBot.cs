@@ -124,9 +124,9 @@ namespace Seedfall
         public int EmptyShelfVisits { get; private set; }
         /// <summary>买到的种子数。</summary>
         public int SeedsBought { get; private set; }
-        /// <summary>收割累计金币（与 World.HarvestPlot 同一条算式 price/5）。</summary>
+        /// <summary>收割累计金币（与 World.HarvestPlot 同一基数：`SeedEconomy.CellGold`）。</summary>
         public int HarvestGold { get; private set; }
-        /// <summary>收割累计经验（与 World.HarvestPlot 同一条算式 price/10）。</summary>
+        /// <summary>收割累计经验（与 World.HarvestPlot 同一基数：`SeedEconomy.CellExp`）。</summary>
         public int HarvestExp { get; private set; }
         /// <summary>被释放/死亡的耕地格数（成熟或生长中直接回到空地）——用来区分"收割"与"丢失"。</summary>
         public int PlotsLost { get; private set; }
@@ -488,8 +488,17 @@ namespace Seedfall
 
             ShopTruck.Phase ph = truck.Current;
             bool open = ph == ShopTruck.Phase.Dock;
+            // ★ v175：提前出发的窗口**必须跟着绕场时长缩放** ✗ ★
+            //
+            // 原实现写死 `LoopSeconds - 3.5f` ✗ 在旧时序（绕场 35s）里那是"最后 10% 不到" ✓
+            // 而新时序绕场只有 **5 秒** ⇒ `5 - 3.5 = 1.5` ⇒ "soon" 占了整圈的 **70%** ✗
+            // ⇒ 机器人会**追着车跑大半个战场**（而且追不上：车 21 m/s）✗
+            // ⇒ 耽误耕作 ⇒ `RunSimulator.Verdict` 里那几条"耕作占比 / 植株数"会垮 ✓
+            // 现在按**比例**取（绕场的最后 25%），并保底 1.2 秒（够走 ≈3.6m ✓）
+            // ⚠️ 这是"机器人策略"的改动 ✗ 不碰任何玩法数值 ✓ 真人玩家不受影响 ✓
+            float preWalk = Mathf.Max(1.2f, ShopTruck.LoopSeconds * 0.25f);
             bool soon = ph == ShopTruck.Phase.Looping
-                        && truck.PhaseElapsed(_s.Clock.GameTime) > ShopTruck.LoopSeconds - 3.5f;
+                        && truck.PhaseElapsed(_s.Clock.GameTime) > ShopTruck.LoopSeconds - preWalk;
 
             if (!open) _windowCounted = false;                     // 窗口关了就允许下次再记一次
             if (!open && !soon) return false;
@@ -905,8 +914,8 @@ namespace Seedfall
                 {
                     Harvests++;
                     SeedDef def = SeedOf(plot.CropSeedId);
-                    HarvestGold += def != null ? Mathf.Max(1, def.Price / 5) : 1;
-                    HarvestExp += def != null ? Mathf.Max(1, def.Price / 10) : 1;
+                    HarvestGold += def != null ? SeedEconomy.CellGold(def) : 1;
+                    HarvestExp += def != null ? SeedEconomy.CellExp(def) : 1;
                 }
                 else if ((was == PlotState.Grown || was == PlotState.Growing) && now == PlotState.Empty)
                 {

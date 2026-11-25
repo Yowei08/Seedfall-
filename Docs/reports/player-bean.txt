@@ -1,0 +1,29 @@
+PLAYER-BEAN REPORT（程序化豆豆人：运行时权威）
+生成方式：Assets/Scripts/Art/PlayerBean.cs（几何）＋ ModelView.SpawnPlayer（两层装配）
+尺寸表：总高 1.200m；头 0.441m ／ 身 0.399m ⇒ 头:身 = 1:1.10
+最宽处：草帽檐 0.680m（俯视剪影的主形）
+
+BEAN-GEOMETRY 内建图元（共享）＋ 自建（缓存）
+  builtin Capsule   v= 550 t= 832
+  builtin Sphere    v= 515 t= 768
+  builtin Cube      v=  24 t=  12
+  builtin Cylinder  v=  88 t=  80
+  custom  cone16    v=  81 t=  32
+  custom  arc       v=  42 t=  80
+  缓存条目：图元 4 ＋ 自建 2（**全场共享**，不随实例增长）
+  单实例：部件 24 个 / 引用顶点 9400 / 三角形 13816
+
+TOOL-BOUNDS（改前 = 挂载到旧 FBX 骨架时量的同一口径：世界 AABB）
+  tool_hoe   尺寸 0.305×1.265×0.104m  缩放后 0.168×0.696×0.057m （grip scale 0.55 roll 90° 导入根旋转 270,0,0）
+  tool_can   尺寸 0.326×0.291×0.183m  缩放后 0.277×0.248×0.156m （grip scale 0.85 roll 0° 导入根旋转 270,0,0）
+  tool_fert  尺寸 0.276×0.504×0.300m  缩放后 0.166×0.302×0.180m （grip scale 0.60 roll 0° 导入根旋转 270,0,0）
+
+单实例世界尺寸（scale=1）：0.707×1.205×0.939m  RawHeight=1.200m
+  idle        armR=-2.6° legL=-1.5° head=-1.3° hipY=0.251 weapon=0 attackLen=0.70s evade=0.00 arc=off jet=off
+  walk        armR=16.5° legL=21.4° head=-3.0° hipY=0.265 weapon=0 attackLen=0.70s evade=0.00 arc=off jet=off
+  attack_hoe  armR=-6.9° legL=-12.6° head=0.0° hipY=0.233 weapon=0 attackLen=0.70s evade=0.00 arc=ON jet=off
+  attack_can  armR=17.3° legL=-11.5° head=0.4° hipY=0.246 weapon=1 attackLen=0.80s evade=0.00 arc=off jet=ON
+  attack_fert armR=-27.6° legL=-6.1° head=-15.7° hipY=0.267 weapon=2 attackLen=1.20s evade=0.00 arc=ON jet=off
+  hit         armR=-33.8° legL=9.9° head=-13.9° hipY=0.220 weapon=2 attackLen=1.20s evade=0.00 arc=off jet=off
+  evade       armR=20.5° legL=-11.5° head=-1.5° hipY=0.211 weapon=2 attackLen=1.20s evade=1.00 arc=off jet=off
+  swap        armR=-16.0° legL=-13.2° head=-3.2° hipY=0.177 weapon=2 attackLen=1.20s evade=1.00 arc=off jet=off

@@ -1,0 +1,63 @@
+# Seedfall v197 图标清单（62 张 = 表内 56 件道具 ＋ 6 株机制植物）
+#01 whet_oil         C      纯增益        ×5   磨刃油
+#02 wind_bell        D      纯增益        ×8   风铃
+#03 long_handle      D      纯增益        ×8   长柄
+#04 lucky_bead       C      纯增益        ×4   幸运珠
+#05 grind_stone      C      纯增益        ×4   磨石
+#06 blast_grain      C      纯增益        ×3   爆裂粒
+#07 wide_funnel      C      纯增益        ×4   广口漏斗
+#08 healing_herb     C      纯增益        ×4   疗心草
+#09 lucky_stone      C      纯增益        ×4   幸运石
+#10 pig_bell         C      纯增益        ×2   猪铃
+#11 dual_straps      B      纯增益        ×5   双臂束带
+#12 spring_basket    B      纯增益        ×4   春收篓
+#13 heart_lantern    B      纯增益        ×2   心灯
+#14 fertile_core     A      纯增益        ×3   沃土核
+#15 berserk_mask     B      有代价        ×4   狂战面
+#16 longbow_arm      C      有代价        ×5   长弓臂
+#17 thorn_whip       B      有代价        ×4   荆鞭
+#18 big_bore         B      有代价        ×4   大孔径
+#19 stone_draught    C      有代价        ×5   石肤饮
+#20 night_lamp       B      有代价        ×4   夜读灯
+#21 frenzy_band      B      有代价        ×4   狂热带
+#22 tailwind_sash    A      有代价        ×3   顺风带
+#23 water_pouch      D      纯增益        ×8   水囊  [老道具补图]
+#24 glass_cannon     C      有代价        ×4   玻璃大炮  [老道具补图]
+#25 plow_weight      C      有代价        ×4   配重犁  [老道具补图]
+#26 hardwood_haft    C      有代价        ×6   硬木柄  [老道具补图]
+#27 twin_blade       B      有代价        ×4   双刃护腕  [老道具补图]
+#28 ferment_jar      B      有代价        ×4   发酵罐  [老道具补图]
+#29 overclock_core   B      有代价        ×3   超载核心  [老道具补图]
+#30 thorn_collar     B      有代价        ×4   荆棘项圈  [老道具补图]
+#31 iron_bark        B      有代价        ×4   铁树皮  [老道具补图]
+#32 sniper_scope     B      有代价        ×3   狙击镜  [老道具补图]
+#33 barbed_tip       B      有代价        ×4   倒刺箭镞  [老道具补图]
+#34 gambler_dice     A      有代价        ×3   赌徒骰  [老道具补图]
+#35 wax_seal         A      有代价        ×3   蜡封符  [老道具补图]
+#36 blood_pact       A      有代价        ×3   血契  [老道具补图]
+#37 greedy_sickle    A      有代价        ×3   贪婪镰  [老道具补图]
+#38 hollow_fruit     A      有代价        ×3   空心果  [老道具补图]
+#39 heirloom         S      有代价        ×3   传家宝  [老道具补图]
+#40 iron_hoe         D      纯增益        ×8   磨刀石  [老道具补图]
+#41 ash_pouch        D      纯增益        ×8   火药袋  [老道具补图]
+#42 scarecrow        D      纯增益        ×6   稻草人  [老道具补图]
+#43 snail_shell      D      纯增益        ×6   蜗牛壳  [老道具补图]
+#44 lens             C      有代价        ×5   放大镜  [老道具补图]
+#45 sprinter_boots   D      纯增益        ×5   疾行靴  [老道具补图]
+#46 lucky_clover     A      有代价        ×3   幸运四叶  [老道具补图]
+#47 carrot_ring      A      纯增益        ×3   胡萝卜环  [v197 机制道具]
+#48 bunny_pet        B      纯增益        ×1   兔子宠物  [v197 机制道具]
+#49 evade_helm       A      有代价        ×1   闪避头盔  [v197 机制道具]
+#50 big_can          B      纯增益        ×5   丰水壶  [v197 机制道具]
+#51 windup_gear      A      纯增益        ×1   蓄势齿轮  [v197 机制道具]
+#52 charge_coil      A      纯增益        ×1   蓄力线圈  [v197 机制道具]
+#53 aegis_lamp       A      纯增益        ×6   护佑灯  [v197 机制道具]
+#54 gamble_glove     S      纯增益        ×1   赌命手套  [v197 机制道具]
+#55 sharp_spray      S      纯增益        ×1   锋利水枪  [v197 机制道具]
+#56 tycoon_coin      S      纯增益        ×1   富豪钱袋  [v197 机制道具]
+#57 warblade_bloom   S      植物        HarvestAtkMult 战镰花
+#58 gale_vine        S      植物        HarvestAtkSpeed 疾风藤
+#59 sunflower_crown  S      植物        SunnyBloom     日光葵
+#60 rainlily         S      植物        RainCloud      雨语莲
+#61 shelter_ivy      A      植物        StandingDodge  庇护藤
+#62 lucky_monarch    A      植物        FarmLuck       四叶王

@@ -1,0 +1,10 @@
+[TYPE] boss
+  crc32=0x3EFE663A
+  boss=1 unit=2.5
+  headLen=0.3797 thoraxLen=0.7243 abdomenLen=1.3232
+  headR=0.2813 thoraxR=0.4056 abdomenR=0.4339
+  legLen=0.6829 legThick=0.0855 antennaLen=0.4253
+  bodyY=0.7761 sides=6 carapace=1 horn=1 tailSpike=0
+  hue=0.3351 legFreq=5.2242
+  meshes=boss/boss body=180v/60t accent=120v/40t leg=96v/32t antenna=72v/24t elytra_r=72v/24t elytra_l=72v/24t mandible_r=96v/32t mandible_l=96v/32t
+  bounds=boss body=min(-0.4560,0.4031,-1.6900)max(0.4560,1.1336,0.7514) leg=min(-0.0197,-0.4376,-0.0787)max(0.7004,0.1559,0.0787) antenna=min(-0.0291,-0.0085,-0.0234)max(0.0184,0.4287,0.3696) accent=min(-0.3590,0.8629,-0.3401)max(0.3590,1.3704,0.8133) elytra_r=min(0.2020,-0.0786,-1.6425)max(0.7713,0.0689,0.3117) elytra_l=min(-0.7713,-0.0786,-1.6426)max(-0.2020,0.0689,0.3118) mandible_r=min(-0.0622,-0.1262,-0.0320)max(0.2092,0.0618,0.5017) mandible_l=min(-0.2086,-0.1262,-0.0384)max(0.0585,0.0618,0.5004)

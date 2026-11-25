@@ -223,6 +223,19 @@ namespace Seedfall
         /// <summary>v24：当前是否暂停生长（没水，或耗尽后未补满）。</summary>
         public bool GrowthPaused => Thirsty || NeedFullRefill;
 
+        /// <summary>
+        /// ★ v219：当前蓄水占**上限**的比例（0..1）★
+        ///
+        /// 为什么需要它：`Water` 是**整数**，而上限 `WaterMax` 由
+        /// `SeedSlot.WaterMaxFor(品种, 等级)` 决定 = **100／140／180**（语料里还有测试用的 20／1000）
+        /// ⇒ 任何"水分低于某个数"的规则都必须以**比例**表达，
+        ///   否则同一个 `50` 在 1 级是 50%、在 3 级（180）只有 28%，语义会随等级漂移 ✗
+        ///
+        /// 唯一消费点：`PlantMechanics.HarvestGoldMult` 的 `ThirstBloom`（焦渴绽放）阈值判断 ✓
+        /// `WaterMax <= 0` 时返回 0（防除以 0；正常情况下它被 `Mathf.Max(1, …)` 保底过）✓
+        /// </summary>
+        public float Water01 => WaterMax <= 0 ? 0f : Mathf.Clamp01(Water / (float)WaterMax);
+
 
         /// <summary>
         /// v23：种下一株（无掘地/播种/洒水动作）。
@@ -445,6 +458,27 @@ namespace Seedfall
             ResetToEmpty();
             return true;
         }
+
+        /// <summary>
+        /// ★★ v215：**把这一列从"种子袋驱动"改成"地里自有"**（`SeedId` 置空）★★
+        ///
+        /// 唯一调用者是 `RunSession.ReplaceSeedOnPlot`（换种）✓
+        ///
+        /// ── 为什么换种之后必须解绑 ──
+        /// 换种的语义是"新种子从袋里扣掉、长在地里"（见那个方法的说明）。
+        /// 若列首仍挂着 `SeedId = 新种子`，而袋里已经没有这个种子，
+        /// 下一次 `RunSession.SyncPlotsToSeeds` 就会按"袋里没有这个种子 ⇒ 这些地是多余的"把它**整列回收** ✗
+        /// （判据：`SyncPlotsToSeeds` ③ 段 `owned = 0 ⇒ 全部 RemoveGrowing()`）
+        /// ⇒ 玩家看到的是"换完种，过一分钟作物自己没了"✓
+        ///
+        /// 解绑之后这一列对 `SyncPlotsToSeeds` **完全不可见**（它只按 `SeedId` 分组）⇒
+        /// 不会被回收、也不会被"补种"覆盖；而 `CropSeedId` / `CropDef` 都还在 ⇒
+        /// 外观、生长、收割**一样都不受影响**（它们读的是 `CropSeedId` ✓）。
+        ///
+        /// ⚠️ 这也意味着它不再与任何种子槽位 1:1 —— 那是**有意的**：
+        /// 那颗种子已经花掉了，它现在的唯一载体就是这块地 ✓
+        /// </summary>
+        internal void DetachSeedDriver() => SeedId = null;
     }
 
     /// <summary>
@@ -663,6 +697,24 @@ namespace Seedfall
                 FarmPlot p = _plots[i];
                 if (p == from || p.Column != col) continue;
                 p.ResetToEmpty();
+            }
+        }
+
+        /// <summary>
+        /// ★★ v215：整列与种子袋解绑（换种用，见 `FarmPlot.DetachSeedDriver`）★★
+        ///
+        /// 只有列首真的持有 `SeedId`，但这里逐格调用：
+        /// ① 幂等、② 不依赖"哪一格是列首"这个前提 —— 解绑的语义是"这一列谁都不许再登记种子" ✓
+        /// </summary>
+        public void DetachColumnSeed(FarmPlot from)
+        {
+            if (from == null) return;
+            int col = from.Column;
+            for (int i = 0; i < _plots.Count; i++)
+            {
+                FarmPlot p = _plots[i];
+                if (p == null || p.Column != col) continue;
+                p.DetachSeedDriver();
             }
         }
 

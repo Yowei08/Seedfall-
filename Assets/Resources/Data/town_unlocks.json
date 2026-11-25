@@ -1,0 +1,491 @@
+{
+ "_note": "★★ 主城「杂货商店」的解锁表 —— 商店卖的不是消耗品，而是「让这件东西在战斗里可刷新」★★ 读它的唯一代码是 Assets/Scripts/Town/TownUnlocks.cs；战斗侧接线（刷新池）另有一路，只读 TownUnlocks.IsUnlocked(id) 这个口子。",
+ "_note_为什么是解锁而不是消耗品": "★★ 用户原话：「商店卖的是道具、插件、植物，买了之后才会在战斗刷新这些」★★ ⇒ 一次购买 = 永久解锁（IsUnlocked 从此为 true），不是「买一张用一次」。所以本表没有数量、没有堆叠，只有「这件东西叫什么 / 要多少钱 / 现在上不上架」。",
+ "_note_默认解锁": "★★ 只列出「需要解锁」的那一批（v214 新增的 30 道具 + 24 插件 + 8 植物）★★ 老的 56 道具 / 12 插件 / 22 植物不列在本表，IsUnlocked 对「表里查不到的 id」返回 true ⇒ 默认全部解锁，行为与加这张表之前完全一样 ✓ 这个方向是刻意选的：漏登记一件新东西的后果是「它默认能刷新」，而不是「所有老道具突然都不能刷新」✗",
+ "_note_新批次哪来的": "★★ 依据（逐条可查）：Data/seeds.json 的 30 条 = 22 条老 + 末尾 8 条（dusk_berry … quick_reed）★ Data/plugins.json 的 36 条 = 前 12 条老 + 末尾 24 条（hoe_edgewave … fert_plagueheart）★ Data/items.json 的 86 条 = 前 56 条老 + 末尾 30 条（clay_trowel … grudge_chain）★★ ⇒ 本表就是这三段「末尾新增」的合集，id 与名字逐字抄自那三张表（不改名、不合并）。",
+ "_note_上架一半": "★★ v237 的历史记录（保留归档，结论已被 v278 取代，见下一条）★★ v237 曾把植物 8/8 全开、道具 15/30 与插件 12/24 保持「上架一半」，未上架条目在面板里画成灰行显示「未上架」。",
+ "_note_v278_全上架": "★★ v278（用户原话：「全部修复，要求能够正确获取」）★★ 病因链：登记在本表 + onSale:false ⇒ ① 面板画成灰行、按钮写死「未上架」（TownHud.cs:1117）⇒ 点不动；② TryUnlock 第一句就是 if (!d.onSale) 直接 return false（TownUnlocks.cs:209）⇒ 买不到；③ IsUnlocked 又要求「这次运行里买过」（TownUnlocks.cs:92-98）⇒ 永远 false ⇒ **死锁：唯一能把它变成 true 的动作被它自己的 false 挡住**。修法：本表 15 条道具的 onSale 全部改 true，价格与 kind 一个字没动（价格本来就按 basePrice×12 定好了，只是没开卖）⇒ 15/15 现在都能在主城买下，买完 IsUnlocked 立刻为 true。⚠️ 本表**没有** requires 字段（TownUnlockDef 只有 id/kind/name/price/onSale 五个字段，JsonUtility 会静默忽略多写的键）⇒「前置解锁」这个写法在本工程里不存在，不能拿它当修法。⚠️ 同时补的两条 S 档（tycoon_coin 96 号富豪钱袋 / gamble_glove 赌命手套）原本**根本不在本表里** ⇒ 面板不画行 ⇒ 主城永远买不到（只有战斗商店车会刷），价格同样按 basePrice 80×12 = 960。",
+ "_note_价格": "★★ price 单位 = 主城金币（不是战斗金币）★★ 定法：= 战斗表里的 basePrice/price × 12 ⇒ 20→240 / 30→360 / 40→480 / 60→720 / 80→960（道具）；18→216 / 24→288 / 29→348 / 36→432 / 45→540（插件）；60→720 / 80→960（植物）。为什么 ×12：主城 36 块地铺满大约 1~2 分钟能赚到一件最便宜的解锁，玩家不会觉得「解锁一个就要挂机半小时」，也不至于「买空整张表」只用两分钟 ✓",
+ "_note_JSON写法": "★ 本文件的说明文字里**不允许出现英文双引号**：JsonUtility 的解析器会在那里提前截断字符串，报「Missing a comma or '}'」（这个错本轮实测踩过一次）。要用引用一律用「」。",
+ "_note_v252_dedup": "★★ v252 去重 ★★ 本表里 7 条道具（陶铲 clay_trowel / 雨量尺 rain_gauge / 药角壶 powder_horn / 草垫 straw_pad / 树皮盾 bark_buckler / 灰铲 cinder_scoop / 蜜心 honey_heart）与 1 条插件（瀑布 fert_cascade）已删除：它们的效果类型、数值、叠加上限与老件**逐位相同**，只差名字（陶铲≡磨刀石、雨量尺≡水囊、药角壶≡火药袋、草垫≡稻草人、树皮盾≡蜗牛壳、灰铲≡爆裂粒、蜜心≡疗心草、瀑布≡连环）⇒ 按『删除功能与数值完全重复、只有名字不同的内容』的要求保留老 id。同时删掉的还有 hoe_twinwave（≡ hoe_edgewave，剑气 1 道/1 层）—— 它不在本表（属老的 12 插件）。",
+ "items": [
+  {
+   "id": "chipped_sickle",
+   "kind": "道具",
+   "name": "缺角镰刀",
+   "price": 240,
+   "onSale": true
+  },
+  {
+   "id": "reed_whistle",
+   "kind": "道具",
+   "name": "芦苇哨",
+   "price": 240,
+   "onSale": true
+  },
+  {
+   "id": "damp_fuse",
+   "kind": "道具",
+   "name": "潮引线",
+   "price": 240,
+   "onSale": true
+  },
+  {
+   "id": "straw_kneepad",
+   "kind": "道具",
+   "name": "草护膝",
+   "price": 240,
+   "onSale": true
+  },
+  {
+   "id": "tallow_candle",
+   "kind": "道具",
+   "name": "牛脂烛",
+   "price": 240,
+   "onSale": true
+  },
+  {
+   "id": "pebble_pouch",
+   "kind": "道具",
+   "name": "石子袋",
+   "price": 240,
+   "onSale": true
+  },
+  {
+   "id": "field_ration",
+   "kind": "道具",
+   "name": "田间口粮",
+   "price": 240,
+   "onSale": true
+  },
+  {
+   "id": "shallow_root",
+   "kind": "道具",
+   "name": "浅根须",
+   "price": 240,
+   "onSale": true
+  },
+  {
+   "id": "whittle_knife",
+   "kind": "道具",
+   "name": "削尖小刀",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "brass_sight",
+   "kind": "道具",
+   "name": "黄铜准星",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "cinder_cake",
+   "kind": "道具",
+   "name": "火种饼",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "patch_vest",
+   "kind": "道具",
+   "name": "补丁背心",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "tally_beads",
+   "kind": "道具",
+   "name": "记账珠",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "study_lamp",
+   "kind": "道具",
+   "name": "温书灯",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "thorn_seed",
+   "kind": "道具",
+   "name": "荆棘籽",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "night_watch",
+   "kind": "道具",
+   "name": "夜哨铃",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "crow_whistle",
+   "kind": "道具",
+   "name": "乌鸦哨",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "seesaw_harness",
+   "kind": "道具",
+   "name": "跷跷板挽具",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "pig_lantern",
+   "kind": "道具",
+   "name": "猪灯",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "spring_heel",
+   "kind": "道具",
+   "name": "弹簧后跟",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "honed_sickle",
+   "kind": "道具",
+   "name": "精磨镰刀",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "press_rail",
+   "kind": "道具",
+   "name": "压轨枪",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "powder_horn",
+   "kind": "道具",
+   "name": "火药角",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "iron_plating",
+   "kind": "道具",
+   "name": "铁衬板",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "market_bell",
+   "kind": "道具",
+   "name": "市集铃",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "seed_lens",
+   "kind": "道具",
+   "name": "育苗透镜",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "hot_blood_powder",
+   "kind": "道具",
+   "name": "热血散",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "gale_vane",
+   "kind": "道具",
+   "name": "风压标",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "bramble_maul",
+   "kind": "道具",
+   "name": "荆棘大槌",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "sun_dial",
+   "kind": "道具",
+   "name": "日晷盘",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "gamblers_nail",
+   "kind": "道具",
+   "name": "赌徒铁钉",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "thunder_ledger",
+   "kind": "道具",
+   "name": "雷电账本",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "moss_cushion",
+   "kind": "道具",
+   "name": "苔藓垫",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "split_drum",
+   "kind": "道具",
+   "name": "分鼓",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "harvest_fang",
+   "kind": "道具",
+   "name": "收成獠牙",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "rail_lance",
+   "kind": "道具",
+   "name": "轨枪",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "salt_charge",
+   "kind": "道具",
+   "name": "盐硝包",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "bull_horn",
+   "kind": "道具",
+   "name": "牛角号",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "golden_scale",
+   "kind": "道具",
+   "name": "金秤",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "marathon_sole",
+   "kind": "道具",
+   "name": "长跑鞋底",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "blood_lens",
+   "kind": "道具",
+   "name": "血透镜",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "ram_frame",
+   "kind": "道具",
+   "name": "撞锤架",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "tithe_bell",
+   "kind": "道具",
+   "name": "什一钟",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "storm_keg",
+   "kind": "道具",
+   "name": "风暴桶",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "titan_haft",
+   "kind": "道具",
+   "name": "泰坦斧柄",
+   "price": 960,
+   "onSale": true
+  },
+  {
+   "id": "star_lattice",
+   "kind": "道具",
+   "name": "星格透镜",
+   "price": 960,
+   "onSale": true
+  },
+  {
+   "id": "golden_plough",
+   "kind": "道具",
+   "name": "金犁",
+   "price": 960,
+   "onSale": true
+  },
+  {
+   "id": "meteor_seed",
+   "kind": "道具",
+   "name": "陨种",
+   "price": 960,
+   "onSale": true
+  },
+  {
+   "id": "last_stand",
+   "kind": "道具",
+   "name": "背水",
+   "price": 960,
+   "onSale": true
+  },
+  {
+   "id": "fate_wheel",
+   "kind": "道具",
+   "name": "命轮",
+   "price": 960,
+   "onSale": true
+  },
+  {
+   "id": "dew_jar_moss",
+   "kind": "植物",
+   "name": "蓄水苔",
+   "price": 240,
+   "onSale": true
+  },
+  {
+   "id": "drizzle_bud",
+   "kind": "植物",
+   "name": "凝露芽",
+   "price": 240,
+   "onSale": true
+  },
+  {
+   "id": "rush_fern",
+   "kind": "植物",
+   "name": "疾长蕨",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "plump_gourd",
+   "kind": "植物",
+   "name": "丰实瓜",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "patch_lattice",
+   "kind": "植物",
+   "name": "连畦藤",
+   "price": 360,
+   "onSale": true
+  },
+  {
+   "id": "drought_lotus",
+   "kind": "植物",
+   "name": "耐旱莲",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "brim_peony",
+   "kind": "植物",
+   "name": "盈水芍",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "brave_sprout",
+   "kind": "植物",
+   "name": "血勇苗",
+   "price": 480,
+   "onSale": true
+  },
+  {
+   "id": "aged_bloom",
+   "kind": "植物",
+   "name": "积年花",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "chain_bloom",
+   "kind": "植物",
+   "name": "叠收莲",
+   "price": 720,
+   "onSale": true
+  },
+  {
+   "id": "nightdew_lily",
+   "kind": "植物",
+   "name": "夜露莲",
+   "price": 960,
+   "onSale": true
+  },
+  {
+   "id": "hunter_bloom",
+   "kind": "植物",
+   "name": "猎血花",
+   "price": 960,
+   "onSale": true
+  },
+  {
+   "id": "hoe_shock",
+   "kind": "插件",
+   "name": "感电",
+   "price": 348,
+   "onSale": true
+  },
+  {
+   "id": "hoe_frenzy",
+   "kind": "插件",
+   "name": "狂暴",
+   "price": 348,
+   "onSale": true
+  },
+  {
+   "id": "hoe_giant",
+   "kind": "插件",
+   "name": "巨型",
+   "price": 432,
+   "onSale": true
+  },
+  {
+   "id": "can_sewer",
+   "kind": "插件",
+   "name": "臭水沟",
+   "price": 432,
+   "onSale": true
+  },
+  {
+   "id": "can_wave",
+   "kind": "插件",
+   "name": "海浪",
+   "price": 348,
+   "onSale": true
+  },
+
+  {
+   "id": "fert_blackhole",
+   "kind": "插件",
+   "name": "黑洞",
+   "price": 432,
+   "onSale": true
+  }
+ ],
+ "_note_v284_restock": "★★ v284（用户：「把这部分全部下架掉，补到图鉴上」「重新设计 50 个道具 / 12 个插件 / 12 个植物，加入到杂货商店，购买后下架并加入到图鉴，且只有购买后才在战斗刷新」）★★ 本表**只登记本轮新设计的 74 件**：道具 50 / 插件 12 / 植物 12，全部 onSale=true。三条规则：① 买之前 ⇒ TownUnlocks.IsUnlocked(id) = false ⇒ **不进战斗池、不进图鉴**；② 买过 ⇒ Purchased 命中 ⇒ **进战斗池 + 进图鉴**；③ 买过的行由 TownHud 跳过（下架）。上一批 69 条已整体下架 —— 它们从表里消失后走「表里没登记 = 默认解锁」那一支，仍留在战斗池与图鉴里（内容一件没删）。定价沿用旧表规则 price = 基础价 × 12。"
+}

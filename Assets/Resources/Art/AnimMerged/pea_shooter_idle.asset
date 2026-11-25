@@ -1384,7 +1384,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 1
+    m_StopTime: 2
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -5577,150 +5577,6 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0416667
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.9166667
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 2
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: localEulerAngles.z
-    path: Root_pea_shooter/Leg_L_pea_shooter
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0416667
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.9166667
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 2
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: localEulerAngles.y
-    path: Root_pea_shooter/Leg_L_pea_shooter
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: -0
-        inSlope: 3.5881345
-        outSlope: 3.5881345
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0416667
-        value: -0.77195597
-        inSlope: -1.8447403
-        outSlope: -1.844714
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.9166667
-        value: 0.885984
-        inSlope: 0.63078016
-        outSlope: 0.6306995
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 2
-        value: -0
-        inSlope: -21.598043
-        outSlope: -21.598043
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: localEulerAngles.x
-    path: Root_pea_shooter/Leg_L_pea_shooter
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
         value: 0
         inSlope: 0
         outSlope: 0
@@ -5741,7 +5597,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: Root_pea_shooter/Shadow_pea_shooter
+    path: Root_pea_shooter
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -5771,7 +5627,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: Root_pea_shooter/Shadow_pea_shooter
+    path: Root_pea_shooter
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -5781,18 +5637,18 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
+        value: 89.98021
+        inSlope: 0.000022888184
+        outSlope: 0.000022888184
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2
-        value: 0
-        inSlope: 0
-        outSlope: 0
+        value: 89.98021
+        inSlope: 0.000022888184
+        outSlope: 0.000022888184
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -5801,7 +5657,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: Root_pea_shooter/Shadow_pea_shooter
+    path: Root_pea_shooter
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6208,53 +6064,53 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: -0
-        inSlope: 16.196411
-        outSlope: 16.196411
+        inSlope: -5.5842285
+        outSlope: -5.5842285
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.375
-        value: 0.28216162
-        inSlope: -16.038788
-        outSlope: -16.038788
+        value: -1.3967122
+        inSlope: -0.38819218
+        outSlope: -0.38819218
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.75
-        value: -0.55916417
-        inSlope: 15.5881815
-        outSlope: 15.5881815
+        value: -0.1918264
+        inSlope: 5.52863
+        outSlope: 5.52863
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.125
-        value: 0.8253064
-        inSlope: -14.834995
-        outSlope: -14.834995
+        value: 1.3704939
+        inSlope: 1.1431046
+        outSlope: 1.1431046
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.5
-        value: -1.0763233
-        inSlope: 13.809804
-        outSlope: 13.809804
+        value: 0.3800837
+        inSlope: -5.3716025
+        outSlope: -5.3716025
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.875
-        value: 1.3065045
-        inSlope: -12.517711
-        outSlope: -12.518583
+        value: -1.3185047
+        inSlope: -1.8774996
+        outSlope: -1.8755407
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -6262,8 +6118,8 @@ AnimationClip:
       - serializedVersion: 3
         time: 2
         value: -0
-        inSlope: -0.970459
-        outSlope: -0.970459
+        inSlope: 33.59326
+        outSlope: 33.59326
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -6271,7 +6127,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: localEulerAngles.x
+    attribute: localEulerAngles.z
     path: Root_pea_shooter/Body_pea_shooter
     classID: 4
     script: {fileID: 0}
@@ -6358,53 +6214,53 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: -0
-        inSlope: -5.5842285
-        outSlope: -5.5842285
+        inSlope: 16.196411
+        outSlope: 16.196411
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.375
-        value: -1.3967122
-        inSlope: -0.38819218
-        outSlope: -0.38819218
+        value: 0.28216162
+        inSlope: -16.038788
+        outSlope: -16.038788
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.75
-        value: -0.1918264
-        inSlope: 5.52863
-        outSlope: 5.52863
+        value: -0.55916417
+        inSlope: 15.5881815
+        outSlope: 15.5881815
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.125
-        value: 1.3704939
-        inSlope: 1.1431046
-        outSlope: 1.1431046
+        value: 0.8253064
+        inSlope: -14.834995
+        outSlope: -14.834995
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.5
-        value: 0.3800837
-        inSlope: -5.3716025
-        outSlope: -5.3716025
+        value: -1.0763233
+        inSlope: 13.809804
+        outSlope: 13.809804
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.875
-        value: -1.3185047
-        inSlope: -1.8774996
-        outSlope: -1.8755407
+        value: 1.3065045
+        inSlope: -12.517711
+        outSlope: -12.518583
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -6412,8 +6268,8 @@ AnimationClip:
       - serializedVersion: 3
         time: 2
         value: -0
-        inSlope: 33.59326
-        outSlope: 33.59326
+        inSlope: -0.970459
+        outSlope: -0.970459
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -6421,7 +6277,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: localEulerAngles.z
+    attribute: localEulerAngles.x
     path: Root_pea_shooter/Body_pea_shooter
     classID: 4
     script: {fileID: 0}
@@ -6432,7 +6288,25 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0416667
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.9166667
+        value: -0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6441,7 +6315,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2
-        value: 0
+        value: -0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6452,7 +6326,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: Root_pea_shooter
+    path: Root_pea_shooter/Leg_L_pea_shooter
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6462,6 +6336,15 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0416667
         value: 0
         inSlope: 0
         outSlope: 0
@@ -6470,8 +6353,17 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
+        time: 1.9166667
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
         time: 2
-        value: 0
+        value: -0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6482,7 +6374,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: Root_pea_shooter
+    path: Root_pea_shooter/Leg_L_pea_shooter
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6492,18 +6384,36 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 89.98021
-        inSlope: 0.000022888184
-        outSlope: 0.000022888184
+        value: -0
+        inSlope: 3.5881345
+        outSlope: 3.5881345
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0416667
+        value: -0.77195597
+        inSlope: -1.8447403
+        outSlope: -1.844714
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.9166667
+        value: 0.885984
+        inSlope: 0.63078016
+        outSlope: 0.6306995
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2
-        value: 89.98021
-        inSlope: 0.000022888184
-        outSlope: 0.000022888184
+        value: -0
+        inSlope: -21.598043
+        outSlope: -21.598043
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -6512,7 +6422,103 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: Root_pea_shooter
+    path: Root_pea_shooter/Leg_L_pea_shooter
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0416667
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.9166667
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 2
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: localEulerAngles.z
+    path: Root_pea_shooter/Leg_R_pea_shooter
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0416667
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.9166667
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 2
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: localEulerAngles.y
+    path: Root_pea_shooter/Leg_R_pea_shooter
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6570,15 +6576,6 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0416667
         value: 0
         inSlope: 0
         outSlope: 0
@@ -6587,8 +6584,29 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 1.9166667
-        value: -0
+        time: 2
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: localEulerAngles.x
+    path: Root_pea_shooter/Shadow_pea_shooter
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6597,7 +6615,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2
-        value: -0
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6608,7 +6626,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: Root_pea_shooter/Leg_R_pea_shooter
+    path: Root_pea_shooter/Shadow_pea_shooter
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6618,25 +6636,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0416667
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.9166667
-        value: -0
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6645,7 +6645,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2
-        value: -0
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6656,7 +6656,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: Root_pea_shooter/Leg_R_pea_shooter
+    path: Root_pea_shooter/Shadow_pea_shooter
     classID: 4
     script: {fileID: 0}
     flags: 0

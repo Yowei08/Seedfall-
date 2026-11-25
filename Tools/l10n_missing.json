@@ -1,0 +1,832 @@
+[
+ {
+  "k": "runsession.m000",
+  "z": "空",
+  "src": "RunSession.cs:256"
+ },
+ {
+  "k": "runsession.m001",
+  "z": "请选择两个不同的种子槽",
+  "src": "RunSession.cs:310"
+ },
+ {
+  "k": "runsession.m002",
+  "z": "空槽不能合成",
+  "src": "RunSession.cs:314"
+ },
+ {
+  "k": "runsession.m003",
+  "z": "只有同一种种子才能合成",
+  "src": "RunSession.cs:317"
+ },
+ {
+  "k": "runsession.m004",
+  "z": "两个种子必须是同一等级（现在是 § 级 + § 级）",
+  "src": "RunSession.cs:322"
+ },
+ {
+  "k": "runsession.m005",
+  "z": "已经是最高等级（§ 级），无法继续合成",
+  "src": "RunSession.cs:327"
+ },
+ {
+  "k": "runsession.m006",
+  "z": "空槽位",
+  "src": "RunSession.cs:417"
+ },
+ {
+  "k": "runsession.m007",
+  "z": "种子袋里没有另一个同样的种子（需同品种、同等级）",
+  "src": "RunSession.cs:425"
+ },
+ {
+  "k": "runsession.m008",
+  "z": "种子袋已满，先合成或出售",
+  "src": "RunSession.cs:520"
+ },
+ {
+  "k": "runsession.m009",
+  "z": "·变异",
+  "src": "RunSession.cs:922"
+ },
+ {
+  "k": "runsession.m010",
+  "z": "已售出的空位不能锁定",
+  "src": "RunSession.cs:1155"
+ },
+ {
+  "k": "runsession.m011",
+  "z": "已锁定（保留到下一回合）",
+  "src": "RunSession.cs:1159"
+ },
+ {
+  "k": "runsession.m012",
+  "z": "§ 级种子 · § · 合成成本 §",
+  "src": "RunSession.cs:1449"
+ },
+ {
+  "k": "runsession.m013",
+  "z": "§ · 插件（装到哪把武器由你决定）",
+  "src": "RunSession.cs:1497"
+ },
+ {
+  "k": "runsession.m014",
+  "z": "[商店 v§] 主城解锁表未载入 ⇒ 道具/插件/植物候选池**不过滤**（保持改前行为）。",
+  "src": "RunSession.cs:1545"
+ },
+ {
+  "k": "runsession.m015",
+  "z": "正常进场（主城 Awake 载入后进战斗）不会走到这里。",
+  "src": "RunSession.cs:1546"
+ },
+ {
+  "k": "runsession.m016",
+  "z": "[§ 级道具] §",
+  "src": "RunSession.cs:1739"
+ },
+ {
+  "k": "runsession.m017",
+  "z": "该格已售出（想换货请花金币刷新商店）",
+  "src": "RunSession.cs:1754"
+ },
+ {
+  "k": "runsession.m018",
+  "z": "种子袋已满，且没有同种同级的种子可以合成（先合成或出售）",
+  "src": "RunSession.cs:1775"
+ },
+ {
+  "k": "runsession.m019",
+  "z": "该道具已叠满",
+  "src": "RunSession.cs:1786"
+ },
+ {
+  "k": "runsession.m020",
+  "z": "插件栏不可用",
+  "src": "RunSession.cs:1806"
+ },
+ {
+  "k": "runsession.m021",
+  "z": "播种手套",
+  "src": "RunSession.cs:2017"
+ },
+ {
+  "k": "runsession.m022",
+  "z": "无效的工具",
+  "src": "RunSession.cs:2035"
+ },
+ {
+  "k": "runsession.m023",
+  "z": "该武器已是最高档",
+  "src": "RunSession.cs:2041"
+ },
+ {
+  "k": "runsession.m024",
+  "z": "你已有更高档的",
+  "src": "RunSession.cs:2046"
+ },
+ {
+  "k": "runsession.m025",
+  "z": "（§/§ 插件位，",
+  "src": "RunSession.cs:2091"
+ },
+ {
+  "k": "runsession.m026",
+  "z": "叠 § 层）",
+  "src": "RunSession.cs:2092"
+ },
+ {
+  "k": "runsession.m027",
+  "z": "装不上：",
+  "src": "RunSession.cs:2096"
+ },
+ {
+  "k": "runsession.m028",
+  "z": "（无适用武器）",
+  "src": "RunSession.cs:2116"
+ },
+ {
+  "k": "runsession.m029",
+  "z": "§（§）",
+  "src": "RunSession.cs:2122"
+ },
+ {
+  "k": "runsession.m030",
+  "z": "自动装配 § 件；背包剩余 § 件",
+  "src": "RunSession.cs:2124"
+ },
+ {
+  "k": "runsession.m031",
+  "z": "，未装上：",
+  "src": "RunSession.cs:2125"
+ },
+ {
+  "k": "runsession.m032",
+  "z": "、",
+  "src": "RunSession.cs:2125"
+ },
+ {
+  "k": "runsession.m033",
+  "z": "拾取雨滴 → 水壶 +§（§/§）",
+  "src": "RunSession.cs:2366"
+ },
+ {
+  "k": "runsession.m034",
+  "z": "击败小猪 → 肥料 +§（§/§）",
+  "src": "RunSession.cs:2392"
+ },
+ {
+  "k": "runsession.m035",
+  "z": "金币不足（重抽需要 §）",
+  "src": "RunSession.cs:2883"
+ },
+ {
+  "k": "runsession.m036",
+  "z": "已重抽（花费 §，下次 §）",
+  "src": "RunSession.cs:2891"
+ },
+ {
+  "k": "runsession.m037",
+  "z": "治疗",
+  "src": "RunSession.cs:2977"
+ },
+ {
+  "k": "runsession.m038",
+  "z": "护卫",
+  "src": "RunSession.cs:2978"
+ },
+ {
+  "k": "runsession.m039",
+  "z": "辅助",
+  "src": "RunSession.cs:2979"
+ },
+ {
+  "k": "runsession.m040",
+  "z": "异常",
+  "src": "RunSession.cs:2991"
+ },
+ {
+  "k": "runsession.m041",
+  "z": "支援",
+  "src": "RunSession.cs:2992"
+ },
+ {
+  "k": "runsession.m042",
+  "z": "物理",
+  "src": "RunSession.cs:2993"
+ },
+ {
+  "k": "runsession.m043",
+  "z": "§（§ 级）已自动种下，等待成熟后用锄头收获",
+  "src": "RunSession.cs:3017"
+ },
+ {
+  "k": "runsession.m044",
+  "z": "换种：没有耕地",
+  "src": "RunSession.cs:3061"
+ },
+ {
+  "k": "runsession.m045",
+  "z": "换种：站到一块耕地旁边再按 Q",
+  "src": "RunSession.cs:3062"
+ },
+ {
+  "k": "runsession.m046",
+  "z": "换种：这块地上还没有作物（换种只换已有作物，不负责首次播种）",
+  "src": "RunSession.cs:3066"
+ },
+ {
+  "k": "runsession.m047",
+  "z": "换种：种子袋是空的",
+  "src": "RunSession.cs:3071"
+ },
+ {
+  "k": "runsession.m048",
+  "z": "换种：种子袋里没有别的种子（这块地种的是 §）",
+  "src": "RunSession.cs:3080"
+ },
+ {
+  "k": "runsession.m049",
+  "z": "换种：先选一颗种子",
+  "src": "RunSession.cs:3101"
+ },
+ {
+  "k": "runsession.m050",
+  "z": "换种：这颗种子不在种子袋里",
+  "src": "RunSession.cs:3103"
+ },
+ {
+  "k": "runsession.m051",
+  "z": "换种：这块地的列首不存在",
+  "src": "RunSession.cs:3107"
+ },
+ {
+  "k": "runsession.m052",
+  "z": "换种：这块地上已经是 §",
+  "src": "RunSession.cs:3113"
+ },
+ {
+  "k": "runsession.m053",
+  "z": "换种：§ → §（§ 级）｜§ 已退回种子袋",
+  "src": "RunSession.cs:3146"
+ },
+ {
+  "k": "runsession.m054",
+  "z": "bomb！！！",
+  "src": "RunSession.cs:3199"
+ },
+ {
+  "k": "runsession.m055",
+  "z": "武器：§（前摇 §s 无法攻击）",
+  "src": "RunSession.cs:3370"
+ },
+ {
+  "k": "runsession.m056",
+  "z": "商店车到了 —— 走到车下按 E 进店（停留 § 秒）",
+  "src": "RunSession.cs:3541"
+ },
+ {
+  "k": "runsession.m057",
+  "z": "商店车开走了",
+  "src": "RunSession.cs:3543"
+ },
+ {
+  "k": "runsession.m058",
+  "z": "｜进度 §",
+  "src": "RunSession.cs:3562"
+ },
+ {
+  "k": "runsession.m059",
+  "z": "｜位置 §,§",
+  "src": "RunSession.cs:3563"
+ },
+ {
+  "k": "runsession.m060",
+  "z": "｜场地半宽 §",
+  "src": "RunSession.cs:3564"
+ },
+ {
+  "k": "runsession.m061",
+  "z": "｜t=§s",
+  "src": "RunSession.cs:3570"
+ },
+ {
+  "k": "runsession.m062",
+  "z": "｜已历 §s",
+  "src": "RunSession.cs:3571"
+ },
+ {
+  "k": "runsession.m063",
+  "z": "／时长 §s",
+  "src": "RunSession.cs:3572"
+ },
+ {
+  "k": "runsession.m064",
+  "z": "｜周期 §s",
+  "src": "RunSession.cs:3573"
+ },
+ {
+  "k": "runsession.m065",
+  "z": "§:§｜",
+  "src": "RunSession.cs:3744"
+ },
+ {
+  "k": "runsession.m066",
+  "z": "分钟 §｜派生波 §｜实际回合 §｜",
+  "src": "RunSession.cs:3745"
+ },
+ {
+  "k": "runsession.m067",
+  "z": "差 §｜敌 §",
+  "src": "RunSession.cs:3746"
+ },
+ {
+  "k": "runsession.m068",
+  "z": "｜时刻 §｜下次间隔 § 分钟",
+  "src": "RunSession.cs:3948"
+ },
+ {
+  "k": "runsession.m069",
+  "z": "你在第 § 分钟倒下了",
+  "src": "RunSession.cs:4050"
+ },
+ {
+  "k": "runsession.m070",
+  "z": "未能在 §s 内击败第 § 分钟的 BOSS",
+  "src": "RunSession.cs:4068"
+ },
+ {
+  "k": "runsession.m071",
+  "z": "收割 § → 金币与经验（土地重新生长）",
+  "src": "RunSession.cs:4186"
+ },
+ {
+  "k": "runsession.m072",
+  "z": "土地缺水（§/§）→ 用水壶攻击补水",
+  "src": "RunSession.cs:4204"
+ },
+ {
+  "k": "runsession.m073",
+  "z": "还没成熟（§ 秒，进度 §%）",
+  "src": "RunSession.cs:4205"
+ },
+ {
+  "k": "runsession.m074",
+  "z": "收获 § → 金币与经验（地块重新生长）",
+  "src": "RunSession.cs:4228"
+ },
+ {
+  "k": "runsession.m075",
+  "z": "肥料催熟 → 立刻成熟（用锄头收获）",
+  "src": "RunSession.cs:4265"
+ },
+ {
+  "k": "runsession.m076",
+  "z": "至少保留 § 个种子，无法出售",
+  "src": "RunSession.cs:4329"
+ },
+ {
+  "k": "runsession.m077",
+  "z": "已出售，返还 §G（释放 § 块耕地）",
+  "src": "RunSession.cs:4337"
+ },
+ {
+  "k": "runsession.m078",
+  "z": "已出售，返还 §G",
+  "src": "RunSession.cs:4338"
+ },
+ {
+  "k": "runsession.m079",
+  "z": "已铲除幼苗",
+  "src": "RunSession.cs:4780"
+ },
+ {
+  "k": "runsession.m080",
+  "z": "成株无法铲除（T-§）",
+  "src": "RunSession.cs:4784"
+ },
+ {
+  "k": "runsession.m081",
+  "z": "§（同时 § 块）",
+  "src": "RunSession.cs:4828"
+ },
+ {
+  "k": "runsession.m082",
+  "z": "掘地完成",
+  "src": "RunSession.cs:5124"
+ },
+ {
+  "k": "runsession.m083",
+  "z": "播种完成",
+  "src": "RunSession.cs:5125"
+ },
+ {
+  "k": "runsession.m084",
+  "z": "已洒水（生长 -§%）",
+  "src": "RunSession.cs:5126"
+ },
+ {
+  "k": "runsession.m085",
+  "z": "已施肥（生长 -§%）",
+  "src": "RunSession.cs:5127"
+ },
+ {
+  "k": "runsession.m086",
+  "z": "掘地",
+  "src": "RunSession.cs:5137"
+ },
+ {
+  "k": "runsession.m087",
+  "z": "播种",
+  "src": "RunSession.cs:5138"
+ },
+ {
+  "k": "runsession.m088",
+  "z": "洒水",
+  "src": "RunSession.cs:5139"
+ },
+ {
+  "k": "runsession.m089",
+  "z": "施肥",
+  "src": "RunSession.cs:5140"
+ },
+ {
+  "k": "runsession.m090",
+  "z": "收割 § 株成熟植物",
+  "src": "RunSession.cs:5874"
+ },
+ {
+  "k": "runsession.m091",
+  "z": "水壶没水了（拾取雨滴 +§）",
+  "src": "RunSession.cs:6242"
+ },
+ {
+  "k": "runsession.m092",
+  "z": "没有肥料了（击败小猪获取）",
+  "src": "RunSession.cs:6715"
+ },
+ {
+  "k": "runsession.m093",
+  "z": "免耗：这一投不扣肥料（§/§）",
+  "src": "RunSession.cs:6723"
+ },
+ {
+  "k": "runsession.m094",
+  "z": "肥料催熟并收获 § 株植物 → 金币与经验",
+  "src": "RunSession.cs:7010"
+ },
+ {
+  "k": "imguihud.m095",
+  "z": "　·　",
+  "src": "ImGuiHud.cs:2425"
+ },
+ {
+  "k": "imguihud.m096",
+  "z": "（",
+  "src": "ImGuiHud.cs:2526"
+ },
+ {
+  "k": "imguihud.m097",
+  "z": "%）",
+  "src": "ImGuiHud.cs:2526"
+ },
+ {
+  "k": "imguihud.m098",
+  "z": "，二段 ",
+  "src": "ImGuiHud.cs:2530"
+ },
+ {
+  "k": "imguihud.m099",
+  "z": "，持续 ",
+  "src": "ImGuiHud.cs:2541"
+ },
+ {
+  "k": "imguihud.m100",
+  "z": " 秒",
+  "src": "ImGuiHud.cs:2541"
+ },
+ {
+  "k": "imguihud.m101",
+  "z": "HUD-AUDIT 发现 § 条超宽：\n",
+  "src": "ImGuiHud.cs:2750"
+ },
+ {
+  "k": "imguihud.m102",
+  "z": "　",
+  "src": "ImGuiHud.cs:4718"
+ },
+ {
+  "k": "imguihud.m103",
+  "z": "已叠 § 层　",
+  "src": "ImGuiHud.cs:4720"
+ },
+ {
+  "k": "imguihud.m104",
+  "z": "　（还可装 § 件）",
+  "src": "ImGuiHud.cs:4744"
+ },
+ {
+  "k": "imguihud.m105",
+  "z": "　（已满）",
+  "src": "ImGuiHud.cs:4744"
+ },
+ {
+  "k": "imguihud.m106",
+  "z": "　 ",
+  "src": "ImGuiHud.cs:4865"
+ },
+ {
+  "k": "imguihud.m107",
+  "z": "　（上限 ",
+  "src": "ImGuiHud.cs:4886"
+ },
+ {
+  "k": "imguihud.m108",
+  "z": " 层）",
+  "src": "ImGuiHud.cs:4886"
+ },
+ {
+  "k": "imguihud.m109",
+  "z": "特殊功能　",
+  "src": "ImGuiHud.cs:5364"
+ },
+ {
+  "k": "imguihud.m110",
+  "z": "　☠ §",
+  "src": "ImGuiHud.cs:5671"
+ },
+ {
+  "k": "imguihud.m111",
+  "z": "　（同时 § 块）",
+  "src": "ImGuiHud.cs:5714"
+ },
+ {
+  "k": "imguihud.m112",
+  "z": "§\n\n坚持 §（第 § 分钟）　击杀 §\n",
+  "src": "ImGuiHud.cs:5879"
+ },
+ {
+  "k": "imguihud.m113",
+  "z": "金币 §　等级 §\n",
+  "src": "ImGuiHud.cs:5880"
+ },
+ {
+  "k": "imguihud.m114",
+  "z": "§　§ ×§",
+  "src": "ImGuiHud.cs:6241"
+ },
+ {
+  "k": "imguihud.m115",
+  "z": "[RewardProbe] 面板开",
+  "src": "ImGuiHud.cs:6407"
+ },
+ {
+  "k": "imguihud.m116",
+  "z": " fuseReady(入帧)=",
+  "src": "ImGuiHud.cs:6414"
+ },
+ {
+  "k": "imguihud.m117",
+  "z": " ②后仍在=",
+  "src": "ImGuiHud.cs:6416"
+ },
+ {
+  "k": "imguihud.m118",
+  "z": " ①保管=",
+  "src": "ImGuiHud.cs:6417"
+ },
+ {
+  "k": "imguihud.m119",
+  "z": " 最终RewardPickConfirmed=",
+  "src": "ImGuiHud.cs:6418"
+ },
+ {
+  "k": "imguihud.m120",
+  "z": " 游戏时间=",
+  "src": "ImGuiHud.cs:6420"
+ },
+ {
+  "k": "imguihud.m121",
+  "z": " 车=(",
+  "src": "ImGuiHud.cs:6421"
+ },
+ {
+  "k": "imguihud.m122",
+  "z": " 车状态=",
+  "src": "ImGuiHud.cs:6422"
+ },
+ {
+  "k": "townhud.m123",
+  "z": " 级",
+  "src": "TownHud.cs:460"
+ },
+ {
+  "k": "townhud.m124",
+  "z": " · 空地",
+  "src": "TownHud.cs:510"
+ },
+ {
+  "k": "townhud.m125",
+  "z": " · 现在种的是 §",
+  "src": "TownHud.cs:510"
+ },
+ {
+  "k": "townhud.m126",
+  "z": "　·　已解锁 ",
+  "src": "TownHud.cs:648"
+ },
+ {
+  "k": "townhud.m127",
+  "z": " 件上架",
+  "src": "TownHud.cs:649"
+ },
+ {
+  "k": "townhud.m128",
+  "z": " 金",
+  "src": "TownHud.cs:717"
+ },
+ {
+  "k": "townhud.m129",
+  "z": "　·　另有 § 件暂未上架（表里有、还没开卖）",
+  "src": "TownHud.cs:734"
+ },
+ {
+  "k": "townhud.m130",
+  "z": " 颗",
+  "src": "TownHud.cs:779"
+ },
+ {
+  "k": "townhud.m131",
+  "z": "已买 ",
+  "src": "TownHud.cs:911"
+ },
+ {
+  "k": "townhud.m132",
+  "z": "）",
+  "src": "TownHud.cs:1030"
+ },
+ {
+  "k": "townunlocks.m133",
+  "z": "[Town] 解锁表：",
+  "src": "TownUnlocks.cs:129"
+ },
+ {
+  "k": "townunlocks.m134",
+  "z": "[Town] 解锁表已载入：§ 条待解锁（上架 § 条 · ",
+  "src": "TownUnlocks.cs:162"
+ },
+ {
+  "k": "townunlocks.m135",
+  "z": "植物 § / 道具 § / ",
+  "src": "TownUnlocks.cs:163"
+ },
+ {
+  "k": "townunlocks.m136",
+  "z": " 暂未上架",
+  "src": "TownUnlocks.cs:195"
+ },
+ {
+  "k": "townunlocks.m137",
+  "z": " 已经解锁过了",
+  "src": "TownUnlocks.cs:196"
+ },
+ {
+  "k": "townunlocks.m138",
+  "z": "｜IsUnlocked(\"§\") = ",
+  "src": "TownUnlocks.cs:211"
+ },
+ {
+  "k": "townunlocks.m139",
+  "z": "解锁表 ",
+  "src": "TownUnlocks.cs:227"
+ },
+ {
+  "k": "townunlocks.m140",
+  "z": " 条（上架 ",
+  "src": "TownUnlocks.cs:227"
+ },
+ {
+  "k": "townunlocks.m141",
+  "z": " 条）｜已解锁 ",
+  "src": "TownUnlocks.cs:228"
+ },
+ {
+  "k": "townunlocks.m142",
+  "z": " 条",
+  "src": "TownUnlocks.cs:228"
+ },
+ {
+  "k": "townunlocks.m143",
+  "z": "｜老货默认解锁：IsUnlocked(\"iron_hoe\")=",
+  "src": "TownUnlocks.cs:229"
+ },
+ {
+  "k": "townunlocks.m144",
+  "z": "｜新货默认锁：IsUnlocked(\"clay_trowel\")=",
+  "src": "TownUnlocks.cs:232"
+ },
+ {
+  "k": "townunlocks.m145",
+  "z": "｜",
+  "src": "TownUnlocks.cs:235"
+ },
+ {
+  "k": "combatfeedback.m146",
+  "z": "｜trauma=",
+  "src": "CombatFeedback.cs:142"
+ },
+ {
+  "k": "combatfeedback.m147",
+  "z": " 世界单位（时长 ",
+  "src": "CombatFeedback.cs:143"
+ },
+ {
+  "k": "combatfeedback.m148",
+  "z": "s）",
+  "src": "CombatFeedback.cs:143"
+ },
+ {
+  "k": "combatfeedback.m149",
+  "z": "（单次 ",
+  "src": "CombatFeedback.cs:146"
+ },
+ {
+  "k": "combatfeedback.m150",
+  "z": " 的 ",
+  "src": "CombatFeedback.cs:146"
+ },
+ {
+  "k": "combatfeedback.m151",
+  "z": " 倍）",
+  "src": "CombatFeedback.cs:146"
+ },
+ {
+  "k": "combatfeedback.m152",
+  "z": "｜timeScale=",
+  "src": "CombatFeedback.cs:147"
+ },
+ {
+  "k": "combatfeedback.m153",
+  "z": "s｜触发过 ",
+  "src": "CombatFeedback.cs:148"
+ },
+ {
+  "k": "combatfeedback.m154",
+  "z": " 次",
+  "src": "CombatFeedback.cs:148"
+ },
+ {
+  "k": "combatfeedback.m155",
+  "z": "｜isPlaying=",
+  "src": "CombatFeedback.cs:149"
+ },
+ {
+  "k": "combatfeedback.m156",
+  "z": "｜scene=",
+  "src": "CombatFeedback.cs:150"
+ },
+ {
+  "k": "towndrops.m157",
+  "z": "：",
+  "src": "TownDrops.cs:269"
+ },
+ {
+  "k": "towndrops.m158",
+  "z": "｜roll §/§｜§",
+  "src": "TownDrops.cs:285"
+ },
+ {
+  "k": "towndrops.m159",
+  "z": "BOSS 掉落权重表（town_drops.json ⇒ 总权重 ",
+  "src": "TownDrops.cs:325"
+ },
+ {
+  "k": "towndrops.m160",
+  "z": "）\n",
+  "src": "TownDrops.cs:325"
+ },
+ {
+  "k": "towndrops.m161",
+  "z": "  品质  种子        权重   概率\n",
+  "src": "TownDrops.cs:326"
+ },
+ {
+  "k": "towndrops.m162",
+  "z": "  品质 ",
+  "src": "TownDrops.cs:349"
+ },
+ {
+  "k": "towndrops.m163",
+  "z": " 合计：",
+  "src": "TownDrops.cs:349"
+ },
+ {
+  "k": "towndrops.m164",
+  "z": "%（",
+  "src": "TownDrops.cs:350"
+ },
+ {
+  "k": "towndrops.m165",
+  "z": " 种）\n",
+  "src": "TownDrops.cs:351"
+ }
+]

@@ -1,0 +1,36 @@
+{
+ "new": [
+  "icon_item_good_wateringcan",
+  "icon_item_good_fertilizer",
+  "icon_item_good_beehive",
+  "icon_item_good_sprinkler"
+ ],
+ "replaced": [
+  "icon_plugin_hoe_echo",
+  "icon_plugin_hoe_warmth",
+  "icon_plugin_hoe_focus",
+  "icon_plugin_can_ricochet",
+  "icon_plugin_can_ripen",
+  "icon_plugin_can_tide",
+  "icon_plugin_hoe_swordwave",
+  "icon_plugin_hoe_burn",
+  "icon_plugin_hoe_doublestrike",
+  "icon_plugin_hoe_lifesteal",
+  "icon_plugin_can_multijet",
+  "icon_plugin_can_slow",
+  "icon_plugin_can_thickjet",
+  "icon_plugin_can_autocharge",
+  "icon_plugin_fert_subburst",
+  "icon_plugin_fert_poison",
+  "icon_plugin_fert_freeburst",
+  "icon_plugin_fert_chain",
+  "icon_plugin_fert_mine",
+  "icon_plugin_fert_ward",
+  "icon_plugin_fert_mark",
+  "icon_item_ash_flask",
+  "icon_item_mead_vat",
+  "icon_item_bronze_lens",
+  "icon_plant_salt_melon",
+  "icon_plant_cloud_orchid"
+ ]
+}

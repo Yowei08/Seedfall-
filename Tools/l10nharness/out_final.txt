@@ -1,0 +1,129 @@
+ResourceRoot = D:\Unity\project\Seedfall守园者\Assets\Resources
+zh.json exists = True
+en.json exists = True
+
+== L10n.Report() ==
+[L10n] keys=499 current=zh | zh=499/499 | en=499/499 | ur=19/499 | ja=19/499 | ko=19/499 | ru=19/499
+
+== L10n.SelfTest() ==
+[L10n.SelfTest] keys=499 | zh T(hud.gold)=金币 S(守园失败)=守园失败 S(第3分钟)= 第 3 分钟　游玩 1:23 cov=499 | en T(hud.gold)=Gold S(守园失败)=Garden Lost S(第3分钟)= Minute 3  played 1:23 cov=499 | ur T(hud.gold)=سونا S(守园失败)=باغ ختم S(第3分钟)= Minute 3  played 1:23 cov=19 | ja T(hud.gold)=ゴールド S(守园失败)=庭の終わり S(第3分钟)= Minute 3  played 1:23 cov=19 | ko T(hud.gold)=골드 S(守园失败)=정원 상실 S(第3分钟)= Minute 3  played 1:23 cov=19 | ru T(hud.gold)=Золото S(守园失败)=Сад потерян S(第3分钟)= Minute 3  played 1:23 cov=19
+
+== per-language readings ==
+-- zh  (Current=Zh, IsRtl=False, fonts=Microsoft YaHei/SimHei/Noto Sans CJK SC/Arial Unicode MS)
+     T(hud.gold) = "金币"
+     T(ui.settings.title) = "设置"
+     T(ui.settings.language) = "语言 / Language"
+     T(combat.death) = "守园失败"
+     T(ui.settings.subtitle) = "改动即时生效并写入 settings.json。"
+     S("守园失败") = "守园失败"
+     S("金币　1234") = "金币　1234"
+     S("第 3 分钟　游玩 1:23") = "第 3 分钟　游玩 1:23"
+     S("仓库里一颗种子都没有 —— 种子只能靠打 BOSS 掉落（北面传送门回战斗）。") = "仓库里一颗种子都没有 —— 种子只能靠打 BOSS 掉落（北面传送门回战斗）。"
+-- en  (Current=En, IsRtl=False, fonts=Segoe UI/Arial/Microsoft YaHei/Arial Unicode MS)
+     T(hud.gold) = "Gold"
+     T(ui.settings.title) = "Settings"
+     T(ui.settings.language) = "Language / 语言"
+     T(combat.death) = "Garden Lost"
+     T(ui.settings.subtitle) = "Changes apply instantly and are written to settings.json."
+     S("守园失败") = "Garden Lost"
+     S("金币　1234") = "Gold 1234"
+     S("第 3 分钟　游玩 1:23") = "Minute 3  played 1:23"
+     S("仓库里一颗种子都没有 —— 种子只能靠打 BOSS 掉落（北面传送门回战斗）。") = "No seeds in storage — only from BOSS drops (north portal returns to combat)."
+-- ur  (Current=Urdu, IsRtl=True, fonts=Segoe UI/Tahoma/Noto Naskh Arabic/Arial/Arial Unicode MS)
+     T(hud.gold) = "سونا"
+     T(ui.settings.title) = "ترتیبات"
+     T(ui.settings.language) = "زبان / Language"
+     T(combat.death) = "باغ ختم"
+     T(ui.settings.subtitle) = "Changes apply instantly and are written to settings.json."
+     S("守园失败") = "باغ ختم"
+     S("金币　1234") = "Gold 1234"
+     S("第 3 分钟　游玩 1:23") = "Minute 3  played 1:23"
+     S("仓库里一颗种子都没有 —— 种子只能靠打 BOSS 掉落（北面传送门回战斗）。") = "No seeds in storage — only from BOSS drops (north portal returns to combat)."
+-- ja  (Current=Ja, IsRtl=False, fonts=Yu Gothic UI/Yu Gothic/Meiryo/MS Gothic/Microsoft YaHei)
+     T(hud.gold) = "ゴールド"
+     T(ui.settings.title) = "設定"
+     T(ui.settings.language) = "言語 / Language"
+     T(combat.death) = "庭の終わり"
+     T(ui.settings.subtitle) = "Changes apply instantly and are written to settings.json."
+     S("守园失败") = "庭の終わり"
+     S("金币　1234") = "Gold 1234"
+     S("第 3 分钟　游玩 1:23") = "Minute 3  played 1:23"
+     S("仓库里一颗种子都没有 —— 种子只能靠打 BOSS 掉落（北面传送门回战斗）。") = "No seeds in storage — only from BOSS drops (north portal returns to combat)."
+-- ko  (Current=Ko, IsRtl=False, fonts=Malgun Gothic/Gulim/Batang/Microsoft YaHei)
+     T(hud.gold) = "골드"
+     T(ui.settings.title) = "설정"
+     T(ui.settings.language) = "언어 / Language"
+     T(combat.death) = "정원 상실"
+     T(ui.settings.subtitle) = "Changes apply instantly and are written to settings.json."
+     S("守园失败") = "정원 상실"
+     S("金币　1234") = "Gold 1234"
+     S("第 3 分钟　游玩 1:23") = "Minute 3  played 1:23"
+     S("仓库里一颗种子都没有 —— 种子只能靠打 BOSS 掉落（北面传送门回战斗）。") = "No seeds in storage — only from BOSS drops (north portal returns to combat)."
+-- ru  (Current=Ru, IsRtl=False, fonts=Segoe UI/Tahoma/Arial/Microsoft YaHei)
+     T(hud.gold) = "Золото"
+     T(ui.settings.title) = "Настройки"
+     T(ui.settings.language) = "Язык / Language"
+     T(combat.death) = "Сад потерян"
+     T(ui.settings.subtitle) = "Changes apply instantly and are written to settings.json."
+     S("守园失败") = "Сад потерян"
+     S("金币　1234") = "Gold 1234"
+     S("第 3 分钟　游玩 1:23") = "Minute 3  played 1:23"
+     S("仓库里一颗种子都没有 —— 种子只能靠打 BOSS 掉落（北面传送门回战斗）。") = "No seeds in storage — only from BOSS drops (north portal returns to combat)."
+
+== settings panel: the exact literals drawn on screen, zh vs each language ==
+-- zh  fonts=Microsoft YaHei/SimHei/Noto Sans CJK SC/Arial Unicode MS  nonEmpty=True  FontGeneration=12
+     zh "设置"  ->  "设置"
+     zh "语言"  ->  "语言"
+     zh "音乐 / 音效"  ->  "音乐 / 音效"
+     zh "音乐音量"  ->  "音乐音量"
+     zh "关闭 (Esc)"  ->  "关闭 (Esc)"
+     zh "返回开始界面"  ->  "返回开始界面"
+     zh "金币　1234"  ->  "金币　1234"
+-- en  fonts=Segoe UI/Arial/Microsoft YaHei/Arial Unicode MS  nonEmpty=True  FontGeneration=13
+     zh "设置"  ->  "Settings"
+     zh "语言"  ->  "Lang"
+     zh "音乐 / 音效"  ->  "Music / SFX"
+     zh "音乐音量"  ->  "Music Volume"
+     zh "关闭 (Esc)"  ->  "Close (Esc)"
+     zh "返回开始界面"  ->  "Back to Title"
+     zh "金币　1234"  ->  "Gold 1234"
+-- ur  fonts=Segoe UI/Tahoma/Noto Naskh Arabic/Arial/Arial Unicode MS  nonEmpty=True  FontGeneration=14
+     zh "设置"  ->  "ترتیبات"
+     zh "语言"  ->  "Lang"
+     zh "音乐 / 音效"  ->  "Music / SFX"
+     zh "音乐音量"  ->  "موسیقی کی آواز"
+     zh "关闭 (Esc)"  ->  "بند کریں (Esc)"
+     zh "返回开始界面"  ->  "Back to Title"
+     zh "金币　1234"  ->  "Gold 1234"
+-- ja  fonts=Yu Gothic UI/Yu Gothic/Meiryo/MS Gothic/Microsoft YaHei  nonEmpty=True  FontGeneration=15
+     zh "设置"  ->  "設定"
+     zh "语言"  ->  "Lang"
+     zh "音乐 / 音效"  ->  "Music / SFX"
+     zh "音乐音量"  ->  "音楽音量"
+     zh "关闭 (Esc)"  ->  "閉じる (Esc)"
+     zh "返回开始界面"  ->  "Back to Title"
+     zh "金币　1234"  ->  "Gold 1234"
+-- ko  fonts=Malgun Gothic/Gulim/Batang/Microsoft YaHei  nonEmpty=True  FontGeneration=16
+     zh "设置"  ->  "설정"
+     zh "语言"  ->  "Lang"
+     zh "音乐 / 音效"  ->  "Music / SFX"
+     zh "音乐音量"  ->  "음악 볼륨"
+     zh "关闭 (Esc)"  ->  "닫기 (Esc)"
+     zh "返回开始界面"  ->  "Back to Title"
+     zh "金币　1234"  ->  "Gold 1234"
+-- ru  fonts=Segoe UI/Tahoma/Arial/Microsoft YaHei  nonEmpty=True  FontGeneration=17
+     zh "设置"  ->  "Настройки"
+     zh "语言"  ->  "Lang"
+     zh "音乐 / 音效"  ->  "Music / SFX"
+     zh "音乐音量"  ->  "Громкость музыки"
+     zh "关闭 (Esc)"  ->  "Закрыть (Esc)"
+     zh "返回开始界面"  ->  "Back to Title"
+     zh "金币　1234"  ->  "Gold 1234"
+
+== persistence ==
+after Set(Ja): PlayerPrefs writes=15 saved=3
+SelfTest wrote prefs 0 times (must be 0)
+after SelfTest: Current=Ja saved=3
+
+== warnings ==
+(none)

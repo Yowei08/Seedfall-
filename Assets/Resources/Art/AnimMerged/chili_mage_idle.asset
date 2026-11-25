@@ -1384,7 +1384,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 1
+    m_StopTime: 2
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -5577,150 +5577,6 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0833334
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.9166667
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 2
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: localEulerAngles.z
-    path: Root_chili_mage/Leg_L_chili_mage
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0833334
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.9166667
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 2
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: localEulerAngles.y
-    path: Root_chili_mage/Leg_L_chili_mage
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: -0
-        inSlope: 3.496103
-        outSlope: 3.496103
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0833334
-        value: -0.79604965
-        inSlope: -1.6311353
-        outSlope: -1.6311449
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.9166667
-        value: 0.8373184
-        inSlope: 1.281967
-        outSlope: 1.281831
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 2
-        value: -0
-        inSlope: -21.111898
-        outSlope: -21.111898
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: localEulerAngles.x
-    path: Root_chili_mage/Leg_L_chili_mage
-    classID: 4
-    script: {fileID: 0}
-    flags: 0
-  - serializedVersion: 2
-    curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
         value: 0
         inSlope: 0
         outSlope: 0
@@ -5741,7 +5597,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: Root_chili_mage/Shadow_chili_mage
+    path: Root_chili_mage
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -5771,7 +5627,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: Root_chili_mage/Shadow_chili_mage
+    path: Root_chili_mage
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -5781,18 +5637,18 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
+        value: 89.98021
+        inSlope: 0.000022888184
+        outSlope: 0.000022888184
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2
-        value: 0
-        inSlope: 0
-        outSlope: 0
+        value: 89.98021
+        inSlope: 0.000022888184
+        outSlope: 0.000022888184
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -5801,7 +5657,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: Root_chili_mage/Shadow_chili_mage
+    path: Root_chili_mage
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6208,53 +6064,53 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: -0
-        inSlope: 16.528198
-        outSlope: 16.528198
+        inSlope: -5.44104
+        outSlope: -5.44104
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.375
-        value: 0.4602606
-        inSlope: -16.142046
-        outSlope: -16.142046
+        value: -1.3919483
+        inSlope: -0.58780193
+        outSlope: -0.58780193
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.75
-        value: -0.8995415
-        inSlope: 15.020917
-        outSlope: 15.020917
+        value: -0.29899552
+        inSlope: 5.312374
+        outSlope: 5.312374
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.125
-        value: 1.2968646
-        inSlope: -13.199136
-        outSlope: -13.198897
+        value: 1.3280323
+        inSlope: 1.7224216
+        outSlope: 1.7227744
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.5416667
-        value: -1.100383
-        inSlope: 14.213088
-        outSlope: 14.213344
+        value: 0.37055063
+        inSlope: -5.243928
+        outSlope: -5.24419
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.9166667
-        value: 1.4705582
-        inSlope: -12.082092
-        outSlope: -12.08305
+        value: -1.3029245
+        inSlope: -1.9903002
+        outSlope: -1.9877248
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -6262,8 +6118,8 @@ AnimationClip:
       - serializedVersion: 3
         time: 2
         value: -0
-        inSlope: -21.364584
-        outSlope: -21.364584
+        inSlope: 32.836517
+        outSlope: 32.836517
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -6271,7 +6127,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: localEulerAngles.x
+    attribute: localEulerAngles.z
     path: Root_chili_mage/Body_chili_mage
     classID: 4
     script: {fileID: 0}
@@ -6358,53 +6214,53 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: -0
-        inSlope: -5.44104
-        outSlope: -5.44104
+        inSlope: 16.528198
+        outSlope: 16.528198
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.375
-        value: -1.3919483
-        inSlope: -0.58780193
-        outSlope: -0.58780193
+        value: 0.4602606
+        inSlope: -16.142046
+        outSlope: -16.142046
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.75
-        value: -0.29899552
-        inSlope: 5.312374
-        outSlope: 5.312374
+        value: -0.8995415
+        inSlope: 15.020917
+        outSlope: 15.020917
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.125
-        value: 1.3280323
-        inSlope: 1.7224216
-        outSlope: 1.7227744
+        value: 1.2968646
+        inSlope: -13.199136
+        outSlope: -13.198897
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.5416667
-        value: 0.37055063
-        inSlope: -5.243928
-        outSlope: -5.24419
+        value: -1.100383
+        inSlope: 14.213088
+        outSlope: 14.213344
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1.9166667
-        value: -1.3029245
-        inSlope: -1.9903002
-        outSlope: -1.9877248
+        value: 1.4705582
+        inSlope: -12.082092
+        outSlope: -12.08305
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -6412,8 +6268,8 @@ AnimationClip:
       - serializedVersion: 3
         time: 2
         value: -0
-        inSlope: 32.836517
-        outSlope: 32.836517
+        inSlope: -21.364584
+        outSlope: -21.364584
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -6421,7 +6277,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: localEulerAngles.z
+    attribute: localEulerAngles.x
     path: Root_chili_mage/Body_chili_mage
     classID: 4
     script: {fileID: 0}
@@ -6432,7 +6288,25 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0833334
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.9166667
+        value: -0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6441,7 +6315,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2
-        value: 0
+        value: -0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6452,7 +6326,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: Root_chili_mage
+    path: Root_chili_mage/Leg_L_chili_mage
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6462,6 +6336,15 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0833334
         value: 0
         inSlope: 0
         outSlope: 0
@@ -6470,8 +6353,17 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
+        time: 1.9166667
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
         time: 2
-        value: 0
+        value: -0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6482,7 +6374,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: Root_chili_mage
+    path: Root_chili_mage/Leg_L_chili_mage
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6492,18 +6384,36 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 89.98021
-        inSlope: 0.000022888184
-        outSlope: 0.000022888184
+        value: -0
+        inSlope: 3.496103
+        outSlope: 3.496103
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0833334
+        value: -0.79604965
+        inSlope: -1.6311353
+        outSlope: -1.6311449
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.9166667
+        value: 0.8373184
+        inSlope: 1.281967
+        outSlope: 1.281831
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2
-        value: 89.98021
-        inSlope: 0.000022888184
-        outSlope: 0.000022888184
+        value: -0
+        inSlope: -21.111898
+        outSlope: -21.111898
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
@@ -6512,7 +6422,103 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: Root_chili_mage
+    path: Root_chili_mage/Leg_L_chili_mage
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0833334
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.9166667
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 2
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: localEulerAngles.z
+    path: Root_chili_mage/Leg_R_chili_mage
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.0833334
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1.9166667
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 2
+        value: -0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: localEulerAngles.y
+    path: Root_chili_mage/Leg_R_chili_mage
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6570,15 +6576,6 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0833334
         value: 0
         inSlope: 0
         outSlope: 0
@@ -6587,8 +6584,29 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 1.9166667
-        value: -0
+        time: 2
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: localEulerAngles.x
+    path: Root_chili_mage/Shadow_chili_mage
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6597,7 +6615,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2
-        value: -0
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6608,7 +6626,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: Root_chili_mage/Leg_R_chili_mage
+    path: Root_chili_mage/Shadow_chili_mage
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6618,25 +6636,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0833334
-        value: -0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.9166667
-        value: -0
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6645,7 +6645,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2
-        value: -0
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6656,7 +6656,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: Root_chili_mage/Leg_R_chili_mage
+    path: Root_chili_mage/Shadow_chili_mage
     classID: 4
     script: {fileID: 0}
     flags: 0

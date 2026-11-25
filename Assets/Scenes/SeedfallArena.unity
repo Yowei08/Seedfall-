@@ -153,7 +153,6 @@ MonoBehaviour:
   botStrategy: -1
   showHud: 1
   buildVisuals: 1
-  cameraSize: 21
 --- !u!4 &634793679
 Transform:
   m_ObjectHideFlags: 0

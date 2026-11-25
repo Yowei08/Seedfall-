@@ -1,0 +1,24 @@
+{
+ "new": [
+  "icon_plugin_can_sewer",
+  "icon_plugin_can_sharp",
+  "icon_plugin_can_wave",
+  "icon_plugin_fert_blackhole",
+  "icon_plugin_hoe_frenzy",
+  "icon_plugin_hoe_giant",
+  "icon_plugin_hoe_shock",
+  "icon_plant_dew_jar_moss",
+  "icon_plant_drizzle_bud",
+  "icon_plant_rush_fern",
+  "icon_plant_plump_gourd",
+  "icon_plant_patch_lattice",
+  "icon_plant_drought_lotus",
+  "icon_plant_brim_peony",
+  "icon_plant_brave_sprout",
+  "icon_plant_aged_bloom",
+  "icon_plant_chain_bloom",
+  "icon_plant_nightdew_lily",
+  "icon_plant_hunter_bloom"
+ ],
+ "replaced": []
+}

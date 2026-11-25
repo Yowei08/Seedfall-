@@ -1,117 +1,371 @@
 {
-  "_note": "v168 植物表（16 种）。★ 数值口径 ★ 收益按【格】结算，一列有 N 格 ⇒ 一列收获 = N × 每格收益。每格金币 = price/5 × 等级倍率(×1.00/×1.35/×1.70) × 植物机制 × 道具机制；每格经验 = price/10 × 等级倍率。蓄水上限 = 100 + 40×(等级−1) + (waterMax − 100)；waterDrain = 每 5 秒消耗。★ 机制只作用于【成长 / 收获 / 缺水】三个阶段 ★ 机制目录、参数与消费点见 PlantMechanics.cs（mechanic 只能取那里的名字，写别的会被 SelfCheck 判红）。★ desc 是种子卡的正文，受 ≤14 字 的既有 UI 约束（见 SelfCheck V50Checks），机制的长说明在 PlantMechanics.Describe。普通/一般 = 纯数值差异（mechanic=None）；稀有/史诗 = 小机制；传奇 = 大机制。 ★★ v171 警告：下面每条种子里有【一批字段在新玩法下完全无效】★★ —— 它们是旧玩法（植物会参战、会攻击、有血有盾）的遗留：attackType / attackKind / supportMode / baseValue / baseHp / baseShield / attackInterval / range / moveSpeed / special / inheritMult。★ 为什么还留着：表校验要求其中几个非零，而删它们要动 Defs.cs 的 SeedDef 与 TableDatabase 的校验（会牵连 SelfCheck 的 40 条断言）。★ 为什么必须写明：植物自 v165 起【不参战】，不再生成 PlantAlly ⇒ 这些字段【没有任何消费方】—— 读表的人若照它们调数值，改了不会有任何效果（与本表同目录的 tuning.json 里那对死键 hpGrowth/dmgGrowth 是同一类问题，那对已删）。★ 真正生效的字段只有一个来源：growTime / waterMax / waterDrain / price / mechanic / desc / grade。★",
+  "_note": "★ v200 植物表（**22 种**：16 种 v179 无机制 + 6 种 v197 机制植物，机制植物的说明见 seeds 数组里的 `_note_v197`）★ 数值口径 ★ 收益按【格】结算，一列有 N 格 ⇒ 一列收获 = N × 每格收益。每格金币 = goldYield × 等级倍率(×1.00/×1.35/×1.70) × 植物机制 × 道具机制；每格经验 = expYield × 等级倍率。★ **平衡规则见 `_note_v200规则`（本表唯一权威口径）** ★ price 只作【种子售价】（商店定价），不参与收益；两个收益基数各自独立，才能表达同档内【金型/验型】的分配。蓄水上限 = 100 + 40×(等级−1) + (waterMax − 100)；waterDrain = 每 5 秒消耗。★ 机制 ★ 16 条 v179 植物全是 None；6 条 v197 植物各带一条机制（HarvestAtkMult / HarvestAtkSpeed / StandingDodge / SunnyBloom / RainCloud / FarmLuck），机制目录、参数与消费点见 PlantMechanics.cs（mechanic 只能取那里的名字，写别的会被 SelfCheck 判红）。★ desc 字段整条从表里删除（v196）★ —— 植物上屏的属性只剩 6 项：名称 / 品质 / 等级 / 成熟时间 / 金币提供量 / 经验值提供量。品质等级：D=普通 / C=一般 / B=稀有 / A=史诗 / S=传奇。",
+  "_note_v200规则": "★★ v200 平衡规则（用户原话：「规定同品质的种子，金币和经验值获取量在相同时间内相同，若成熟时间长，则总和在此基础上略微增加（时间越长，增加越多），若有机制，则获取量总和减少，高品质的永远比低品质获取总和高」）★★ 算式（唯一实现：`Assets/Scripts/Farm/PlantMechanics.cs` 的 `SeedTierBudget` / `GrowTimeFactor` / `ExpectedSum` / `SumPerSecond`）：**(金+验)/秒 = V档 × f(t) × (有机制 ? 0.94 : 1)**，其中 **f(t) = 1 + 0.10 × log2(t ÷ t档基准)**（t档基准 = 该档最快那一株的成熟时间）。★ 落地方式：先算 `金+验 ≈ round(V档 × f(t) × t × 机制折扣)`，再按【金占比】切成两个整数 ⇒ **同一档里 t 相同的两株，金+验 逐位相等**（这不是近似：预算相同 ⇒ 四舍五入后相同，自检 SEED-TIER-RATE 的判据①精确验这条）。★ 五档预算 V（(金+验)/秒，f=1 处）★ D 0.50 / C 0.62 / B 0.80 / A 0.90 / S 1.06 —— 每档都必须严格高于上一档的**最大值** `V低 × f_max`，且机制植物再打 6% 折 ⇒ 不等式 `V高 > V低 × f_max ÷ 0.94` 逐档成立（D 1.168 / C 1.200 / B 1.049 / A 1.056）✓。★ 为什么 f(t) 的基准是「本档最快」而不是全局最小 ★ 规则④（高品质永远更高）优先级高于②：五档的周期区间**并不单调**（B 48s 比 A 42.5s 长、A 比 S 37s 长），若用全局 f(t)，B 档会被周期抬到 A 档之上 ⇒ 直接违反④ ⇒ f 只能是「档内相对」，跨档由 V 严格拉开 ✓。★ 为什么斜率取 0.10 ★ 用户要的是「**略微**增加」：周期翻一倍才 +10%，D 档 4 倍周期差也只 +20%；斜率再大就会让高周期株的「率」逼近上一档，把跨档严格性吃掉 ✓。★ 本轮改的字段只有 growTime / goldYield / expYield ★ id / name / price / waterMax / waterDrain / grade / mechanic 一个字未动 ✓（见 `_note_口径变化`）。",
+  "_note_v200整数刻度": "★★ 必须承认的物理下限（用户本轮明确要求「整数粒度要认」）★★ 金与验都是正整数（`TableDatabase.Validate` 要求 > 0）⇒ 公式只能落在整数格点上。某一档一株的整数和是 S ⇒ 该档能表达的最小台阶是 1/S，本轮实测：**D 档整数和只有 2~9 ⇒ 台阶 50%~11%（frost_ivy 5 秒 2 单位 = 0.4000/秒）**｜C 8~40 ⇒ 12.5%~2.5%｜B 32~47 ⇒ 3.1%~2.1%｜A 31~48 ⇒ 3.2%~2.1%｜S 30~49 ⇒ 3.3%~2.0%。⇒ 自检**不写「逐位相等」去要求不同周期的两株**（那在数学上做不到），而写两条物理上做得到的：①同档**同 t** ⇒ 整数和**逐位相等**（精确，零容差）；②同档**不同 t** ⇒ `|整数和 − 预算| ≤ 0.5`（= 四舍五入的理论下界，**不是放宽**）。★ 后果如实记 ★ D 档 t=5 那一株（frost_ivy，和=2）与预算 2.50 差 −0.50，是全表唯一顶到下限的一株 —— 想让 D 档更平滑，只能把该株收益抬到 3（+50%，档内立刻失衡）或把周期拉长（破坏「D 档最快」的定位）⇒ 取「顶格」并在此写明 ✓。",
+  "_note_v200周期重排": "★★ v199 的「全部成熟时间压到 ≤60 秒」**仍然成立**（本表最长 chili_mage 54s、moss_shield 56s）★★ 但 v200 为了把「越长越增」真正表达出来，把 B / A / S 三档原先**被钳成同一值**的周期重新拉开（v199 是 B 全 48 / A 全 42.5 / S 全 37 ⇒ f(t) 在那三档恒等于 1，「越长越增」无从体现）：★ B 40 / 48 / 56（最快 40）★ A 34 / 42.5 / 42.5 / 42.5 / 50（最快 34）★ S 30 / 37 / 37 / 37 / 44 / 44（最快 30）★ D 5 / 8 / 8 / 16（v199 的 4 → **5**：5 秒 × 整数和 2 才落得出 0.4000/秒 这一档；4 秒会把最快株的率抬到 0.5000 并与 8 秒株打平，「越长越增」在 D 档就断了）★ C 13.5 / 27 / 27 / 54 与 v199 **逐位相同**（本来就在 60 秒内且四型齐备）✓ 三档拉开后 tMax < 1.5×tMin（A 50 < 51｜S 44 < 45｜B 56 < 60）⇒ `SEED-ARCHETYPE` 的「周期轴」判据仍然判「周期已均一」（要 金/验 两型），断言口径不变、只是读数跟着表走 ✓",
+  "_note_公平准则": "★★ v200 公平准则（取代 v179 的「同档四象限每秒总价值相同」与 v197 的「金+2×验」加权口径）★★ ①【唯一算式】见 `_note_v200规则`：`(金+验)/秒 = V档 × f(t) × 机制折扣`。②【为什么经验按 1:1 与金币相加】用户本轮的度量就是「金币和经验值获取量……**总和**」⇒ 等比相加 ✓ v197 的 `+2×验`（1 金 = 2 验）守的是「档内**感知价值**相等」，而它必然让同档的「金型」与「验型」**总和不等**（金型 6+1=7 vs 验型 2+4=6 ⇒ 差 14%）⇒ 与规则①正面冲突 ⇒ 本轮换成 1:1 ✓ ③【金型 / 验型的意义变了】改成「总和相同、构成不同」：金型（金占比 ≥ 0.6）买货快，验型（≤ 0.45）升级快 ⇒ 玩家按需要选，不是按强弱选 ✓ ④【机制植物的 6%】`PlantMechanics.MechanicPayback` 仍是 6%：表里的原始总和比同档同 t 的无机制植物**严格低 6%**，而「公平值」（×1.06）与它们相等 ⇒ 「有机制 ⇒ 总和减少」与「档内不存在支配关系」两条同时成立 ✓ ⑤【水耗不许成为暗面优势】waterDrain 仍按品质锁定（D 6 / C 4 / B 2 / A 1 / S 1），同品质内恒定；而**周期越短、补水次数越多**（收获不补水，下一轮要靠水壶）⇒ 短周期在「操作与水」这一侧天然吃亏，这也是 f(t) 的折扣**只取 10%/倍**、不取更大的原因之一 ✓",
+  "_note_档位预算与实算": "★★ v200 实算读数（逐株可复算，也可对照只读探针与自检 SEED-TIER-RATE 的打印）★★ ── 档 ─ V档 ─ 档基准周期 ─ f(t) ── ★ D 0.50 / 5s / 1.000(5s) 1.068(8s) 1.168(16s) → 实际 (金+验)/秒 **0.4000 / 0.5000 / 0.5000 / 0.5625** ★ C 0.62 / 13.5s / 1.000(13.5s) 1.100(27s) 1.200(54s) → **0.5926 / 0.6667 / 0.6667 / 0.7407** ★ B 0.80 / 40s / 1.000(40s) 1.026(48s) 1.049(56s) → **0.8000 / 0.8125 / 0.8393** ★ A 0.90 / 34s / 1.000(34s) 1.032(42.5s) 1.056(50s) → **0.9118 / 0.9176 / 0.8706(机制×2) / 0.9600** ★ S 1.06 / 30s / 1.000(30s) 1.030(37s) 1.055(44s) → **1.0811 / 1.1136**（无机制）· **1.0000 / 1.0270 / 1.0270 / 1.0455**（有机制）★ 四条判据的读数（自检 SEED-TIER-RATE 的 pass 消息里也印同一组）★ ① 同期整数和逐位相等：D 8s 两株都是 4、C 27s 两株都是 18、A 42.5s 两株机制植物都是 37 ✓ ② 每档单调不减（D 0.4000→0.5000→0.5625｜C 0.5926→0.6667→0.7407｜B 0.8000→0.8125→0.8393｜A 0.9118→0.9176→0.9600｜S 1.0811→1.1136）✓ ③ 六株机制植物全部严格低于同档同 t 的无机制株 ✓ ④ 跨档严格：D 0.5625 < C 0.5926 < B 0.8393 < A 0.8706 < S 1.0000 ✓（A 的最小值是机制株 0.8706、S 的最小值也是机制株 1.0000，仍严格分开）✓",
+  "_note_本轮的字段变化": "★★ v200 相比 v199 改了什么（逐条可查）★★ ① `growTime`：4→5（frost_ivy）、42.5→34（char_flower）、42.5→50（holy_tree_guard）、48→56（moss_shield）、48→40（healing_clover）、37→44（ironroot_colossus / rainlily）、37→30（warblade_bloom）；其余 15 株周期未动 ✓ ② `goldYield` / `expYield`：22 株全部按新算式重算，其中 **sunflower_crown 25/13 一字未动**（它本来就落在预算上，可当作算式的一个交叉验证点 ✓）、radish_guard 3/1 未动 ✓ ③ `grade` / `mechanic` / `price` / `waterMax` / `waterDrain` / `attackType` 等**一个字未动** ✓ ④ 等级倍率未手动改：`LevelSpeedMult`（1.00/1.15/1.30）与 `LevelHarvestMult`（1.00/1.35/1.70）本来就乘在成熟时间与收益上 ⇒ 1/2/3 级自动同步 ✓ ⑤ `mutations` 空表未动 ✓ ⑥ `desc` 仍不存在（v196 已整条删除）✓",
+  "_note_v199节奏_留档": "★★ 留档（已被 v200 取代，不要按它算数值）：v199 把全部成熟时间压到 ≤60 秒（>60 的反复 /2），金/验按同一个 2 的幂同比除、D 档再 /2 后 +1 ★★ 它留下的两条结论**仍然有效**：①周期 ≤60 秒这一条 v200 继续遵守；②「同档各处相等」的加权口径（金+2验）在 v200 被用户的 1:1「总和」口径取代 ⇒ 当时那套 V 值（D 0.5625~0.75 / C 0.6667 / B 0.8542 / A 1.1224 / S 1.4324，均按 (金+2验)/秒）**全部作废**，两套口径之间不可直接比较（分子权重不同）✓",
+  "_note_v199两处偏离_留档": "★★ 留档：v199 的两处「必须偏离字面规则」在 v200 下**都不再存在** ★★ ① v199 给 D 档做了 `/2 后 +1`，而 +1 会让 D 档每秒价值涨 57%~133%（D 的 g+e 只有 3~8 单位），于是 D 档反超 C 档 ⇒ v200 直接按「预算 → 整数和 → 切分」落表，**没有 +1 这一步**，「反超」在算式层就不可能发生 ✓ ② v199 把 char_flower 写成 14/17（和 48）是为了压 A 档内的速度差；v200 的 A 档不再要求「档内各处相等」，char_flower 周期性地下移到 34 秒（A 档最快）并给 14/17（和 31），它是「快型」那一株 ✓",
+  "_note_口径变化": "★ 本轮**没有**改的东西（逐条可查）★ ① `id` 与 `name` 一个字未动（跨系统主键）；② `price` 未动（D20/C30/B40/A60/S80）—— 种子售价是档位的一部分，与收益脱钩；③ `waterMax` / `waterDrain` 未动；④ `grade` 未动；⑤ `mechanic` 未动（16 株 None + 6 株机制植物）；⑥ 等级倍率**未手动改**（见 `_note_本轮的字段变化`④）；⑦ `mutations` 空表未动。",
+  "_note_兼容": "★ 为什么不动 id ★ id 是【跨系统主键】，不是显示名 —— seedId 用在存档 key、FarmPlot.SeedId 与 CropSeedId、模型 Art/Plants/<id>.fbx（含 _young 与 _grown）、图标 Art/UI/icon_plant_<id>.png、TableDatabase.GetSeed(id)、自检夹具与 DebugApi 命令上。改 id ⇒ 老存档的种子查不到定义、模型与图标全部丢引用。所以本轮【id 与 name 一个字未动】，动的只有 grade / desc / growTime / waterDrain / goldYield / expYield / mechanic。",
+  "_note_名字与形态": "名字必须与模型形态对得上（形态见 Docs/plants_qstyle_table.md）：radish_guard=萝卜(bulb 球根) | pea_shooter=豌豆(pod 豆荚) | toxic_mushroom=蘑菇(cap 菌盖) | frost_ivy=常春藤(cluster 丛生) | thorn_pumpkin=南瓜(gourd 瓜) | stone_fist=山药(rock 块根) | chili_mage=辣椒(taper 锥形) | starvine=星藤(star 星形) | moontree=月树(canopy 树冠) | moss_shield=苔玉(mossball 苔球) | healing_clover=三叶草(clover 三叶) | life_spring=睡莲(basin 水盆) | char_flower=炭花(flower 花) | holy_tree_guard=冠树(tree 树) | plague_mother=毒蕈(dome 伞盖) | ironroot_colossus=铁树(colossus 巨形)。",
+  "_note_整数化误差": "★★ 小档位做不到「预算的精确小数」（v200 口径）★★ 公式给出的是实数（如 D 档 8 秒 = 4.27），而表里只能写整数和 ⇒ 只能取 4（差 −0.27）。这不是设计妥协，是**整数刻度的物理下限**：`|整数和 − 预算| ≤ 0.5` 就是四舍五入的定义 ✓ 判据因此写「≤0.5」而不是「相等」；而**同一档里 t 相同的两株**必须逐位相等（预算相同 ⇒ 舍入结果相同）—— 那一条零容差 ✓ 逐档实测最大偏差：D 0.50（frost_ivy，顶到下限）｜C 0.41｜B 0.41｜A 0.40｜S 0.30 ⇒ 全表没有一株超过半个整数单位 ✓",
+  "_note_死字段": "★★ 警告：下面每条种子里有一批字段在新玩法下完全无效 ★★ —— 旧玩法（植物会参战、会攻击、有血有盾）的遗留：attackType / attackKind / supportMode / baseValue / baseHp / baseShield / attackInterval / range / moveSpeed / special / inheritMult。★ 为什么还留着：表校验要求其中几个非零，而删它们要动 Defs.cs 的 SeedDef 与 TableDatabase 的校验（会牵连 SelfCheck 的 40 条断言）⇒ 本轮明确不做。★ 为什么必须写明：植物自 v165 起【不参战】，不再生成 PlantAlly ⇒ 这些字段【没有任何战斗消费方】—— 读表的人若照它们调数值，改了不会有任何效果。★ 真正生效的字段只有这 9 个（v196：`desc` 已从表里删除）：grade / name / mechanic / growTime / waterMax / waterDrain / price / goldYield / expYield。本表已按此原则重写：只有这 9 个字段的值有意义，其余保持原样未动。",
+  "_note_v197": "★★ v197：seeds 数组末尾追加的 6 株是【机制植物】（用户原话：品质 ≥ 史诗，数值低于同品质无机制植物）★★ ① 档位：S 四株（战镰花 / 疾风藤 / 日光葵 / 雨语莲）＋ A 两株（庇护藤 / 四叶王）；② 数值：全部**严格低于**同档无机制植物（goldYield 与每秒总和都更低，v200 起统一为 −6%）；③ 公平判据：`SEED-TIER-RATE` 走 `PlantMechanics.FairValuePerSecond` = 每秒总和 ×(1 + 机制补偿 6%) ⇒ 机制植物低 6% 正好回到档位预算，档内仍无支配关系（理由写在 `PlantMechanics.MechanicPayback` 上）；④ 三字段合法性：baseHp > 0 / attackInterval > 0 / price > 0 全部满足（`TableDatabase.Validate` 逐条验）；⑤ attackType 一律 Support（机制植物不攻击）；⑥ 形态：**没有 fbx** ⇒ 画法走 `WorldView` 里六个程序化形状（复用 `_fxMeshCache`，不新建资源）。",
+  "_note_v253": "★★ v253：表尾追加 **12 株**（39 → 51），**全部带机制**（6 株复用旧机制 + 6 株新机制），品阶分布按要求 D2 / C3 / B3 / A2 / S2 ★★ ① 复用旧机制的 6 株：dew_jar_moss=WaterSave / drizzle_bud=DewDrop / rush_fern=Haste / plump_gourd=RichHarvest / drought_lotus=ThirstTolerant / aged_bloom=ElderGrowth —— 与现有同机制株的**周期与数值都不同**（同机制不同档位才有可比性）；② 新机制的 6 株：patch_lattice=PlotCountGold（每块已解锁耕地 +2% 收获金币，上限 +20%）/ brim_peony=FullWaterGold（水分 ≥80% 时金币 ×1.25）/ brave_sprout=LowHpGrow（玩家生命 <40% 时该株生长 ×1.30）/ chain_bloom=StreakHarvest（同格准时连收 +6%/层，上限 +36%）/ nightdew_lily=NightGold（夜间金币 ×1.20）/ hunter_bloom=KillRush（击杀后 4 秒攻击倍率 ×1.12）；③ 数值全部落在 `_note_v200规则` 的算式上：`金+验 ≈ round(V档 × f(t) × t × 0.94)`，且**新 id 的 growTime 都取「该档现有周期区间之内」**（D 12/20、C 24/34/46、B 44/50/58、A 48/50、S 34/44）⇒ `SEED-ARCHETYPE` 的周期轴判据（tMax < 1.5×tMin）对 B/A/S 三档**仍然判「均一」**，不用改那两张基准表；④ 机制参数只在 `PlantMechanics` 的常量里，表里只写机制名（与 47~50 行既有规矩一致）；⑤ 新机制的特效**没有**接 `PlantAuraFx`（该文件本轮被另一路占用）—— 表现层暂缺，见交接报告。",
   "seeds": [
-    {
-      "id": "radish_guard", "name": "萝卜卫士", "grade": "D",
-      "attackType": "Physical", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "None",
-      "desc": "均衡入门种",
-      "baseValue": 2, "inheritMult": 0.6, "growTime": 18, "baseHp": 8, "baseShield": 0,
-      "attackInterval": 1, "range": 2, "moveSpeed": 4, "waterMax": 100, "waterDrain": 5, "price": 20
+    { "id": "glow_moss", "name": "辉苔", "grade": "D",
+      "attackType": "Ailment", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 2, "inheritMult": 0.5, "growTime": 16, "baseHp": 9, "baseShield": 0,
+      "attackInterval": 2, "range": 2, "moveSpeed": 3, "waterMax": 100, "waterDrain": 6, "price": 20,
+      "goldYield": 5, "expYield": 4
     },
-    {
-      "id": "pea_shooter", "name": "豌豆射手", "grade": "D",
+    { "id": "salt_melon", "name": "盐霜瓜", "grade": "C",
+      "attackType": "Physical", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 3, "inheritMult": 0.7, "growTime": 27, "baseHp": 10, "baseShield": 1,
+      "attackInterval": 1, "range": 2, "moveSpeed": 4, "waterMax": 100, "waterDrain": 4, "price": 30,
+      "goldYield": 4, "expYield": 14
+    },
+    { "id": "cloud_orchid", "name": "云兰", "grade": "B",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "Heal", "special": "None", "mechanic": "None",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 40, "baseHp": 9, "baseShield": 1,
+      "attackInterval": 3, "range": 5, "moveSpeed": 3, "waterMax": 100, "waterDrain": 2, "price": 40,
+      "goldYield": 8, "expYield": 24
+    },
+    { "id": "mirror_bloom", "name": "镜花", "grade": "A",
       "attackType": "Physical", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "None",
-      "desc": "省水慢熟",
-      "baseValue": 2, "inheritMult": 0.6, "growTime": 24, "baseHp": 5, "baseShield": 0,
-      "attackInterval": 1, "range": 7, "moveSpeed": 4, "waterMax": 120, "waterDrain": 4, "price": 20
+      "baseValue": 4, "inheritMult": 0.7, "growTime": 34, "baseHp": 8, "baseShield": 0,
+      "attackInterval": 2, "range": 7, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 24, "expYield": 7
     },
-    {
-      "id": "toxic_mushroom", "name": "毒蘑菇", "grade": "D",
+    { "id": "ember_reed", "name": "烬苇", "grade": "C",
       "attackType": "Ailment", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "None",
-      "desc": "快熟费水",
-      "baseValue": 2, "inheritMult": 0.5, "growTime": 12, "baseHp": 6, "baseShield": 0,
-      "attackInterval": 2, "range": 6, "moveSpeed": 3, "waterMax": 80, "waterDrain": 8, "price": 30
+      "baseValue": 5, "inheritMult": 0.7, "growTime": 54, "baseHp": 12, "baseShield": 1,
+      "attackInterval": 2, "range": 6, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 30,
+      "goldYield": 30, "expYield": 10
     },
-    {
-      "id": "frost_ivy", "name": "寒霜藤", "grade": "D",
+    { "id": "mint_sprout", "name": "薄荷苗", "grade": "D",
+      "attackType": "Physical", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 2, "inheritMult": 0.6, "growTime": 10, "baseHp": 6, "baseShield": 0,
+      "attackInterval": 1, "range": 6, "moveSpeed": 4, "waterMax": 100, "waterDrain": 6, "price": 20,
+      "goldYield": 2, "expYield": 3
+    },
+    { "id": "cinder_pepper", "name": "灰烬椒", "grade": "D",
       "attackType": "Ailment", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "None",
-      "desc": "最省水的品种",
-      "baseValue": 2, "inheritMult": 0.5, "growTime": 20, "baseHp": 6, "baseShield": 1,
-      "attackInterval": 2, "range": 5, "moveSpeed": 3, "waterMax": 140, "waterDrain": 3, "price": 30
+      "baseValue": 2, "inheritMult": 0.5, "growTime": 17, "baseHp": 7, "baseShield": 0,
+      "attackInterval": 2, "range": 5, "moveSpeed": 3, "waterMax": 100, "waterDrain": 6, "price": 20,
+      "goldYield": 7, "expYield": 3
     },
-    {
-      "id": "thorn_pumpkin", "name": "荆棘南瓜", "grade": "C",
+    { "id": "glass_melon", "name": "琉璃瓜", "grade": "C",
       "attackType": "Physical", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "None",
-      "desc": "中庸数值",
-      "baseValue": 3, "inheritMult": 0.7, "growTime": 16, "baseHp": 10, "baseShield": 0,
-      "attackInterval": 1, "range": 2, "moveSpeed": 4, "waterMax": 130, "waterDrain": 7, "price": 40
+      "baseValue": 3, "inheritMult": 0.7, "growTime": 30, "baseHp": 12, "baseShield": 1,
+      "attackInterval": 1, "range": 2, "moveSpeed": 4, "waterMax": 100, "waterDrain": 4, "price": 30,
+      "goldYield": 13, "expYield": 8
+    },
+    { "id": "frost_reed", "name": "霜纹芦", "grade": "C",
+      "attackType": "Ailment", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 3, "inheritMult": 0.5, "growTime": 45, "baseHp": 9, "baseShield": 2,
+      "attackInterval": 2, "range": 2, "moveSpeed": 3, "waterMax": 100, "waterDrain": 4, "price": 30,
+      "goldYield": 21, "expYield": 12
     },
     {
-      "id": "stone_fist", "name": "石拳", "grade": "C",
+      "id": "radish_guard", "name": "萝卜", "grade": "D",
       "attackType": "Physical", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "None",
-      "desc": "高蓄水慢熟",
-      "baseValue": 3, "inheritMult": 0.7, "growTime": 22, "baseHp": 14, "baseShield": 2,
-      "attackInterval": 1, "range": 2, "moveSpeed": 3, "waterMax": 180, "waterDrain": 5, "price": 45
+      "baseValue": 2, "inheritMult": 0.6, "growTime": 8, "baseHp": 8, "baseShield": 0,
+      "attackInterval": 1, "range": 2, "moveSpeed": 4, "waterMax": 100, "waterDrain": 6, "price": 20,
+      "goldYield": 3, "expYield": 1
     },
     {
-      "id": "chili_mage", "name": "辣椒法师", "grade": "C",
+      "id": "pea_shooter", "name": "豌豆", "grade": "D",
+      "attackType": "Physical", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 2, "inheritMult": 0.6, "growTime": 8, "baseHp": 5, "baseShield": 0,
+      "attackInterval": 1, "range": 7, "moveSpeed": 4, "waterMax": 100, "waterDrain": 6, "price": 20,
+      "goldYield": 1, "expYield": 3
+    },
+    {
+      "id": "toxic_mushroom", "name": "蘑菇", "grade": "D",
       "attackType": "Ailment", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "None",
-      "desc": "快熟高耗水",
-      "baseValue": 3, "inheritMult": 0.6, "growTime": 14, "baseHp": 6, "baseShield": 0,
-      "attackInterval": 2, "range": 6, "moveSpeed": 3, "waterMax": 110, "waterDrain": 9, "price": 40
+      "baseValue": 2, "inheritMult": 0.5, "growTime": 16, "baseHp": 6, "baseShield": 0,
+      "attackInterval": 2, "range": 6, "moveSpeed": 3, "waterMax": 100, "waterDrain": 6, "price": 20,
+      "goldYield": 6, "expYield": 3
     },
     {
-      "id": "starvine", "name": "星藤", "grade": "B",
-      "attackType": "Physical", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "Haste",
-      "desc": "成长加速×1.25",
-      "baseValue": 3, "inheritMult": 0.6, "growTime": 20, "baseHp": 6, "baseShield": 0,
-      "attackInterval": 2, "range": 6, "moveSpeed": 3, "waterMax": 140, "waterDrain": 6, "price": 55
+      "id": "frost_ivy", "name": "常春藤", "grade": "D",
+      "attackType": "Ailment", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 2, "inheritMult": 0.5, "growTime": 5, "baseHp": 6, "baseShield": 1,
+      "attackInterval": 2, "range": 5, "moveSpeed": 3, "waterMax": 100, "waterDrain": 6, "price": 20,
+      "goldYield": 1, "expYield": 1
     },
     {
-      "id": "moontree", "name": "月光树", "grade": "B",
-      "attackType": "Physical", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "NeighborBoost",
-      "desc": "相邻成长×1.12",
-      "baseValue": 4, "inheritMult": 0.8, "growTime": 24, "baseHp": 10, "baseShield": 1,
-      "attackInterval": 2, "range": 7, "moveSpeed": 3, "waterMax": 170, "waterDrain": 5, "price": 60
+      "id": "thorn_pumpkin", "name": "南瓜", "grade": "C",
+      "attackType": "Physical", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 3, "inheritMult": 0.7, "growTime": 27, "baseHp": 10, "baseShield": 0,
+      "attackInterval": 1, "range": 2, "moveSpeed": 4, "waterMax": 100, "waterDrain": 4, "price": 30,
+      "goldYield": 14, "expYield": 4
     },
     {
-      "id": "moss_shield", "name": "苔藓盾", "grade": "B",
-      "attackType": "Support", "attackKind": "Melee", "supportMode": "Guard", "special": "None", "mechanic": "WaterSave",
-      "desc": "漏水减半",
-      "baseValue": 0, "inheritMult": 0.5, "growTime": 22, "baseHp": 16, "baseShield": 3,
-      "attackInterval": 99, "range": 4, "moveSpeed": 2, "waterMax": 200, "waterDrain": 8, "price": 60
+      "id": "stone_fist", "name": "山药", "grade": "C",
+      "attackType": "Physical", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 3, "inheritMult": 0.7, "growTime": 27, "baseHp": 14, "baseShield": 2,
+      "attackInterval": 1, "range": 2, "moveSpeed": 3, "waterMax": 100, "waterDrain": 4, "price": 30,
+      "goldYield": 6, "expYield": 12
     },
     {
-      "id": "healing_clover", "name": "治愈三叶草", "grade": "A",
-      "attackType": "Support", "attackKind": "Ranged", "supportMode": "Heal", "special": "None", "mechanic": "ThirstTolerant",
-      "desc": "缺水也生长40%",
-      "baseValue": 0, "inheritMult": 0.6, "growTime": 20, "baseHp": 8, "baseShield": 1,
-      "attackInterval": 3, "range": 5, "moveSpeed": 3, "waterMax": 180, "waterDrain": 6, "price": 75
+      "id": "chili_mage", "name": "辣椒", "grade": "C",
+      "attackType": "Ailment", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 3, "inheritMult": 0.6, "growTime": 54, "baseHp": 6, "baseShield": 0,
+      "attackInterval": 2, "range": 6, "moveSpeed": 3, "waterMax": 100, "waterDrain": 4, "price": 30,
+      "goldYield": 26, "expYield": 14
     },
     {
-      "id": "life_spring", "name": "生命之泉", "grade": "A",
-      "attackType": "Support", "attackKind": "Ranged", "supportMode": "Utility", "special": "None", "mechanic": "DewDrop",
-      "desc": "收获返还12水",
-      "baseValue": 0, "inheritMult": 0.6, "growTime": 26, "baseHp": 8, "baseShield": 1,
-      "attackInterval": 99, "range": 20, "moveSpeed": 3, "waterMax": 220, "waterDrain": 5, "price": 80
+      "id": "starvine", "name": "星藤", "grade": "C",
+      "attackType": "Physical", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 3, "inheritMult": 0.6, "growTime": 13.5, "baseHp": 6, "baseShield": 0,
+      "attackInterval": 2, "range": 6, "moveSpeed": 3, "waterMax": 100, "waterDrain": 4, "price": 30,
+      "goldYield": 6, "expYield": 2
+    },
+    {
+      "id": "moontree", "name": "月树", "grade": "B",
+      "attackType": "Physical", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 4, "inheritMult": 0.8, "growTime": 48, "baseHp": 10, "baseShield": 1,
+      "attackInterval": 2, "range": 7, "moveSpeed": 3, "waterMax": 100, "waterDrain": 2, "price": 40,
+      "goldYield": 31, "expYield": 8
+    },
+    {
+      "id": "moss_shield", "name": "苔玉", "grade": "B",
+      "attackType": "Support", "attackKind": "Melee", "supportMode": "Guard", "special": "None", "mechanic": "None",
+      "baseValue": 0, "inheritMult": 0.5, "growTime": 56, "baseHp": 16, "baseShield": 3,
+      "attackInterval": 99, "range": 4, "moveSpeed": 2, "waterMax": 100, "waterDrain": 2, "price": 40,
+      "goldYield": 24, "expYield": 23
+    },
+    {
+      "id": "healing_clover", "name": "三叶草", "grade": "B",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "Heal", "special": "None", "mechanic": "None",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 40, "baseHp": 8, "baseShield": 1,
+      "attackInterval": 3, "range": 5, "moveSpeed": 3, "waterMax": 100, "waterDrain": 2, "price": 40,
+      "goldYield": 14, "expYield": 18
+    },
+    {
+      "id": "life_spring", "name": "睡莲", "grade": "A",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "Utility", "special": "None", "mechanic": "None",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 42.5, "baseHp": 8, "baseShield": 1,
+      "attackInterval": 99, "range": 20, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 31, "expYield": 8
     },
     {
       "id": "char_flower", "name": "炭花", "grade": "A",
-      "attackType": "Ailment", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "RichHarvest",
-      "desc": "收获金币×1.30",
-      "baseValue": 4, "inheritMult": 0.7, "growTime": 22, "baseHp": 8, "baseShield": 0,
-      "attackInterval": 2, "range": 2, "moveSpeed": 4, "waterMax": 190, "waterDrain": 7, "price": 80
+      "attackType": "Ailment", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 4, "inheritMult": 0.7, "growTime": 34, "baseHp": 8, "baseShield": 0,
+      "attackInterval": 2, "range": 2, "moveSpeed": 4, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 14, "expYield": 17
     },
     {
-      "id": "holy_tree_guard", "name": "圣树守卫", "grade": "S",
-      "attackType": "Physical", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "ChainHarvest",
-      "desc": "收割连带整列",
-      "baseValue": 5, "inheritMult": 0.8, "growTime": 28, "baseHp": 18, "baseShield": 2,
-      "attackInterval": 2, "range": 2, "moveSpeed": 3, "waterMax": 240, "waterDrain": 5, "price": 110
+      "id": "holy_tree_guard", "name": "冠树", "grade": "A",
+      "attackType": "Physical", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 5, "inheritMult": 0.8, "growTime": 50, "baseHp": 18, "baseShield": 2,
+      "attackInterval": 2, "range": 2, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 31, "expYield": 17
     },
     {
-      "id": "plague_mother", "name": "焦渴之母", "grade": "S",
-      "attackType": "Ailment", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "ThirstBloom",
-      "desc": "缺水时金币×1.6",
-      "baseValue": 4, "inheritMult": 0.7, "growTime": 24, "baseHp": 12, "baseShield": 1,
-      "attackInterval": 3, "range": 6, "moveSpeed": 2, "waterMax": 150, "waterDrain": 10, "price": 105
+      "id": "plague_mother", "name": "毒蕈", "grade": "S",
+      "attackType": "Ailment", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 4, "inheritMult": 0.7, "growTime": 37, "baseHp": 12, "baseShield": 1,
+      "attackInterval": 3, "range": 6, "moveSpeed": 2, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 32, "expYield": 8
     },
     {
-      "id": "ironroot_colossus", "name": "铁根巨像", "grade": "S",
-      "attackType": "Physical", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "ElderGrowth",
-      "desc": "越久成长越快",
-      "baseValue": 6, "inheritMult": 0.9, "growTime": 30, "baseHp": 24, "baseShield": 4,
-      "attackInterval": 2, "range": 3, "moveSpeed": 2, "waterMax": 260, "waterDrain": 5, "price": 120
+      "id": "ironroot_colossus", "name": "铁树", "grade": "S",
+      "attackType": "Physical", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "None",
+      "baseValue": 6, "inheritMult": 0.9, "growTime": 44, "baseHp": 24, "baseShield": 4,
+      "attackInterval": 2, "range": 3, "moveSpeed": 2, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 22, "expYield": 27
+    },
+
+    {
+      "id": "warblade_bloom", "name": "战镰花", "grade": "S",
+      "attackType": "Support", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "HarvestAtkMult",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 30, "baseHp": 14, "baseShield": 1,
+      "attackInterval": 99, "range": 2, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 24, "expYield": 6
+    },
+    {
+      "id": "gale_vine", "name": "疾风藤", "grade": "S",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "HarvestAtkSpeed",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 37, "baseHp": 12, "baseShield": 1,
+      "attackInterval": 99, "range": 6, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 13, "expYield": 25
+    },
+    {
+      "id": "sunflower_crown", "name": "日光葵", "grade": "S",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "SunnyBloom",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 37, "baseHp": 20, "baseShield": 2,
+      "attackInterval": 99, "range": 5, "moveSpeed": 2, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 25, "expYield": 13
+    },
+    {
+      "id": "rainlily", "name": "雨语莲", "grade": "S",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "RainCloud",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 44, "baseHp": 10, "baseShield": 1,
+      "attackInterval": 99, "range": 5, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 23, "expYield": 23
+    },
+    {
+      "id": "shelter_ivy", "name": "庇护藤", "grade": "A",
+      "attackType": "Support", "attackKind": "Melee", "supportMode": "Guard", "special": "None", "mechanic": "StandingDodge",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 42.5, "baseHp": 8, "baseShield": 1,
+      "attackInterval": 99, "range": 2, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 31, "expYield": 6
+    },
+    {
+      "id": "lucky_monarch", "name": "四叶王", "grade": "A",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "FarmLuck",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 42.5, "baseHp": 8, "baseShield": 1,
+      "attackInterval": 99, "range": 5, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 17, "expYield": 20
+    },
+
+    {
+      "id": "dusk_berry", "name": "暮莓", "grade": "A",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "DewDrop",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 37, "baseHp": 10, "baseShield": 1,
+      "attackInterval": 99, "range": 4, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 24, "expYield": 8
+    },
+    {
+      "id": "tide_gourd", "name": "潮瓜", "grade": "A",
+      "attackType": "Support", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "WaterSave",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 44, "baseHp": 12, "baseShield": 1,
+      "attackInterval": 99, "range": 3, "moveSpeed": 2, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 14, "expYield": 25
+    },
+    {
+      "id": "hollow_vine", "name": "空藤", "grade": "A",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "ThirstBloom",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 46, "baseHp": 8, "baseShield": 2,
+      "attackInterval": 99, "range": 5, "moveSpeed": 2, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 30, "expYield": 11
+    },
+    {
+      "id": "dune_cactus", "name": "沙掌", "grade": "A",
+      "attackType": "Support", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "ThirstTolerant",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 50, "baseHp": 18, "baseShield": 3,
+      "attackInterval": 99, "range": 2, "moveSpeed": 2, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 18, "expYield": 27
+    },
+    {
+      "id": "harvest_bell", "name": "丰收铃", "grade": "S",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "RichHarvest",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 31, "baseHp": 10, "baseShield": 1,
+      "attackInterval": 99, "range": 4, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 25, "expYield": 6
+    },
+    {
+      "id": "star_ladder", "name": "星梯", "grade": "S",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "ChainHarvest",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 32, "baseHp": 12, "baseShield": 1,
+      "attackInterval": 99, "range": 5, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 26, "expYield": 6
+    },
+    {
+      "id": "elder_oak", "name": "古木", "grade": "S",
+      "attackType": "Support", "attackKind": "Melee", "supportMode": "Guard", "special": "None", "mechanic": "ElderGrowth",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 33, "baseHp": 24, "baseShield": 3,
+      "attackInterval": 99, "range": 2, "moveSpeed": 2, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 11, "expYield": 22
+    },
+    {
+      "id": "quick_reed", "name": "疾苇", "grade": "S",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "Haste",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 44.5, "baseHp": 8, "baseShield": 1,
+      "attackInterval": 99, "range": 6, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 33, "expYield": 14
+    },
+
+    {
+      "id": "dew_jar_moss", "name": "蓄水苔", "grade": "D",
+      "attackType": "Support", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "WaterSave",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 12, "baseHp": 7, "baseShield": 0,
+      "attackInterval": 99, "range": 2, "moveSpeed": 2, "waterMax": 100, "waterDrain": 6, "price": 20,
+      "goldYield": 2, "expYield": 4
+    },
+    {
+      "id": "drizzle_bud", "name": "凝露芽", "grade": "D",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "DewDrop",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 20, "baseHp": 8, "baseShield": 0,
+      "attackInterval": 99, "range": 3, "moveSpeed": 3, "waterMax": 100, "waterDrain": 6, "price": 20,
+      "goldYield": 7, "expYield": 4
+    },
+    {
+      "id": "rush_fern", "name": "疾长蕨", "grade": "C",
+      "attackType": "Support", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "Haste",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 24, "baseHp": 9, "baseShield": 0,
+      "attackInterval": 99, "range": 2, "moveSpeed": 3, "waterMax": 100, "waterDrain": 4, "price": 30,
+      "goldYield": 10, "expYield": 5
+    },
+    {
+      "id": "plump_gourd", "name": "丰实瓜", "grade": "C",
+      "attackType": "Support", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "RichHarvest",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 34, "baseHp": 11, "baseShield": 1,
+      "attackInterval": 99, "range": 3, "moveSpeed": 2, "waterMax": 100, "waterDrain": 4, "price": 30,
+      "goldYield": 16, "expYield": 6
+    },
+    {
+      "id": "patch_lattice", "name": "连畦藤", "grade": "C",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "PlotCountGold",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 46, "baseHp": 10, "baseShield": 0,
+      "attackInterval": 99, "range": 5, "moveSpeed": 3, "waterMax": 100, "waterDrain": 4, "price": 30,
+      "goldYield": 20, "expYield": 12
+    },
+    {
+      "id": "drought_lotus", "name": "耐旱莲", "grade": "B",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "ThirstTolerant",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 44, "baseHp": 14, "baseShield": 1,
+      "attackInterval": 99, "range": 4, "moveSpeed": 2, "waterMax": 100, "waterDrain": 2, "price": 40,
+      "goldYield": 12, "expYield": 22
+    },
+    {
+      "id": "brim_peony", "name": "盈水芍", "grade": "B",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "FullWaterGold",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 50, "baseHp": 12, "baseShield": 1,
+      "attackInterval": 99, "range": 4, "moveSpeed": 2, "waterMax": 100, "waterDrain": 2, "price": 40,
+      "goldYield": 28, "expYield": 11
+    },
+    {
+      "id": "brave_sprout", "name": "血勇苗", "grade": "B",
+      "attackType": "Support", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "LowHpGrow",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 58, "baseHp": 16, "baseShield": 2,
+      "attackInterval": 99, "range": 2, "moveSpeed": 2, "waterMax": 100, "waterDrain": 2, "price": 40,
+      "goldYield": 20, "expYield": 26
+    },
+    {
+      "id": "aged_bloom", "name": "积年花", "grade": "A",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "ElderGrowth",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 48, "baseHp": 18, "baseShield": 2,
+      "attackInterval": 99, "range": 3, "moveSpeed": 2, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 30, "expYield": 13
+    },
+    {
+      "id": "chain_bloom", "name": "叠收莲", "grade": "A",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "StreakHarvest",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 50, "baseHp": 12, "baseShield": 1,
+      "attackInterval": 99, "range": 5, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 60,
+      "goldYield": 32, "expYield": 13
+    },
+    {
+      "id": "nightdew_lily", "name": "夜露莲", "grade": "S",
+      "attackType": "Support", "attackKind": "Ranged", "supportMode": "None", "special": "None", "mechanic": "NightGold",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 34, "baseHp": 14, "baseShield": 1,
+      "attackInterval": 99, "range": 5, "moveSpeed": 3, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 24, "expYield": 10
+    },
+    {
+      "id": "hunter_bloom", "name": "猎血花", "grade": "S",
+      "attackType": "Support", "attackKind": "Melee", "supportMode": "None", "special": "None", "mechanic": "KillRush",
+      "baseValue": 0, "inheritMult": 0.6, "growTime": 44, "baseHp": 16, "baseShield": 2,
+      "attackInterval": 99, "range": 2, "moveSpeed": 2, "waterMax": 100, "waterDrain": 1, "price": 80,
+      "goldYield": 20, "expYield": 26
     }
   ],
   "mutations": []

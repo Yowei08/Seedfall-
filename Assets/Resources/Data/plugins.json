@@ -1,38 +1,432 @@
 {
-  "_comment": "插件表（商店第三类）。v171 重写，按用户新标准：每把武器 6 个插槽、三类插件（hoe_* 锄头 / can_* 水壶 / fert_* 肥料）。原 core_* 通用类已删除（理由见报告）。effect 取值见 Goods.cs 的 PluginEffectKind，共 17 种，每一种都被 RunSession 的三条攻击路径真的消费。amount2 目前只有 ChainOnHit 用（跳数 amount / 每跳比例 amount2）。⚠ 率类（CritRate/CritDamage）是 0..1 小数：0.12 = 12%。",
+ "_comment": "插件表（商店第三类）。v180 阶段 3 重写：12 件，**只改攻击方式，不改玩家属性**。锄头 4（剑气/灼烧/双击/吸血）、水壶 4（多柱/减速/加粗/自充）、肥料 4（子爆/毒素/免耗/连环）。quality 用字母档 D/C/B/A/S（索引 0..4，与商店品质权重数组对齐）。effect 取值见 Goods.cs 的 PluginEffectKind，共 12 种（另加 None = 无效行），每一种都被 RunSession 的三条攻击路径真的消费，且每一种在表里恰好出现一次。amount 的单位随效果而异：比例类是 0..1 小数（0.20 = 20%），绝对量类是个数（1 = 一道 / 一刀 / 一下）。amount2 是第二参数：减速的每层每秒比例、子爆的半径比、连环的落点距离。持续效果（灼烧/减速/毒区）的时长与层数上限写在 Combat/PluginDots.cs 里（v200 起规格给死 **3 秒** / 灼烧与减速各自层数上限 / 减速 −60% 只是兜底下限）。",
+ "_note_v285": "★★ v285（用户原话：『所有插件在菜单和商店的拓展提示内容修改，只声明功能和层数，不声明数值』）★★ 21 条 description 全部改成「功能 ＋ 层数」两句：不再写百分比／秒数／点数／范围米数；amount / amount2 / maxStack 一个字节未动（它们是结算的输入），屏幕不再复述。同一规则已同步到 l10n_zh / l10n_en / l10n_ja 的 desc.<id>。商店详情的「效果：」行也不再拼 amount（ImGuiHud.PluginEffectText 只返回 WeaponSystem.ChannelOf）",
+ "_note_v200_exact": "★★ v200（用户原话：『灼烧的毒区插件上限数修改为 1，重新制作插件描述这里，拒绝不清楚的信息，说明白干什么，数值多少，比如提供减速30%，产生灼烧（继承50%近战伤害），减速插件会让敌人每秒扣50%远程伤害的血量，持续3秒，特殊弹字图标，同步更新灼烧和中毒，统一是每秒扣50%，按照各自的继承伤害，持续3秒』）★★ ① **12 条 description 全部改成「触发条件 ＋ 做什么 ＋ 具体数值 ＋ 持续时长」**，每条都写到玩家能在商店里直接验收的粒度（不再有『一部分』『更毒』这种没数的说法）✓ 精确数一律与代码同源：`amount`/`amount2` 来自本文件，时长/层数上限来自 `Combat/PluginDots.cs`，继承比例来自 `Combat/WeaponSystem.cs`（`SwordWaveDamageRatio 0.50` / `SwordWaveDistMult 1.25` / `DoubleStrikeDamageRatioPerLayer 2/3` / `MultiJetExtraWaterCost 5` / `WaterBallDamageRatio 0.50` / `SubBurstDamageRatio 0.50` / `PoisonRadiusRatio 0.80` / `SubBurstRingRatio 1.75`），武器基准值来自 `tuning.json` 的 `tools`（锄 8 / 壶 6 / 肥 12，射程 3.8 / 9.5 / 6.5，主爆半径 3）✓ ② `fert_poison.maxStack` **3 → 1**（一炮只叠 1 层毒 ⇒ 每秒 50% 爆炸伤害，不再因拥有多件而更高）✓ ③ 灼烧 / 减速 / 毒区的**持续时长 5 秒 → 3 秒**（`PluginDotTable.BurnSeconds / SlowSeconds / PoisonSeconds`），每秒的量一个数都没动 ✓ ④ 『同一处再炸』这条**未改**的旧规则必须被读到，所以写进了 `fert_poison` 的描述里：0.15 米内再炸不会铺第二片，而是把这一片叠得更毒（+1 层 = 每秒再 +50%）—— 它由 `PluginDotTable.AddPoisonZone` 的合并分支决定，与 `maxStack`（插件层数）是两件事 ✓",
+ "_note_v197": "★★ v197（历史，已被 v200 取代）★★ 那一轮要求『12 条描述一条精确实数都不留』（只写作用声明，精确读数交给商店详情的「效果：」行）。v200 用户**反过来**要求写明数值与时长 ⇒ 本轮把数写回描述，同时保留 §v197 提出过的三处**过期数字修正**（`hoe_swordwave` 的旧射程 3.2m、`can_multijet` 的旧夹角 8°、`fert_chain` 的旧 0.7×）：它们在新描述里按**当前代码的真值**重写（射程 = 攻击范围 ×1.25、夹角由 `BeamFanStepDeg` 从半宽与射程算出、连环的范围与伤害都等于主爆）✓",
+ "plugins": [
+  {
+   "id": "hoe_echo",
+   "nameEn": "Echo",
+   "displayName": "回响",
+   "quality": "B",
+   "allowedWeapons": [
+    0
+   ],
+   "effect": "Echo",
+   "amount": 0.4,
+   "amount2": 0.35,
+   "stackRule": "Stackable",
+   "maxStack": 2,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "锄头砍中敌人后，这一刀会延迟再结算一次伤害。可叠 2 层。"
+  },
 
-  "plugins": [
-    { "id": "hoe_whetstone", "displayName": "磨刀石", "quality": "Common", "allowedWeapons": [0], "effect": "DamageFlat", "amount": 2, "stackRule": "Stackable", "maxStack": 3, "exclusivePerWeapon": false, "basePrice": 28, "description": "锄头开刃。伤害（加法）+2/层，最多 3 层。" },
-    { "id": "hoe_lightgrip", "displayName": "轻量握柄", "quality": "Common", "allowedWeapons": [0], "effect": "AttackSpeed", "amount": 0.15, "stackRule": "Stackable", "maxStack": 3, "exclusivePerWeapon": false, "basePrice": 46, "description": "握柄减重。攻速 +15%/层，挥击间隔 = 基础冷却 ÷(攻速 ×(1+攻速加成))。" },
-    { "id": "hoe_keeneye", "displayName": "锐目刃", "quality": "Uncommon", "allowedWeapons": [0], "effect": "CritRate", "amount": 0.12, "stackRule": "Stackable", "maxStack": 3, "exclusivePerWeapon": false, "basePrice": 56, "description": "刃口对准要害。暴击率 +12%/层（基础 0%）——它也是「血月刃」那条暴击炸裂的唯一来源。" },
-    { "id": "hoe_airslash", "displayName": "剑气刃", "quality": "Rare", "allowedWeapons": [0], "effect": "SwordWave", "amount": 1, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 96, "description": "★攻击形式★ 挥击的同时沿瞄准方向劈出一道剑气，打到近战判定框（3.2m）之外的敌人；射程 = 近战范围 ×2。" },
-    { "id": "hoe_airsplit", "displayName": "裂空刃", "quality": "Rare", "allowedWeapons": [0], "effect": "ProjectileCount", "amount": 1, "stackRule": "Stackable", "maxStack": 2, "exclusivePerWeapon": false, "basePrice": 88, "description": "★攻击形式★ 剑气 +1 条/层，每条朝向相差 12°，能扫到不同的一条线。单独装也有效：它自己就会让挥击带出 1 道剑气。" },
-    { "id": "hoe_frostedge", "displayName": "霜锋", "quality": "Uncommon", "allowedWeapons": [0], "effect": "ChillOnHit", "amount": 2, "stackRule": "Stackable", "maxStack": 3, "exclusivePerWeapon": false, "basePrice": 50, "description": "◇小机制◇ 命中额外叠 2 层寒冷/层（普通命中本来 1 层）：每层移速 -20%，满层冰冻 1 秒后破冰爆发。" },
-    { "id": "hoe_embershard", "displayName": "炭屑刃", "quality": "Epic", "allowedWeapons": [0], "effect": "BurnOnHit", "amount": 0.35, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 124, "description": "◆大机制◆ 命中即点燃：灼烧量 = 本次伤害 ×35%，每 1 秒结算一次、共 4 次；烧着的敌人再被非异常攻击命中会炸开。" },
-    { "id": "hoe_shockcore", "displayName": "震荡核", "quality": "Epic", "allowedWeapons": [0], "effect": "ChainOnHit", "amount": 2, "amount2": 0.45, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 138, "description": "◆大机制◆ 共振连锁：命中后向最近 6m 内其它 2 个敌人各溅射本次伤害的 45%（一跳一次，不会无限连锁）。" },
-    { "id": "hoe_bloodmoon", "displayName": "血月刃", "quality": "Legendary", "allowedWeapons": [0], "effect": "CritBlast", "amount": 0.6, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 168, "description": "★特殊效果★ 暴击时在命中点炸开：半径 3m 内其它敌人各吃本次伤害的 60%。需要暴击率来源（锐目刃或道具）。" },
-    { "id": "hoe_hunttooth", "displayName": "猎杀锯齿", "quality": "Legendary", "allowedWeapons": [0], "effect": "DamagePercent", "amount": 0.35, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 165, "description": "锯齿撕开更大的伤口。伤害 ×(1+35%)，与其它加成**相加后一次性乘**（不是各自连乘）。" },
+  {
+   "id": "hoe_focus",
+   "nameEn": "Focus",
+   "displayName": "收束",
+   "quality": "A",
+   "allowedWeapons": [
+    0
+   ],
+   "effect": "Focus",
+   "amount": 3,
+   "amount2": 0.4,
+   "stackRule": "Stackable",
+   "maxStack": 2,
+   "exclusivePerWeapon": false,
+   "basePrice": 36,
+   "description": "锄头连续命中同一个敌人时补一记处决伤害。可叠 2 层。"
+  },
+  {
+   "id": "can_ricochet",
+   "nameEn": "Ricochet",
+   "displayName": "弹射",
+   "quality": "B",
+   "allowedWeapons": [
+    1
+   ],
+   "effect": "Ricochet",
+   "amount": 0.6,
+   "amount2": 3.5,
+   "stackRule": "Stackable",
+   "maxStack": 2,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "水柱命中后，水花弹到附近另一个敌人。可叠 2 层。"
+  },
+  {
+   "id": "can_ripen",
+   "nameEn": "Ripen",
+   "displayName": "催熟",
+   "quality": "C",
+   "allowedWeapons": [
+    1
+   ],
+   "effect": "Ripen",
+   "amount": 0.1,
+   "stackRule": "Stackable",
+   "maxStack": 3,
+   "exclusivePerWeapon": false,
+   "basePrice": 24,
+   "description": "水柱扫过未成熟的地块时推进它的成长。可叠 3 层。",
+   "_note_v284": "amount 3 -> 0.3 (每次催熟 3 秒 -> 0.3 秒)"
+  },
+  {
+   "id": "can_tide",
+   "nameEn": "Tide",
+   "displayName": "潮汐",
+   "quality": "A",
+   "allowedWeapons": [
+    1
+   ],
+   "effect": "Tide",
+   "amount": 1.2,
+   "stackRule": "Stackable",
+   "maxStack": 2,
+   "exclusivePerWeapon": false,
+   "basePrice": 36,
+   "description": "水柱命中时把敌人顺着水线推开。可叠 2 层。"
+  },
+  {
+   "id": "hoe_swordwave",
+   "displayName": "剑气",
+   "quality": "B",
+   "allowedWeapons": [
+    0
+   ],
+   "effect": "SwordWave",
+   "amount": 1,
+   "stackRule": "Stackable",
+   "maxStack": 3,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "挥动锄头时沿攻击方向多飞出一道剑气。可叠 3 层，每层多一道。"
+  },
+  {
+   "id": "hoe_burn",
+   "displayName": "灼烧",
+   "quality": "C",
+   "allowedWeapons": [
+    0
+   ],
+   "effect": "BurnOnHit",
+   "amount": 0.5,
+   "amount2": 1,
+   "stackRule": "Stackable",
+   "maxStack": 1,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "锄头命中时给敌人附加灼烧，持续掉血。仅 1 层，不叠层。"
+  },
+  {
+   "id": "hoe_doublestrike",
+   "displayName": "双击",
+   "quality": "A",
+   "allowedWeapons": [
+    0
+   ],
+   "effect": "DoubleStrike",
+   "amount": 1,
+   "stackRule": "Stackable",
+   "maxStack": 2,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "一次挥击劈出多刀，每刀各自判定暴击与命中效果。可叠 2 层。"
+  },
+  {
+   "id": "hoe_lifesteal",
+   "displayName": "吸血",
+   "quality": "S",
+   "allowedWeapons": [
+    0
+   ],
+   "effect": "Lifesteal",
+   "amount": 0.01,
+   "stackRule": "Stackable",
+   "maxStack": 3,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "锄头造成直接伤害时把一部分伤害转成自己的生命。可叠 3 层。"
+  },
+  {
+   "id": "can_multijet",
+   "displayName": "多柱",
+   "quality": "B",
+   "allowedWeapons": [
+    1
+   ],
+   "effect": "MultiJet",
+   "amount": 1,
+   "stackRule": "Stackable",
+   "maxStack": 3,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "喷水时一次喷出多道水柱，呈扇形铺开。可叠 3 层。"
+  },
+  {
+   "id": "can_slow",
+   "displayName": "减速",
+   "quality": "C",
+   "allowedWeapons": [
+    1
+   ],
+   "effect": "SlowOnHit",
+   "amount": 0.3,
+   "amount2": 0.5,
+   "stackRule": "Stackable",
+   "maxStack": 1,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "水壶命中时让敌人减速，同时持续掉血。仅 1 层，不叠层。"
+  },
+  {
+   "id": "can_thickjet",
+   "displayName": "加粗",
+   "quality": "A",
+   "allowedWeapons": [
+    1
+   ],
+   "effect": "ThickJet",
+   "amount": 1.0,
+   "stackRule": "Stackable",
+   "maxStack": 2,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "水柱变粗，能打中的宽度跟着变宽。可叠 2 层。"
+  },
+  {
+   "id": "can_autocharge",
+   "displayName": "自充",
+   "quality": "S",
+   "allowedWeapons": [
+    1
+   ],
+   "effect": "AutoCharge",
+   "amount": 5,
+   "stackRule": "Stackable",
+   "maxStack": 3,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "持续回水，每次耗水额外射出会自动追敌的水球。可叠 3 层。"
+  },
+  {
+   "id": "fert_subburst",
+   "displayName": "子爆",
+   "quality": "B",
+   "allowedWeapons": [
+    2
+   ],
+   "effect": "SubBurst",
+   "amount": 1,
+   "amount2": 0.5,
+   "stackRule": "Stackable",
+   "maxStack": 3,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "肥料炸开时在主爆之外再炸出一圈小爆炸。可叠 3 层。"
+  },
+  {
+   "id": "fert_poison",
+   "displayName": "毒素",
+   "quality": "C",
+   "allowedWeapons": [
+    2
+   ],
+   "effect": "PoisonZone",
+   "amount": 0.5,
+   "stackRule": "Stackable",
+   "maxStack": 1,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "肥料炸开后留下毒区，走进去的敌人持续掉血。仅 1 层，不叠层。"
+  },
+  {
+   "id": "fert_freeburst",
+   "displayName": "免耗",
+   "quality": "A",
+   "allowedWeapons": [
+    2
+   ],
+   "effect": "FreeBurst",
+   "amount": 0.12,
+   "stackRule": "Stackable",
+   "maxStack": 3,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "投出肥料时有机会不扣充能。可叠 3 层。"
+  },
+  {
+   "id": "fert_chain",
+   "displayName": "连环",
+   "quality": "S",
+   "allowedWeapons": [
+    2
+   ],
+   "effect": "ChainBurst",
+   "amount": 1,
+   "amount2": 2.5,
+   "stackRule": "Stackable",
+   "maxStack": 2,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "一次投掷连炸好几下，每一炸的范围与伤害都等同主爆。可叠 2 层。"
+  },
+  {
+   "id": "fert_mine",
+   "nameEn": "Buried Charge",
+   "displayName": "伏雷",
+   "quality": "B",
+   "allowedWeapons": [
+    2
+   ],
+   "effect": "Mine",
+   "amount": 1.5,
+   "amount2": 0.8,
+   "stackRule": "Stackable",
+   "maxStack": 2,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "肥料落地先埋进土里上膛，敌人踩进范围才引爆。可叠 2 层。"
+  },
+  {
+   "id": "fert_ward",
+   "nameEn": "Soil Ward",
+   "displayName": "护壤",
+   "quality": "C",
+   "allowedWeapons": [
+    2
+   ],
+   "effect": "Ward",
+   "amount": 2,
+   "amount2": 3,
+   "stackRule": "Stackable",
+   "maxStack": 1,
+   "exclusivePerWeapon": false,
+   "basePrice": 24,
+   "description": "肥料炸开时，站在爆炸范围内的玩家获得护盾。仅 1 层，不叠层。"
+  },
+  {
+   "id": "fert_mark",
+   "nameEn": "Brand Mark",
+   "displayName": "灼印",
+   "quality": "A",
+   "allowedWeapons": [
+    2
+   ],
+   "effect": "Mark",
+   "amount": 0.5,
+   "amount2": 3,
+   "stackRule": "Stackable",
+   "maxStack": 2,
+   "exclusivePerWeapon": false,
+   "basePrice": 36,
+   "description": "肥料炸到敌人时烙下印记，放大它下一次受到的伤害。可叠 2 层。"
+  },
+  {
+   "id": "hoe_shock",
+   "nameEn": "Shock",
+   "displayName": "感电",
+   "quality": "B",
+   "allowedWeapons": [
+    0
+   ],
+   "effect": "Shock",
+   "amount": 3,
+   "amount2": 0.1,
+   "stackRule": "Stackable",
+   "maxStack": 3,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "锄头砍中敌人时，电流会窜向它周围的其它敌人。可叠 3 层。"
+  },
+  {
+   "id": "hoe_frenzy",
+   "nameEn": "Frenzy",
+   "displayName": "狂暴",
+   "quality": "B",
+   "allowedWeapons": [
+    0
+   ],
+   "effect": "Frenzy",
+   "amount": 0.1,
+   "amount2": 0.4,
+   "stackRule": "Stackable",
+   "maxStack": 2,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "被砍中的敌人如果已经残血，这一刀会更疼。可叠 2 层。"
+  },
+  {
+   "id": "hoe_giant",
+   "nameEn": "Giant",
+   "displayName": "巨型",
+   "quality": "S",
+   "allowedWeapons": [
+    0
+   ],
+   "effect": "Giant",
+   "amount": 0.35,
+   "amount2": 0.0,
+   "stackRule": "Unique",
+   "maxStack": 1,
+   "exclusivePerWeapon": false,
+   "basePrice": 36,
+   "description": "挥击不再只打面前，而是环绕玩家一整圈。仅 1 层，不叠层。"
+  },
+  {
+   "id": "can_sewer",
+   "nameEn": "Sewer",
+   "displayName": "臭水沟",
+   "quality": "A",
+   "allowedWeapons": [
+    1
+   ],
+   "effect": "Sewer",
+   "amount": 20,
+   "amount2": 0.6,
+   "stackRule": "Stackable",
+   "maxStack": 2,
+   "exclusivePerWeapon": false,
+   "basePrice": 36,
+   "description": "水柱变成浑浊的绿水，每消耗一些水分就在身边泼下一块巨大的香蕉皮。可叠 2 层。"
+  },
+  {
+   "id": "can_wave",
+   "nameEn": "Wave",
+   "displayName": "海浪",
+   "quality": "B",
+   "allowedWeapons": [
+    1
+   ],
+   "effect": "Wave",
+   "amount": 0.5,
+   "amount2": 4.5,
+   "stackRule": "Stackable",
+   "maxStack": 3,
+   "exclusivePerWeapon": false,
+   "basePrice": 29,
+   "description": "喷水时脚下推出一道海浪，扫到的人站不稳，你也会跟着走得更快。可叠 3 层。"
+  },
 
-    { "id": "can_longpipe", "displayName": "加长喷杆", "quality": "Common", "allowedWeapons": [1], "effect": "Range", "amount": 0.2, "stackRule": "Stackable", "maxStack": 3, "exclusivePerWeapon": false, "basePrice": 26, "description": "喷杆加长。激光射程 +20%/层（基础 9.5m）。" },
-    { "id": "can_pumpcore", "displayName": "增压泵芯", "quality": "Common", "allowedWeapons": [1], "effect": "DamageFlat", "amount": 2, "stackRule": "Stackable", "maxStack": 3, "exclusivePerWeapon": false, "basePrice": 52, "description": "泵芯加压。激光伤害（加法）+2/层。" },
-    { "id": "can_focusjet", "displayName": "聚流喷嘴", "quality": "Uncommon", "allowedWeapons": [1], "effect": "CritRate", "amount": 0.1, "stackRule": "Stackable", "maxStack": 3, "exclusivePerWeapon": false, "basePrice": 48, "description": "水流聚焦。暴击率 +10%/层 ⇒ 叠满 30%（基础 0%）。" },
-    { "id": "can_turbine", "displayName": "涡流叶轮", "quality": "Uncommon", "allowedWeapons": [1], "effect": "AttackSpeed", "amount": 0.25, "stackRule": "Stackable", "maxStack": 2, "exclusivePerWeapon": false, "basePrice": 62, "description": "叶轮提速。攻速 +25%/层：**同一目标的再受伤间隔**与弹药扣费间隔都按 1/(1+攻速) 缩短。" },
-    { "id": "can_rainstorm", "displayName": "暴雨阀", "quality": "Rare", "allowedWeapons": [1], "effect": "ProjectileCount", "amount": 1, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 118, "description": "★攻击形式★ 阀门全开：一次喷出 2 道激光（朝向相差 8°），能同时打两条线上的敌人。" },
-    { "id": "can_arcnode", "displayName": "弧光节点", "quality": "Rare", "allowedWeapons": [1], "effect": "ChainOnHit", "amount": 1, "amount2": 0.5, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 112, "description": "◆大机制◆ 共振连锁：命中后向最近 6m 内其它 1 个敌人溅射本次伤害的 50%。" },
-    { "id": "can_scaldjet", "displayName": "蒸汽喷嘴", "quality": "Epic", "allowedWeapons": [1], "effect": "BurnOnHit", "amount": 0.3, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 126, "description": "◆大机制◆ 高温蒸汽烫伤：灼烧量 = 本次伤害 ×30%，每 1 秒结算一次、共 4 次。" },
-    { "id": "can_overflow", "displayName": "溢流阀", "quality": "Rare", "allowedWeapons": [1], "effect": "AmmoOnKill", "amount": 12, "stackRule": "Stackable", "maxStack": 2, "exclusivePerWeapon": false, "basePrice": 74, "description": "◇小机制◇ 每击杀 1 个敌人回 12 点水壶弹药/层（上限仍是 100）。" },
-    { "id": "can_pressuredge", "displayName": "压差刃", "quality": "Legendary", "allowedWeapons": [1], "effect": "CritDamage", "amount": 0.8, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 152, "description": "暴击倍率 +80%（基础 200% → 280%）。只对真暴击的那一次生效。" },
-    { "id": "can_fullflow", "displayName": "满流阀", "quality": "Legendary", "allowedWeapons": [1], "effect": "FullHpBonus", "amount": 0.4, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 146, "description": "★特殊效果★ 满血时激光伤害倍率 ×(1+40%)；一旦掉血立刻消失，回满再回来。" },
-
-    { "id": "fert_pressure", "displayName": "增压药罐", "quality": "Common", "allowedWeapons": [2], "effect": "ExplodeRadius", "amount": 0.35, "stackRule": "Stackable", "maxStack": 2, "exclusivePerWeapon": false, "basePrice": 30, "description": "药罐加压。爆炸半径 +35%/层（基础 3m）——前摇标记与真正的爆炸读的是同一个值。" },
-    { "id": "fert_richmix", "displayName": "浓缩肥", "quality": "Common", "allowedWeapons": [2], "effect": "DamageFlat", "amount": 2, "stackRule": "Stackable", "maxStack": 3, "exclusivePerWeapon": false, "basePrice": 32, "description": "肥力更足。爆炸公式里的基础伤害（加法）+2/层。" },
-    { "id": "fert_quickfuse", "displayName": "速燃引信", "quality": "Uncommon", "allowedWeapons": [2], "effect": "AttackSpeed", "amount": 0.2, "stackRule": "Stackable", "maxStack": 3, "exclusivePerWeapon": false, "basePrice": 52, "description": "引信变短。攻速 +20%/层（投掷冷却 1.2s ÷(1+攻速)）。" },
-    { "id": "fert_blastweight", "displayName": "爆震配重", "quality": "Uncommon", "allowedWeapons": [2], "effect": "Knockback", "amount": 0.9, "stackRule": "Stackable", "maxStack": 3, "exclusivePerWeapon": false, "basePrice": 34, "description": "爆炸把敌人整体推出去。击退 +0.9/层（肥料是三条路里唯一按 1.0 全额吃击退的）。" },
-    { "id": "fert_split", "displayName": "分裂弹丸", "quality": "Rare", "allowedWeapons": [2], "effect": "ProjectileCount", "amount": 1, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 116, "description": "★攻击形式★ 一次投掷落 2 个爆炸点（第二个落在主落点外 2.5m），覆盖更宽。" },
-    { "id": "fert_echocan", "displayName": "回声药罐", "quality": "Epic", "allowedWeapons": [2], "effect": "BlastEcho", "amount": 0.5, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 140, "description": "◆大机制◆ 爆炸回声：第一次炸完原地再结算一次，第二段是第一次伤害的 50%。" },
-    { "id": "fert_scorch", "displayName": "焦土药", "quality": "Epic", "allowedWeapons": [2], "effect": "BurnOnHit", "amount": 0.4, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 128, "description": "◆大机制◆ 爆炸范围内的敌人一律点燃：灼烧量 = 本次伤害 ×40%。" },
-    { "id": "fert_coldsmoke", "displayName": "冷凝烟", "quality": "Uncommon", "allowedWeapons": [2], "effect": "ChillOnHit", "amount": 2, "stackRule": "Stackable", "maxStack": 3, "exclusivePerWeapon": false, "basePrice": 54, "description": "◇小机制◇ 爆炸范围内的敌人额外叠 2 层寒冷/层。" },
-    { "id": "fert_chainpowder", "displayName": "连锁火药", "quality": "Rare", "allowedWeapons": [2], "effect": "ChainOnHit", "amount": 2, "amount2": 0.4, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 122, "description": "◆大机制◆ 共振连锁：爆炸命中的每个目标再向最近 6m 内其它 2 个敌人溅射 40%。" },
-    { "id": "fert_fullcharge", "displayName": "满仓药罐", "quality": "Legendary", "allowedWeapons": [2], "effect": "FullHpBonus", "amount": 0.45, "stackRule": "Unique", "maxStack": 1, "exclusivePerWeapon": true, "basePrice": 150, "description": "★特殊效果★ 满血时爆炸伤害 ×(1+45%)；掉血即失效。" }
-  ]
+  {
+   "id": "fert_blackhole",
+   "nameEn": "Black Hole",
+   "displayName": "黑洞",
+   "quality": "S",
+   "allowedWeapons": [
+    2
+   ],
+   "effect": "BlackHole",
+   "amount": 0.0,
+   "amount2": 0.0,
+   "stackRule": "Unique",
+   "maxStack": 1,
+   "exclusivePerWeapon": false,
+   "basePrice": 36,
+   "description": "肥料炸开之前，先把附近的敌人吸向爆点。仅 1 层，不叠层。"
+  }
+ ],
+ "_note_v290": "★★ v290：本批 7 件（感电 / 狂暴 / 巨型 / 臭水沟 / 海浪 / 锋利 / 黑洞）★★ 数值的唯一真相在 **`Assets/Scripts/Combat/PluginExtra2.cs` 顶部常量区**（`ShockTargetsPerStack` / `FrenzyPctPerStack` / `GiantInnerRatio` / `SewerWaterPerDrop` / `WaveRadiusBase` …）—— 本表这 7 件的 `amount / amount2` 只是**镜像值**（给策划读、给 UI 读），**运行时不读它们**：`WeaponSystem.Aggregate` 对这 7 个 effect 直接搬代码常量（用户规格：「数值参数集中在一处（`PluginExtra2` 顶部常量）…因为新 effect 的参数还没进表」）。★ description 只写「功能 + 可叠层数」，不写任何百分比 / 米数 / 秒数（工程既有规矩，v285）。★ 唯一件（`stackRule: Unique` + `maxStack: 1`）写「仅 1 层，不叠层。」，与 hoe_burn / can_slow / fert_ward 同形。"
 }

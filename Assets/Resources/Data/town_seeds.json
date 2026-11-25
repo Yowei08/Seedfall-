@@ -1,0 +1,19 @@
+{
+  "_note": "★★ 主城（Town）专属种子表 —— 与战斗侧 Assets/Resources/Data/seeds.json 完全独立 ★★ 本表只被 Assets/Scripts/Town/TownData.cs 读，战斗侧（SeedDef / TableDatabase / FarmGrid）一个字段都不读它，主城也不读 seeds.json。两张表的 key 不共享：本表 id 一律以 town_ 开头，避免与战斗种子的 id 撞键。",
+  "_note_三数值": "★★ 每个种子恰好三个玩法数值（用户原话：每种三个数值：成熟时间 / 主城金币提供量 / 等级 1~3 级）★★ ① growSeconds = 成熟时间（秒）② goldPerSecond = 主城金币提供量（每秒）③ level = 等级（1~3）。grade（品质 D/C/B/A）是第四个展示用维度，与战斗侧的 D/C/B/A/S 五档不是同一套 —— 它只影响 HUD 上的一行字与仓库排序，不参与任何算式（理由：主城不结算收割，品质若参与算式就会变成第四个数，与三个数值的说法冲突）。",
+  "_note_产金规则": "★★ 产金规则（TownState.Advance 是唯一实现）★★ ① 每块地各自计时：elapsed += dt。② 只要地块上有作物，每秒就按 goldPerSecond 结算金币（恒定，不看成熟与否），用 double 累加、满 1 才入账（避免逐帧取整把 0.4 抹成 0）。③ elapsed >= growSeconds 的瞬间记为成熟，成熟时返还 1 颗同类种子到仓库（仓库该种已达 99 则作废）—— 这是我自己定的规则，写在交付里；它存在的理由：不为成熟时间编一个凭空的收益倍率，而让成熟时间真的影响玩法（长周期 = 长回本周期，短周期 = 可以反复回种）。④ 换种 / 铲除 = 清空 elapsed 与成熟标记，不退还种子（换种是覆盖，不是回收）。",
+  "_note_等级与售价": "★★ level 的用途：商业街售价（town_shop.json 的 price 按等级阶梯写死）与仓库排序，不乘任何倍率 ★★ 为什么不让 level 乘产量：那会与三个数值中的金币量重复表达同一条强度轴；现在的分工是 goldPerSecond 管收益、growSeconds 管节奏、level 管价格与稀有度。",
+  "_note_颜色": "★★ color 是 8 种互不相同的十六进制色（Hue 大致均分一圈），它同时喂给 ① 田里那株程序化方块作物的材质（ToonLook.Get 共享材质池，8 个色 = 8 份材质，36 块地共用）② HUD 里种子行的色块 ③ 小地图上该地块的小格。⇒ 光看田、看 UI、看小地图，三处的颜色逐位同源，不会出现田里是紫的、UI 上写蓝的这种错位。",
+  "_note_尺寸": "★ size = 成熟时作物的高度（米）。程序化作物按 0.42~1.05 米做，比 1.20 米的豆豆人矮一点 ⇒ 玩家站在田里不会被作物挡住视线。",
+  "_note_回收价": "★★ v214：sellPrice = **商店「收种子」分页的回收价**（每颗多少主城金币）★★ 用户原话：「商店可以让玩家把不要的主城种子换金币」。口径 = 如果它还摆在货架上卖，卖价的 30~50%（v213 的旧卖价 40/60/120/200/350/520/800/1200 ⇒ 回收 16/25/50/85/150/220/340/500，比例 40.0%~42.9%）。为什么不是 100%：回收价等于卖价就能「买了再卖」无限刷（虽然这一版商店已经不卖种子了，但这条防线要留住）；为什么不是 10%：那玩家宁可把多余种子烂在仓库里，回收页就没人用了。这个数只在 `TownState.SellSeed` 里用，**不参与产金、不参与成熟** ✓",
+  "seeds": [
+    { "id": "town_radish",  "name": "赤玉萝卜", "grade": "D", "level": 1, "growSeconds": 600, "goldPerSecond": 1.0, "color": "#E2564D", "size": 0.42, "sellPrice":  16 },
+    { "id": "town_wheat",   "name": "金穗麦",   "grade": "D", "level": 1, "growSeconds": 600, "goldPerSecond": 1.4, "color": "#E9C25A", "size": 0.55, "sellPrice":  25 },
+    { "id": "town_pea",     "name": "青豆荚",   "grade": "C", "level": 1, "growSeconds": 900, "goldPerSecond": 2.0, "color": "#6FC13C", "size": 0.62, "sellPrice":  50 },
+    { "id": "town_pumpkin", "name": "暖橙瓜",   "grade": "C", "level": 2, "growSeconds": 900, "goldPerSecond": 2.8, "color": "#F08A2E", "size": 0.70, "sellPrice":  85 },
+    { "id": "town_grape",   "name": "紫藤珠",   "grade": "B", "level": 2, "growSeconds": 1200, "goldPerSecond": 3.8, "color": "#9B59D0", "size": 0.78, "sellPrice": 150 },
+    { "id": "town_berry",   "name": "深蓝莓",   "grade": "B", "level": 2, "growSeconds": 1200, "goldPerSecond": 4.8, "color": "#3F8FE0", "size": 0.86, "sellPrice": 220 },
+    { "id": "town_lotus",   "name": "碧水莲",   "grade": "A", "level": 3, "growSeconds": 1500, "goldPerSecond": 6.5, "color": "#33D6C8", "size": 0.95, "sellPrice": 340 },
+    { "id": "town_crystal", "name": "幻晶花",   "grade": "A", "level": 3, "growSeconds": 1500, "goldPerSecond": 8.5, "color": "#F06AB4", "size": 1.05, "sellPrice": 500 }
+  ]
+}

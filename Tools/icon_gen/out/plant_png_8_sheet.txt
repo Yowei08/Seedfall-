@@ -1,0 +1,8 @@
+dusk_berry    暮莓     D:\Unity\project\Seedfall守园者\Assets\Resources\Art\UI\icon_plant_dusk_berry.png
+tide_gourd    潮瓜     D:\Unity\project\Seedfall守园者\Assets\Resources\Art\UI\icon_plant_tide_gourd.png
+hollow_vine   空藤     D:\Unity\project\Seedfall守园者\Assets\Resources\Art\UI\icon_plant_hollow_vine.png
+dune_cactus   沙掌     D:\Unity\project\Seedfall守园者\Assets\Resources\Art\UI\icon_plant_dune_cactus.png
+harvest_bell  丰收铃    D:\Unity\project\Seedfall守园者\Assets\Resources\Art\UI\icon_plant_harvest_bell.png
+star_ladder   星梯     D:\Unity\project\Seedfall守园者\Assets\Resources\Art\UI\icon_plant_star_ladder.png
+elder_oak     古木     D:\Unity\project\Seedfall守园者\Assets\Resources\Art\UI\icon_plant_elder_oak.png
+quick_reed    疾苇     D:\Unity\project\Seedfall守园者\Assets\Resources\Art\UI\icon_plant_quick_reed.png

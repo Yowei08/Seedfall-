@@ -1,0 +1,51 @@
+{
+  "generator": "Tools/mesh_gen/gen_v180_fx_meshes.py",
+  "runtime_source": "Assets/Scripts/Bootstrap/WorldView.cs",
+  "runtime_functions": [
+    "FxBladeMesh",
+    "FxRingMesh",
+    "Quad"
+  ],
+  "shading": "flat（每面拆顶点）+ 双面（每四边形正反各发一遍）",
+  "meshes": {
+    "fx_blade": {
+      "quads": 80,
+      "tris": 320,
+      "verts": 960,
+      "params": {
+        "segs": 20,
+        "inner": 0.62,
+        "outer": 1.0,
+        "thick_in": 0.055,
+        "thick_out": 0.004,
+        "half_deg": 55.0,
+        "quads_per_seg": 4
+      }
+    },
+    "fx_ring36": {
+      "quads": 36,
+      "tris": 144,
+      "verts": 432,
+      "params": {
+        "segs": 36,
+        "inner_ratio": 0.86,
+        "quads_per_seg": 1
+      }
+    },
+    "fx_ring30": {
+      "quads": 30,
+      "tris": 120,
+      "verts": 360,
+      "params": {
+        "segs": 30,
+        "inner_ratio": 0.86,
+        "quads_per_seg": 1
+      }
+    }
+  },
+  "purpose": {
+    "fx_blade": "锄头挥击的刃形（替掉原来的扇形面片 ArcMesh）",
+    "fx_ring36": "地面边界圈 / 肥料前摇环（替掉填充圆盘）",
+    "fx_ring30": "插件冲击环 / 水柱命中环（替掉实心圆柱）"
+  }
+}

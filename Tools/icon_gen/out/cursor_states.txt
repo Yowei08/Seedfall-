@@ -1,0 +1,7 @@
+# Seedfall v203 光标清单（3 张 = 默认 / 悬停 / 按下）
+# 规范：48×48 透明底 / ≤6 色 / 2px 暖灰描边 #3A3A38 / 高光 #F2EFE6 / 硬边(alpha 0|255)
+# 热点：(4, 6) —— 铲尖像素，原点左上；三态同一个热点
+# 写入：Assets/Resources/Art/UI/cursor_<state>.png
+default  bbox 36×36  6 色  最靠前不透明像素 (4, 6)
+hover    bbox 36×39  6 色  最靠前不透明像素 (4, 6)
+press    bbox 36×36  6 色  最靠前不透明像素 (4, 8)

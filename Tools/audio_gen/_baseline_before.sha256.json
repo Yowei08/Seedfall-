@@ -1,0 +1,167 @@
+﻿[
+    {
+        "name":  "bgm_combat.wav",
+        "sha256":  "63247ec9df5661029b423be8a1ca80a735f4e7d27f7bcc88ad2cfb8c5ac7cc53",
+        "bytes":  10263316
+    },
+    {
+        "name":  "bgm_farm_day.wav",
+        "sha256":  "160a93349dcb030460c92c2697a0412f52f1bb7479ab213156ba3e7a93020c8b",
+        "bytes":  16128044
+    },
+    {
+        "name":  "bgm_night.wav",
+        "sha256":  "6c539ff9e20e57782371004eb03a4a308d475227a596d6a706f7b28d5e70cbb4",
+        "bytes":  15394952
+    },
+    {
+        "name":  "sfx_blast.wav",
+        "sha256":  "fd915b8bd02b932b40de1598e79320d27c264a00a5e7f3b9e328e9649d08cc56",
+        "bytes":  158804
+    },
+    {
+        "name":  "sfx_coin.wav",
+        "sha256":  "abdaf94159c2dc036568fee01473591040c06e1e137bebcf7d292f0b35d5f258",
+        "bytes":  38852
+    },
+    {
+        "name":  "sfx_defeat.wav",
+        "sha256":  "dfcec3534e9b7a387961db9fec3df1244e64532f2bc71759ade91a166e84abd2",
+        "bytes":  211724
+    },
+    {
+        "name":  "sfx_enemy_die.wav",
+        "sha256":  "4c1f5eaf8f99a66c3aa1bcfb9fa304b67a177dd44837315258bf9bbb9336d320",
+        "bytes":  61784
+    },
+    {
+        "name":  "sfx_enemy_spawn.wav",
+        "sha256":  "1c921483a7a16da41552d58343a07776400bb69d2c6a67f6d1ee0d308d3220b9",
+        "bytes":  70604
+    },
+    {
+        "name":  "sfx_harvest.wav",
+        "sha256":  "bca03ec947e90deb16774f9b2e3d977171c9248c70a6ce404adf54a44af84ffc",
+        "bytes":  70604
+    },
+    {
+        "name":  "sfx_hoe_hit.wav",
+        "sha256":  "20f5be7d79d2fffa5a595a2e688fd680bb64eb12c0655f6de6fed36d4f40cc6e",
+        "bytes":  22092
+    },
+    {
+        "name":  "sfx_hoe_swing.wav",
+        "sha256":  "95b124dc7f8867beb8f4ef68c34d0f0b125f8e02c313309522a0530b96c435f4",
+        "bytes":  32676
+    },
+    {
+        "name":  "sfx_interact.wav",
+        "sha256":  "39fe6bb04783e91dcbe4666de29103558c3c91385cf3d5e123a69d44d089a71b",
+        "bytes":  44144
+    },
+    {
+        "name":  "sfx_laser.wav",
+        "sha256":  "8e91703319640256b01bd0c479a564e07004c2546ae5882a705338b77089398c",
+        "bytes":  36204
+    },
+    {
+        "name":  "sfx_levelup.wav",
+        "sha256":  "4d19b9019884ffb0065f20078c8169368032c3c928b029478707142c2c82fc31",
+        "bytes":  158804
+    },
+    {
+        "name":  "sfx_pl_autocharge.wav",
+        "sha256":  "5ff8ace750b791b590ea399ef38dd1628f13557eef96f5f32056efc1dcbd3ff1",
+        "bytes":  56492
+    },
+    {
+        "name":  "sfx_pl_burn.wav",
+        "sha256":  "1f1f950c8127899040e28998ed139f6faba0eb9ad7d69287d03f9bbfcd3b393d",
+        "bytes":  44144
+    },
+    {
+        "name":  "sfx_pl_chain.wav",
+        "sha256":  "08cc9f25bae43b51a4f5db2886c35daf0c9cd3ea2d94e0f07270e01362fa24e0",
+        "bytes":  46788
+    },
+    {
+        "name":  "sfx_pl_doublestrike.wav",
+        "sha256":  "22d6257f498488e0522d5794cff1083ad7e21f2690b01ad087df82fd17bfe3e4",
+        "bytes":  34444
+    },
+    {
+        "name":  "sfx_pl_freeburst.wav",
+        "sha256":  "81555816e74736ba4eb4ef154f8272e1d6758826e8dfc5d3fa5d5390ea1b5a55",
+        "bytes":  23860
+    },
+    {
+        "name":  "sfx_pl_lifesteal.wav",
+        "sha256":  "39f3bd0945f5ad4185c7cae3e73af660fad5fc08439588a6d2631360f6eb1b25",
+        "bytes":  54728
+    },
+    {
+        "name":  "sfx_pl_multijet.wav",
+        "sha256":  "bef76a19f8123c7b9ecb210211afe271121744a0f1c01a6426db3aa1d48db3f1",
+        "bytes":  41500
+    },
+    {
+        "name":  "sfx_pl_poison.wav",
+        "sha256":  "de4e758a830dc7129951ce06268f7bbee266c7d0e7973edfeef537cd0fb7533e",
+        "bytes":  49436
+    },
+    {
+        "name":  "sfx_pl_slow.wav",
+        "sha256":  "0c32eb46dcdd595815ecf5fec18ea5e1de52e50e1e74fe37f2a14296ec43fc6b",
+        "bytes":  52084
+    },
+    {
+        "name":  "sfx_pl_subburst.wav",
+        "sha256":  "6ace8ff135a1948f04488bbec5108cc33cd70dc8227430d20ae7e6ce0fa4f4b1",
+        "bytes":  37972
+    },
+    {
+        "name":  "sfx_pl_swordwave.wav",
+        "sha256":  "a7dfd6c6e8d94d15636b078f925082c8abb463491f9e9b770ac94b508af8b4bd",
+        "bytes":  27388
+    },
+    {
+        "name":  "sfx_pl_thickjet.wav",
+        "sha256":  "bad632f0ce4d8d94d235ae987a34bca2b24f8c62853b1d1653959e3b2d6a16ec",
+        "bytes":  30912
+    },
+    {
+        "name":  "sfx_plant.wav",
+        "sha256":  "828ec39eb47dfdf124df7b9196867ed5b7a2a9a786c50837ad54cb4497397a41",
+        "bytes":  44144
+    },
+    {
+        "name":  "sfx_purchase.wav",
+        "sha256":  "b3ea6a4f8b7a609581a155d96e718f886e0e1767ec5ea78589987397669d993a",
+        "bytes":  70604
+    },
+    {
+        "name":  "sfx_shop_open.wav",
+        "sha256":  "afa256bd4a533ae32793bab8282a91f66ff3d046cebd0358d90b1cb8202c1cab",
+        "bytes":  88244
+    },
+    {
+        "name":  "sfx_ui_click.wav",
+        "sha256":  "08e51d900f99559d5d3e938ddf51d3e0a4a144da54e9bbdd83f27cf0471b3aca",
+        "bytes":  10628
+    },
+    {
+        "name":  "sfx_ui_hover.wav",
+        "sha256":  "c286496a75665a8d49590353c75a628fdaec8a9b8be409c6246c15d8a7faff81",
+        "bytes":  7452
+    },
+    {
+        "name":  "sfx_water.wav",
+        "sha256":  "4b8ed532e42d8a2754b2e90bc0425f5cbcb55049d0d2e120fdfa75ae04b7dfec",
+        "bytes":  52964
+    },
+    {
+        "name":  "sfx_water_low.wav",
+        "sha256":  "ca2e1f249f1c04be2c6bd831b1d0ffde6a52a872a507c435b80fefd8afe7639f",
+        "bytes":  91772
+    }
+]

@@ -6,7 +6,16 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Login.unity
+    guid: 1e457af16027667459168d88068fa0cd
+  - enabled: 1
     path: Assets/Scenes/SeedfallArena.unity
     guid: d92ad0950073d6a4f83e5fcb07b514f3
+  - enabled: 1
+    path: Assets/Scenes/Town.unity
+    guid: 1c01808478dc4864fa4e00135a05ccd4
+  - enabled: 1
+    path: Assets/Scenes/Training.unity
+    guid: ff22a50fbc424a5fa08b180b21d9f34e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

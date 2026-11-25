@@ -20,7 +20,7 @@ import os
 import sys
 import math
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 OUT_DIR = r"D:\Unity\project\Seedfall守园者\Assets\Resources\Art\UI"
 
@@ -39,6 +39,16 @@ WATER = (102, 168, 216, 255)
 FERT = (217, 138, 60, 255)
 EXP = (150, 200, 110, 255)
 WHITE = (255, 255, 255, 255)
+
+# ── v220：面板外投影的参数（九宫格 + 阴影共用一份，改这里就改全局观感）──
+#   SHADOW_INSET = 本体离画布边的距离（= 阴影最外圈的厚度）
+#   画布 = 本体 + 2×INSET ⇒ 80 = 64 + 16
+SHADOW_INSET = 6
+SHADOW_ALPHA = 52       # 阴影最深处的不透明度（0..255）；52 ≈ 20%
+                        #   第一版用 78（30%）+ inset 8：实测在 1920 宽下成了一条硬邦邦的暗边 ✗
+                        #   九宫格会把"边"那条 1px 拉伸成整条边 ⇒ 影子必须够淡，否则就是描了个黑框
+SHADOW_BLUR = 2.4       # 柔化半径（像素）—— 需求写的是「1~2px 柔化」
+SHADOW_DY = 1           # 光源在左上 ⇒ 阴影整体下沉 1px（2px 时下沿明显偏重）
 
 
 def ensure_dir():
@@ -72,6 +82,57 @@ def ninepatch(name, size, border, fill, edge, ink=INK, radius=None, top_hl=True)
     if top_hl:
         # 顶部一道浅高光，让面板有厚度
         d.line([(r, inset + 2), (size - r, inset + 2)], fill=(255, 255, 255, 70), width=2)
+    return save(img, name)
+
+
+# ---------------------------------------------------------------- 面板外投影（v220）
+def ninepatch_shadow(name, body_size, radius, fill, edge, ink=INK,
+                     inset=SHADOW_INSET, alpha=SHADOW_ALPHA, blur=SHADOW_BLUR, dy=SHADOW_DY):
+    """
+    ★「面板外投影」★ —— 用户需求："UI 高级化处理"，面板要有**外投影**、1~2px 柔化。
+
+    为什么要改贴图、而不是在画的时候先画一个影子框：
+      面板是用 `GUI.Box(rect, none, UiSkin.PanelStyle)` 画的（九宫格），
+      调用点在 `LoginHud`/`ImGuiHud` 里 —— 那些目录本轮**禁改**。
+      九宫格样式唯一的抓手就是**贴图本身**，所以把影子**烘进贴图**：
+        · 画布放大到 `本体 + 2×inset`（80 = 64 + 16）
+        · 本体仍然画在画布正中、仍是 64px、圆角仍是 18px ⇒ **本体看着和改前一模一样**
+        · 外圈 8px 是一条高斯柔化的黑影（下沉 2px，光源在左上）
+        · `UiSkin` 的 border 相应从 18 改成 26（= 8 + 18），九宫格拉伸区不变形
+
+    这样做的结果是**观感变、布局不变**：
+      绘制用的 `Rect` 一个都没动，本体在 Rect 里内缩 8px（四周各 8px 被影子占掉），
+      而文字的绘制矩形由调用方画在别处（`GUI.Box` 传的是 `GUIContent.none`）⇒ 文字位置不变 ✓
+    """
+    size = body_size + inset * 2
+
+    # ① 影子：把本体形状画成白块 → 高斯模糊 → 当黑色蒙版的 alpha
+    mask = Image.new("L", (size, size), 0)
+    md = ImageDraw.Draw(mask)
+    md.rounded_rectangle([inset, inset + dy, size - 1 - inset, size - 1 - inset + dy],
+                         radius=radius, fill=255)
+    mask = mask.filter(ImageFilter.GaussianBlur(blur))
+    mask = mask.point(lambda v: int(v * alpha / 255))
+
+    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    shadow = Image.new("RGBA", (size, size), (16, 12, 8, 255))
+    shadow.putalpha(mask)
+    img = Image.alpha_composite(img, shadow)
+
+    # ② 本体：与 `ninepatch` 同一套画法，只是整块搬到 inset 里面
+    d = ImageDraw.Draw(img)
+    x0, y0, x1, y1 = inset, inset, size - 1 - inset, size - 1 - inset
+    d.rounded_rectangle([x0, y0, x1, y1], radius=radius, fill=fill,
+                        outline=edge, width=3)
+    ring = max(3, radius // 5)
+    d.rounded_rectangle([x0 + ring, y0 + ring, x1 - ring, y1 - ring],
+                        radius=max(1, radius - ring), outline=ink, width=1)
+    # 顶部高光（凸起感）+ 底部内阴影（厚度）：一升一降，面板才不像一张纸
+    d.line([(x0 + radius, y0 + 3), (x1 - radius, y0 + 3)], fill=(255, 255, 255, 88), width=2)
+    d.line([(x0 + radius, y1 - 3), (x1 - radius, y1 - 3)], fill=(0, 0, 0, 46), width=2)
+    # 外缘一道极薄的亮线：把面板从背景里"拎"出来（高级感的来源）
+    d.rounded_rectangle([x0 - 1, y0 - 1, x1 + 1, y1 + 1], radius=radius + 1,
+                        outline=(255, 255, 255, 30), width=1)
     return save(img, name)
 
 
@@ -229,12 +290,15 @@ def icon(name, kind):
 # ---------------------------------------------------------------- 入口
 def build_all():
     ensure_dir()
-    # 面板：亮/暗两套（HUD 用亮，商店与菜单用暗）
-    ninepatch("panel", 64, 18, CREAM, WOOD)
-    ninepatch("panel_dark", 64, 18, SLATE, SLATE_L, ink=(20, 18, 15, 255))
-    ninepatch("card", 64, 16, (250, 244, 228, 255), (200, 170, 120, 255))
+    # ── 面板：v220 起带「外投影」──
+    #   本体 64px / 圆角 18px 不变，画布 80px，外圈 8px 是柔化黑影
+    #   ⇒ UiSkin 的 border 必须同步改成 8+18 = 26（见 Scripts/Art/UiSkin.cs）
+    ninepatch_shadow("panel", 64, 18, CREAM, WOOD)
+    ninepatch_shadow("panel_dark", 64, 18, SLATE, SLATE_L, ink=(20, 18, 15, 255))
+    ninepatch_shadow("card", 64, 16, (250, 244, 228, 255), (200, 170, 120, 255))
 
-    # 按钮三态
+    # 按钮三态：**不加影子**（按钮的标签是 GUI.Button 连着样式一起画的，
+    # 加内缩会把文字推走 = 改布局 ✗）。只加"底边压暗 + 顶边提亮"的厚度感。
     ninepatch("button", 48, 14, (228, 210, 176, 255), WOOD)
     ninepatch("button_hover", 48, 14, (246, 226, 160, 255), (176, 128, 62, 255))
     ninepatch("button_press", 48, 14, (198, 178, 142, 255), WOOD_D)
@@ -270,9 +334,9 @@ if __name__ == "__main__":
         ensure_dir()
         for a in args:
             if a == "panel":
-                ninepatch("panel", 64, 18, CREAM, WOOD)
-                ninepatch("panel_dark", 64, 18, SLATE, SLATE_L, ink=(20, 18, 15, 255))
-                ninepatch("card", 64, 16, (250, 244, 228, 255), (200, 170, 120, 255))
+                ninepatch_shadow("panel", 64, 18, CREAM, WOOD)
+                ninepatch_shadow("panel_dark", 64, 18, SLATE, SLATE_L, ink=(20, 18, 15, 255))
+                ninepatch_shadow("card", 64, 16, (250, 244, 228, 255), (200, 170, 120, 255))
             elif a == "button":
                 ninepatch("button", 48, 14, (228, 210, 176, 255), WOOD)
                 ninepatch("button_hover", 48, 14, (246, 226, 160, 255), (176, 128, 62, 255))

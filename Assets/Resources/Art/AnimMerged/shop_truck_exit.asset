@@ -36,7 +36,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -61,7 +61,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1816,31 +1816,6 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: 0.74, y: -1.25, z: 1.95}
-        inSlope: {x: 0, y: 0, z: 0}
-        outSlope: {x: 0, y: 0, z: 0}
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
-        outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
-      - serializedVersion: 3
-        time: 2.4583333
-        value: {x: 0.74, y: -1.25, z: 1.95}
-        inSlope: {x: 0, y: 0, z: 0}
-        outSlope: {x: 0, y: 0, z: 0}
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
-        outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    path: AwningPosts_shop_truck
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
         value: {x: -0, y: -0.9, z: 2.34}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
@@ -1861,6 +1836,31 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     path: Bob_shop_truck/Awning_shop_truck
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: {x: 0.74, y: -1.25, z: 1.95}
+        inSlope: {x: 0, y: 0, z: 0}
+        outSlope: {x: 0, y: 0, z: 0}
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
+        outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
+      - serializedVersion: 3
+        time: 2.4583333
+        value: {x: 0.74, y: -1.25, z: 1.95}
+        inSlope: {x: 0, y: 0, z: 0}
+        outSlope: {x: 0, y: 0, z: 0}
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
+        outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    path: AwningPosts_shop_truck
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -2696,7 +2696,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -2721,7 +2721,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -3020,7 +3020,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 2041131555
+      path: 3430016764
       attribute: 1
       script: {fileID: 0}
       typeID: 4
@@ -3029,7 +3029,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 3430016764
+      path: 2041131555
       attribute: 1
       script: {fileID: 0}
       typeID: 4
@@ -3101,7 +3101,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 2041131555
+      path: 3430016764
       attribute: 2
       script: {fileID: 0}
       typeID: 4
@@ -3110,7 +3110,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 3430016764
+      path: 2041131555
       attribute: 2
       script: {fileID: 0}
       typeID: 4
@@ -3155,7 +3155,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 2041131555
+      path: 3430016764
       attribute: 3
       script: {fileID: 0}
       typeID: 4
@@ -3164,7 +3164,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 3430016764
+      path: 2041131555
       attribute: 3
       script: {fileID: 0}
       typeID: 4
@@ -3259,7 +3259,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 1
+    m_StopTime: 2.4583335
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -3301,7 +3301,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3331,7 +3331,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3361,7 +3361,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3391,7 +3391,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3401,7 +3401,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.74
+        value: -0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3410,7 +3410,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2.4583333
-        value: 0.74
+        value: -0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3421,7 +3421,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3431,7 +3431,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -1.25
+        value: -0.9
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3440,7 +3440,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2.4583333
-        value: -1.25
+        value: -0.9
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3451,7 +3451,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3461,7 +3461,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1.95
+        value: 2.34
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3470,7 +3470,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2.4583333
-        value: 1.95
+        value: 2.34
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3481,7 +3481,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3511,7 +3511,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.x
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3541,7 +3541,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.y
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3571,7 +3571,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.z
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3601,7 +3601,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3631,7 +3631,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3661,7 +3661,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3691,7 +3691,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3701,7 +3701,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0
+        value: 0.74
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3710,7 +3710,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2.4583333
-        value: -0
+        value: 0.74
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3721,7 +3721,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3731,7 +3731,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.9
+        value: -1.25
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3740,7 +3740,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2.4583333
-        value: -0.9
+        value: -1.25
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3751,7 +3751,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3761,7 +3761,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 2.34
+        value: 1.95
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3770,7 +3770,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 2.4583333
-        value: 2.34
+        value: 1.95
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -3781,7 +3781,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3811,7 +3811,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.x
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3841,7 +3841,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.y
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3871,7 +3871,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.z
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -14441,7 +14441,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -14471,7 +14471,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -14501,7 +14501,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: Bob_shop_truck/Awning_shop_truck
+    path: AwningPosts_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -15728,7 +15728,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -15758,7 +15758,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -15788,7 +15788,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: AwningPosts_shop_truck
+    path: Bob_shop_truck/Awning_shop_truck
     classID: 4
     script: {fileID: 0}
     flags: 0

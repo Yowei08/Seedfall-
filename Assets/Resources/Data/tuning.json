@@ -1,282 +1,494 @@
 {
-  "player": {
-    "maxHp": 10.0,
-    "shield": 2.0,
-    "explodeDamage": 2.5,
-    "explodeRange": 100,
-    "meleeDamage": 1,
-    "rangedDamage": 1,
-    "blastDamage": 1,
-    "atkMult": 1.0,
-    "critRate": 0,
-    "critDmg": 2.0,
-    "atkSpeed": 1.0,
-    "atkRange": 1.0,
-    "moveSpeed": 5.5,
-    "dodge": 0.0,
-    "maxPlots": 6,
-    "knockback": 0.6,
-    "startGold": 25,
-    "expMult": 1.0,
-    "goldMult": 1.0,
-    "luck": 0.0,
-    "heartDropRate": 0,
-    "heartHeal": 3.0,
-    "invulnTime": 0.6,
-    "shieldRegenPct": 0.1,
-    "shieldRegenMin": 1.0,
-    "shieldRegenDelay": 10.0
+ "player": {
+  "_note_v192_hpunit": "★★ v192（用户需求②『敌人伤害处理，全部转换为整数』）：**玩家血量与敌人伤害共用的整数单位 = 10** ★★ 病因：敌人伤害在改前是**小数**（第 1 分钟：基础兵触碰 0.455 / 远程弹 0.303 / 精英砸地 0.607），而 `Round(0.455)` = **0** ⇒ 直接取整会让敌人**打不动玩家** ✗ ⇒ 先把玩家血池整体放大 10 倍（`maxHp 10 → 100`、`shield 2 → 20`、`heartHeal 3 → 30`、`growth.hpPerLevel 1 → 10`、道具/抽卡的 MaxHp·Shield·HeartHeal 也 ×10），敌人伤害则按 `Round(曲线值 × hpUnit)` 落成**整数点**（第 1 分钟六个值见 `ProbeV192Num`）✗ 1 点旧血量 = 10 个新血点 ⇒ 比例与改前逐项相同（只有四舍五入的 ±0.05 点误差）✓ 唯一读取点：`EnemyDef.PlayerHpUnit` / `EnemyDef.PlayerDamagePoints`（Defs.cs）＋ `DamageResolver.Resolve` 对**玩家**的伤害取整 ＋ 两处『按敌人伤害比例回血』（吸血 / 毒系回血）乘同一个单位 ✓ 敌人 HP 与玩家武器伤害**一个字节没动**（所以『开局一刀死』『20 分钟 80 血』等既有断言全部不变）✓",
+  "_note_v195_revert": "★★ v195（用户原话：『回调各种数值，玩家血量恢复到10，护盾2 … 抽卡提供数值，生命2，护盾2，近战伤害、远程伤害、爆炸伤害都为1，爱心恢复量3』）：**血池与度量单位一起回调** ★★ `hpUnit 10 → **1**`、`maxHp 100 → **10**`、`shield 20 → **2**`、`heartHeal 30 → **3**`、`growth.hpPerLevel 10 → **1**` ⇒ 『曲线值 → 血点』重新退化成**恒等换算**（`Round(曲线值 × 1)`）✓ ★ 为什么三样必须一起动 ★ 只改 maxHp 而不改 hpUnit ⇒ 敌人伤害还要再 ×10 才能打到 10 血的玩家（`Round(4.55) = 5` 变成 `Round(0.455) = 0`）⇒ 敌人**打不动人** ✗ 只改 hpUnit 而不改 maxHp ⇒ 45 点打 100 血（三下死）✗ 三者是同一个刻度的三个面，必须同改 ✓ ★ 唯一读取点：`EnemyDef.PlayerHpUnit` / `PlayerDamagePoints`（含 `Mathf.Max(1, …)` 的**至少 1 点**下限 —— 小数曲线值取整后不允许变成 0 ✗），以及两处『按敌人伤害比例回血』（毒系回血 / 吸血）乘同一个单位 ✓ 自检里凡是用 `EnemyDef.PlayerHpUnit` 写期望值的断言**自动跟着变**（这是 v192 当时刻意留下的写法）✓",
+  "_note_v194_unit_legacy": "★★ v194（已被 v195 推翻，留档）：hpUnit 保持 10、血池 100/20、敌人 base ×10 ★★ 那条路线的后果是『第 1 分钟小兵一击 45 血点（血 100 ⇒ 三下死）、第 4 分钟起一下致死、BOSS 第 10 分钟一下秒杀』—— 用户已接受过，但 v195 的『大数字回调』把它整体撤回 ✓ 留档的用途：任何一份 v194 的读数 ×10 后仍可与本版对照 ✓",
+  "_note_v196_fraction": "★★ v196（用户原话：『玩家伤害不再转换为整数，允许小数』）：**取整只留在「敌人→玩家」这一侧** ★★ ── 改前（v194/v195）── `HealthPool.ApplyDamageSplit` 里有一句**无条件**的 `amount = Mathf.Max(1f, Mathf.Round(amount))`，而它是**全工程唯一**把伤害写进血/盾的地方 ⇒ 玩家打出去的小数伤害也被抬成整数 ✗ 实测：锄头 `(4 + 0.55) × 1.0 = 4.55` 打 800 血的怪实扣 **5**、毒跳伤 `0.15 × 125 = 18.75` 实扣 **19** ✗ ── 改后 ── 同一个函数多一个判断：`HealthPool.IntegerOnly` ⇒ 玩家池 `true`（仍是 `max(1, round(x))`，与改前**逐位相同**）、敌人池 `false`（**小数原样进池**，一位不动）✓ 这个布尔的唯一写者是 `Actor` 的构造函数（`Health.IntegerOnly = this is PlayerActor;` 一行）—— 依据是**结构事实**：本作里玩家只挨敌人的、敌人只挨玩家的（含玩家造成的毒 / 火 / 破冰 / 灼烧溅射 / 剑气流）⇒ 『池的归属』就是『伤害的来源』✓ ── 弹字 ── `Actor.Popup` 同样分两档：玩家挨打 ⇒ 整数（`-5`），敌人挨打 ⇒ **`0.##`**（`-4.55` / `-18.75` / `-800`；整数不带小数点、一位小数只印一位）✓ `-0` 仍然**不可能出现**：入口门槛 `PopupMinAmount = 0.05` 比 `0.##` 的半个最小单位 0.005 大一个数量级 ⇒ 印出来最短是 `-0.05` ✓ ── 为什么不用「传进来的 amount 是不是整数」来分档 ── 那是**数据驱动**的判据：一个正好 4.0 的小数侧伤害会被误判成整数档 ✗ 判据必须是**来源**（谁在挨打）✓ ── 读数（探针 `ProbeV196Num` ②）── 4.55 打 800 血怪 ⇒ 血 800 → 795.45（实扣 4.55）、弹字 `-4.55`；同一个 4.55 打 10 血玩家 ⇒ 实扣 **5 血点**、弹字 `-5`；毒 / 火跳伤 **18.75 不取整**；破冰 `1.2 × 50 = 60` ✓ ── 伤害**刻度**一个字节没动 ── `hpUnit` 仍是 1、`maxHp` 10、`shield` 2、敌人三招 base 与伤害曲线全部原值 ⇒ v195 定下的『20 分钟 10 / 10 / 5 / 3 下致死』**逐条不变** ✓",
+  "hpUnit": 1.0,
+  "maxHp": 10.0,
+  "shield": 2.0,
+  "explodeRange": 100,
+  "meleeDamage": 0.0,
+  "rangedDamage": 0.0,
+  "blastDamage": 0.0,
+  "atkMult": 1.0,
+  "critRate": 0.05,
+  "critDmg": 1.5,
+  "atkSpeed": 1.0,
+  "atkRange": 1.0,
+  "moveSpeed": 5.5,
+  "dodge": 0.0,
+  "maxPlots": 6,
+  "knockback": 0.6,
+  "startGold": 25,
+  "expMult": 1.0,
+  "goldMult": 1.0,
+  "_note_v191_luck": "★★ v191（用户需求①）：幸运值 —— 百分比形式，初始 5% ★★ 它是 0..1 小数属性（与 critRate 同一套单位），已进 TableDatabase.IsFractionStat ⇒ 抽卡写 `{id:Luck, mode:Add, amount:3}` = +3 个百分点，写入时 /100 ✓ ★ 基底必须 > 0 ★：为 0 时任何 Percent 卡都是 `0 × (1+p) = 0`（死卡）⇒ 5% 既满足需求，也让两类卡都能用 ✓ 面板印 AddPoints(当前, 基底) = 百分点差 ⇒ 开局天然 +0% ✓ 消费者：World.HarvestPlot（收割时概率让金币与经验 ×2，用**派生哈希**掷签，不消费 World.Rng）✓",
+  "luck": 0.05,
+  "_note_v191_pig": "★★ v191（用户需求③）：小猪刷新率的初始**等级**（0..3，不是概率）★★ 与 heartDropRate 同构：等级查 TuningDef.PigRateByLevel 得 2%/4%/6%/8%，名字 低/中/高/MAX ✓ 0 = 低 = 2% ✓ ⚠️ waves.pigChance 那个键已删除（否则两处真相：一个不生效的 1%）✓",
+  "pigRate": 0,
+  "heartDropRate": 0,
+  "heartHeal": 3.0,
+  "invulnTime": 1.0,
+  "shieldRegenPct": 0.1,
+  "shieldRegenMin": 10.0,
+  "shieldRegenDelay": 5.0,
+  "_note_v192_minuteheal": "★★ v192（用户需求⑦『每分钟整点恢复玩家健康状态 —— 把回合遗留的 bug 变成机制』）：**整点回血比例（相对 maxHp）** ★★ 1.0 = 回满（= 改前 `ResetPlayerForNewWave` 里那句 `Heal(MaxHp)` 的**逐位等价**）⇒ 默认值不改平衡、只把它从『没人调的过程量』变成**可调机制** ✓ 消费点唯一：`RunSession.ResetPlayerForNewWave`（每 60 秒由 `Clock.WaveIndex > WaveIndex` 触发一次），同处在 `Bus.Publish(new MinuteHealEvent{...})` ⇒ 表现层（WorldView）订阅那个事件播全屏回血特效，本文件与逻辑层不认识任何特效 ✓ 0.25 = 每分钟回四分之一、0 = 关闭回血（护盾仍按 `RefillShield` 补满，那是同一句『健康状态恢复』的一部分）✓",
+  "minuteHealPercent": 1.0,
+  "_note_v193_heal0": "★★ v193（用户原话『每分钟触发一次的回血在0分钟（初始）不触发，增加条件判断』）：整点回血的**起算点**改成 t=60s —— 判据是 `RunSession.ResetPlayerForNewWave` 里的 `WaveIndex <= 1`（= 本局第 1 波）★★ 为什么**不是** `Clock.GameTime > 0f`：开局 `PhaseState.Prepare` 会吃掉真实时间（`tuning.shop.infinitePrepare = true` ⇒ 一直在等玩家选初始种子），实测真正的 `StartWave(1)` 落在 t≈2.5s ⇒ 时钟判据会在开局照样回一次血 ✗ 而『第 1 波』是本局的语义起点，与 Prepare 等了多久无关 ✓ ⚠️ 回血 / 回盾 / `MinuteHealEvent` 三句是**一起拦**的（第 1 波：0 次事件、0 次全屏特效）；而 `InvulnRemaining` / `HitFlash` / `SinceDamaged` 三句**不拦**（它们不是『补满血』）。本条只是记录，无游戏内数值可调 ✓"
+ },
+ "growth": {
+  "hpPerLevel": 1.0,
+  "shieldPerLevel": 0.0,
+  "levelsPerPlot": 0,
+  "_note_v209_expbase": "★★ v209（用户原话『降低前期升级需要经验值』）：**expBase 20 → 12** —— 只动『每一级的固定底』★★ 曲线 `round(expBase + 11·(L-1)^1.35)` 的另外两项 **一个字没动**（`expLinear = 11`、`expExponent = 1.35`），因为它们决定的是『后期有多陡』 ⇒ 动它们等于把后期一起降 ✗ 而用户要的是『前期』✓ 实算（改前 → 改后，降幅）：1→2 `20→12`（-40.0%）｜2→3 `31→23`（-25.8%）｜3→4 `48→40`（-16.7%）｜4→5 `68→60`（-11.8%）｜5→6 `91→83`（-8.8%）｜6→7 `117→109`（-6.8%）｜7→8 `144→136`（-5.6%）｜8→9 `172→164`（-4.6%）｜9→10 `202→194`（-4.0%）｜10→11 `234→226`（-3.4%）—— 到 10 级**累计 893 → 821（-8.1%）** ✓ 降幅随等级**单调收敛**（Lv20 只剩 -1.3%，L→∞ 趋 0）⇒ 『后期几乎不变』是公式结构保证的，不是靠调参凑的 ✓ 唯一读取点 `PlayerProgress.ExpToNextFor`（`Assets/Scripts/Stats/Stats.cs:300`）✓",
+  "expBase": 12.0,
+  "expLinear": 11.0,
+  "expExponent": 1.35
+ },
+ "caps": {
+  "dodge": 0.6,
+  "critRate": 1.0,
+  "_note_v210_uncap": "★★ v210（用户原话：『近伤害，远程伤害，爆炸伤害，攻击范围，爆炸范围，攻击速度，移动速度，击退力，爱心恢复数全部修改无上限』）：**九项上限 → 9999（哨兵）** ★★ ① meleeDamage 999→9999 ② rangedDamage 999→9999 ③ blastDamage 999→9999 ④ atkRange 2.5→9999 ⑤ explodeRange 5.0→9999 ⑥ atkSpeed 3.0→9999 ⑦ moveSpeed 9.0→9999 ⑧ knockback 3.0→9999 ⑨ heartHeal（在 `farm` 段，见 `_note_v210_heartheal`）。★ 为什么是**哨兵**而不是删掉上限 ★ `StatBlock.CapOf` 是**查表取钳位值**，删键会让它按 `DefaultCap` 兜底（那反而**更小**）⇒ 用大数当哨兵**不动任何钳位逻辑**，效果等价于无上限 ✓ 这与 v198 给 `maxStack` 用 9999 的做法同源 ✓ ★★ 但请同时阅读本文件 `_note_v198_unlimited` 里那条警告：`windup_gear`/`charge_coil` 的**代价**是 `1 − 0.10 × 层数`，第 10 层把代价乘到 0 ⇒ 上限一放开，攻速与伤害倍率这两条会**线性爆掉**（收益侧 `RampCapSeconds=60` 仍是 2.2 倍封顶，问题在**买价**一侧）★★ 本轮只按用户要求改上限，这条数值后果另行报告、未擅自加软上限 ✓",
+  "atkSpeed": 9999.0,
+  "atkRange": 9999.0,
+  "moveSpeed": 9999.0,
+  "maxPlots": 6,
+  "knockback": 9999.0,
+  "meleeDamage": 9999,
+  "rangedDamage": 9999,
+  "blastDamage": 9999,
+  "explodeRange": 9999.0,
+  "_note_v198_unlimited": "★★ v198（用户原话：『道具的4，5，6上限修改为无限』）：**三件的 maxStack 5/1/1 → 9999（哨兵）** ★★ ④ 丰水壶 big_can ⑤ 蓄势齿轮 windup_gear ⑥ 蓄力线圈 charge_coil。★ 为什么是哨兵而不是 0/−1 ★ `maxStack` 是 int，而 `Validate` 已把 `maxStack <= 0` 判成错、四处 `Mathf.Max(1, …)` 也会把 0 兜成 1 ⇒ 用大数当哨兵**不动任何既有钳位逻辑**，`TryBuy` 的 `n >= MaxStack` 天然永不成立 = 买不完 ✓ 判据只有一处 `ItemDef.IsUnlimitedStack`，UI 由 `ImGuiHud.MaxStackText` 显示成 ∞（**不能只改 json 不改 UI**，否则玩家读到『最多 9999 件』）✓ ★★ 这两条的爬升**本来就有硬顶**，与 maxStack 无关 ★★ `ProgMechanics.RampCapSeconds = 60` ⇒ `AtkSpeedRampPct = min(60, 秒数) × 2` ⇒ 5/10/20 分钟全是 **+120%**（= 2.2 倍），不存在线性爆掉；再乘 `caps.atkSpeed = 3.0`（`StatBlock.CapOf`）⇒ 攻速这一侧双保险 ✓ 而 `AtkMult` **在本节里没有 cap**（`CapOf` 无该分支）⇒ 伤害倍率只由 `RampCapSeconds` 那一层兜 ⇒ 2.2 倍封顶 ✓ ⚠️ 真正的副作用在**代价**一侧：`windup_gear` 的 `costs` 是 Percent AtkSpeed 10、`charge_coil` 是 Percent AtkMult 10，而 `RunSession.WriteBonus` 把它写成 `1 − 0.10 × 层数`（**随层数线性**），收益（爬升）却与层数**无关**（`Tick` 只判 `> 0`）⇒ 第 5 层起买它反而是净亏、第 10 层把该项乘到 0。本轮按用户要求只改上限，这条数值后果另行报告、未擅自加软上限 ✓"
+ },
+ "farm": {
+  "arenaHalf": 20.0,
+  "tileSize": 2.5,
+  "gridSize": 6,
+  "initialRows": 3,
+  "maxRows": 6,
+  "rowGrowthSeconds": 300.0,
+  "digTime": 5.0,
+  "sowTime": 2.0,
+  "waterTime": 1,
+  "fertilizeTime": 1.0,
+  "_note_v192_blastharvest": "★★ v192（用户需求③『爆炸对耕地的收割处理，让经验值和金币获取量为原来的 1/3』）→ v195 改 1/4 → **现行 = 0.25** ★★ 这是**爆炸收割的收益系数**（1 = 普通收割）★★ 消费点唯一：`World.MatureAndHarvestInRadius`（肥料爆炸唯一的『催熟 + 收割半径内成熟作物』入口）把它当作**入参**传给 `World.HarvestPlot(plot, yieldScale)`，后者把金币/经验基数乘上它 ⇒ 弹字、幸运 ×2、等级倍率、道具 `harvest_gold_pct` **全部自动跟着变**（因为乘在最前面）✓ ★★ 逃逸：它**只是这一次调用的栈上参数** —— 手挥锄头 / 扫掠 / 剑气 / 水枪 / 连锁收获走的是单参重载 `HarvestPlot(plot)`（≡ 传 1）⇒ 在类型层面就拿不到这个系数 ✓ ★★ 【v202 订正】本条旧文写的是『把它写进 `World.HarvestYieldScale`，离开时恢复 1（`try/finally`）』—— 那个**世界级可变字段 v200 已删除**，文字已过期，现按实际实现改写 ✓ 另注：v202 起『爆炸真的收到东西 ⇒ 武器自动切回锄头』（`RunSession.ReturnToHoeAfterBlastHarvest`），所以本系数只作用于**那一次爆炸**，不会把玩家锁在 1/4 上 ✓ 写 1 即关闭这条规则 ✓",
+  "blastHarvestRatio": 0.25,
+  "_note_v195_goldscale": "★★ v195（用户原话：『植物金币收获量调整 … 耕地全解锁且全部为满级最高品质植物时，每分钟收入量以千为单位，刚好足够支持购买一个传奇』）★★ `harvestGoldScale = 0.54` ★ 实算：满配 = 6 列 × 6 行 = **36 格**、全 3 级（等级倍率 ×1.70）、最高品质（S 档里金产最高的 **毒蕈**：goldYield 149 / 成熟 148 秒）⇒ 每格 `149 × 1.70 / 148 = 1.7115 金/秒` ⇒ 36 格 = **61.6 金/秒 = 3697 金/分** ⇒ ×0.54 = **1996 金/分** ≈ 30 分钟一个传奇的价（S 档 `80 × 5.0 × 5.0 = 2000`）✓ 判据由探针 `ProbeV195Num` 的『满配农场每分钟收入』一节打读数 ✓ 只乘金币、不乘经验 ✓ `≤0` 回落 1 ✓",
+  "harvestGoldScale": 0.54,
+  "waterMaxDefault": 100,
+  "waterPerHit": 10,
+  "fertilizeHits": 10,
+  "waterFactor": 2,
+  "_note_waterFactor": "★ v190：这个键**改前是死配置**（Defs.FarmDef 声明了它，全工程 0 个消费点）★ 现在把它接成唯一语义：**全局水耗速度系数** —— 消费点只有一处，`Actors.cs` 的 `World.Simulate` 把 `PlantMechanics.WaterCostScale(crop)` 乘上它，再交给 `FarmPlot.TickGrowth2(dt, waterCostScale, ...)`；而 `TickGrowth2` 里水耗是 `_drainAcc += dt × waterCostScale` ⇒ 2 = 漏水时钟走两倍快 = **0→100 的耗水时间减半** ✓ 每格每次仍扣满额（`WaterDrain` 不动），只是扣得更勤 ⇒ 种子里『每 5 秒消耗』的 UI 语义仍然是同一句话 ✓ ★ 刻意**没有**乘的两处：① 水壶命中的补水/耗弹（`waterPerHit`、`WaterAmmo`）② 生长推进（`TickGrowth`）—— 需求只要『水分消耗速度 ×2』✓",
+  "treeGrowTime": 8,
+  "treeProductInterval": 10.0,
+  "fertilizeFactor": 0.5,
+  "growthFloor": 0.35,
+  "interactRange": 2.4,
+  "growingHpFactor": 0.4,
+  "wallThickness": 0.6,
+  "rootWhileActing": true,
+  "freePlotOnGrown": true
+ },
+ "formula": {
+  "plantHpBaseline": 10.0,
+  "plantShieldBaseline": 2.0,
+  "plantMoveBaseline": 5.0,
+  "healInheritMult": 0.8,
+  "guardInheritMult": 0.35,
+  "leechBase": 0.1,
+  "ailmentDelay": 1.5,
+  "tickInterval": 1.0,
+  "ailmentTickCount": 3,
+  "_note_ailment": "★ v190：4 → 3（用户要求『灼烧、中毒改为触发 3 次』）★ 这个键是 `StatusRuntime.Apply`（Combat.cs:484）**唯一**读的结算次数 ⇒ 毒/火都是 3 次、间隔 `tickInterval` 1.0 秒 ⇒ 总时长 3 秒 ✓ 这就是交付里『解 B』（1 次/秒、共 3 次），理由见那里的说明 ✓ ⚠️ 同段里的 `poisonDuration` / `burnDuration`（4.0）是**死配置**：全工程 0 个消费点，改它们对结算次数与时长都没有任何影响（本轮没删，因为删字段要动 Defs 与自检；已在交付报告里列为『第 4、5 处死配置』）✓",
+  "poisonTickFactor": 0.15,
+  "poisonDuration": 4.0,
+  "poisonContactSeconds": 1.0,
+  "poisonSpreadRatio": 1.0,
+  "poisonLeechRatio": 0.3,
+  "burnTickFactor": 0.18,
+  "burnDuration": 4.0,
+  "burnExplodeRadius": 2.2,
+  "burnExplodeFactor": 0.5,
+  "burnSpreadRadius": 2.5,
+  "burnSpreadTargets": 2,
+  "burnSpreadRatio": 0.3,
+  "chillPerHit": 0.25,
+  "chillSlowPerStack": 0.2,
+  "freezeSlow": 0.35,
+  "freezeThresholdRatio": 0.5,
+  "freezeThresholdMin": 4.0,
+  "freezeDuration": 1.0,
+  "freezeBreakFactor": 1.2,
+  "minDamage": 0.1,
+  "plantProjectileSpeed": 18.0,
+  "aimJitterDeg": 1.5,
+  "plantDetectFactor": 1.35,
+  "ailmentHitRatio": 0.5,
+  "ailmentDelayPoison": 2.0,
+  "poisonContactRadius": 1.2,
+  "poisonContactRatio": 0.3,
+  "poisonContactCooldown": 1.5,
+  "_note_v192_subburst": "★★ v192（用户需求⑤『修改爆炸子爆炸的爆炸范围，缩小为正常爆炸的 1/2，伤害基础爆炸伤害的 50%』）：**子爆伤害比 = 0.5** ★★ 两条比例现在**分开**：① **半径**来自 `plugins.json` 的 `fert_subburst.amount2`（0.70 → **0.50**）② **伤害**来自这里的 `subBurstDamageRatio`（写死 0.70 ⇒ **0.50**）—— 改前两者共用 `amount2`，所以调半径会顺手改伤害 ✗ 消费点唯一：`WeaponSystem.SubBurstRadius` / `SubBurstDamage`；判定与表现都读它们（`RunSession.ExplodeAt`、`WorldView` 的子爆环）✓ 落点『距主爆心 = 主爆半径 ×1.75』是**间距**、与半径比无关（v189 用户要求『间距增加』，本轮没动）⇒ 半径 0.5R 的子爆是主爆外的一圈小爆，视觉上不再压在主爆里面 ✓",
+  "subBurstDamageRatio": 0.5
+ },
+ "dots": {
+  "_note_v279_weaponpercent": "★★ v279（用户原话：「燃烧、减速、中毒伤害都修改为继承自对应武器的伤害百分比，而不是继承属性」）★★ 三种持续伤害的**唯一百分比出处**就是本段 —— 灼烧 = **锄头这一刀的实际伤害** × `burnPercent`；减速 = **水壶这一束的实际伤害** × `slowPercent`；毒区 = **肥料这一炮的实际伤害** × `poisonPercent`（子爆毒区按这一发子爆的伤害算，见 `RunSession.ExplodeAt`）✓ ── 改前是什么 ── 灼烧/减速读的是**属性**（`Stats.Get(MeleeDamage / RangedDamage)`，`RunSession.PluginPostHit`），毒区读的是这一炮的伤害 ⇒ 三种口径不一致，而且属性为 0 时 `ApplyBurn(…, 0f, …)` 会在 `perLayerPerSecond <= 0` 处**连行都不建**（DoT 静默消失）✗ 改后三者同一个口径：**造成它的那把武器、这一次的真实伤害** ✓ ── 代码只读不改 ── 三个纯算式 `WeaponSystem.BurnPerLayerPerSecond / SlowPerLayerPerSecond / PoisonPerLayerPerSecond` 的比例全部来自本段（`TuningDef.DotsBurnPercent` 等），代码里**没有**第二份 0.5；`plugins.json` 里 `hoe_burn.amount` / `can_slow.amount2` / `fert_poison.amount` 保留为『插件自述比例』（自检 `PlugField` 的活体判定仍读它们），**不再参与伤害计算** ✓ ── 上限（防爆）── 单次 DoT 结算 ≤ 目标 `MaxHp × tickMaxHpFraction`（默认 25%），执法点唯一：`PluginDotTable.Hit`（**逐目标**夹紧 ⇒ 毒区对后走进来的敌人同样生效，而不是在施加时按施法者的血量算一次）✓ `≤ 0` 或键缺失 ⇒ 比例回落 0.5、上限回落 0.25（与改前逐位相同，老表不改也能跑）✓",
+  "burnPercent": 0.5,
+  "slowPercent": 0.5,
+  "poisonPercent": 0.5,
+  "tickMaxHpFraction": 0.25
+ },
+ "lifesteal": {
+  "_note_v282_groupstack": "★★ v282（用户反馈：「吸血类插件太强，在面对大量敌人时回血过多」）★★ 病因是**结构性的，不是系数太大** ⇒ 改前 `RunSession.PluginPostHit` 的吸血那一段被**逐敌**调用（`MeleeHitScan` / `JudgeSwordWaveBox` / `FireBeam` / `BlastDamageAt` 四个循环里各调一次）⇒ 一刀命中 N 个敌人就回 N 份，再乘多段（双击 = 每刀各结算一次、剑气 = 每发对每个敌人各结算一次、多柱 = 每道各结算一次）⇒ 群怪时回血量随敌人数**线性增长** ✗ 改后：一次「攻击事件」（一个挥击窗口 / 一发剑气流 / 一束激光 / 一次爆炸）内的全部命中先**累加**，事件结束时按**这一下的总伤害**结算**一次**，再被下面两条上限夹住 ✓ ── 旧值与理由（要回滚就删掉本段，行为等价改前）── `perSwingMaxHpFraction` **旧：无上限（等效 ∞）→ 新：0.05** ⇒ 任何一次攻击事件最多回 5% 最大生命，防「一刀十怪瞬间回满」；`perSecondMaxHpFraction` **旧：无上限（等效 ∞）→ 新：0.03** ⇒ 任意 1 秒桶内最多回 3% 最大生命，防「AOE 持续回血」✓ 两条都是**占玩家当前 `MaxHp` 的比例**（不是绝对点数）⇒ 血量成长后自动按比例放大，不需要跟着血池改数字 ✓ ── 为什么**不**改 `plugins.json` 的 `hoe_lifesteal.amount`（0.01）── 单挑 3 层 = 这一刀伤害的 3%，本来就不强；再降只会让单挑彻底没用，而群怪的线性叠加一点没解决 ✗ 所以 `amount` **保留为单次结算的基础系数**，本段只管上限 ✓ ── 写 0 或 ≤ 0 ⇒ 该条上限**关闭**（等价改前行为，老表不改也能跑）✓ 消费点唯一：`WeaponSystem.LifestealSwingCap / LifestealSecondCap / LifestealSettle`（纯函数），执法点在 `RunSession.LifestealSettle`",
+  "perSwingMaxHpFraction": 0.05,
+  "perSecondMaxHpFraction": 0.03
+ },
+ "tools": {
+  "switchWindup": 0.5,
+  "workCapMax": 4,
+  "_note_v192_autocharge": "★★ v192（用户需求①『水壶充能插件，修改为每 0.5 秒恢复一次』）：**自充的结算节拍（秒）** ★★ 消费点唯一：`RunSession.TickAutoCharge` —— 只在节拍边界上一次性发 `AutoChargePerSecond × 节拍` 点水，节拍内不再逐帧累加发水 ✓ 每次发 10×0.5 = **5 点**、**总量不变**（10 点/秒，`waterMax 100` ⇒ 仍是 10 秒回满）—— 用户只要求改**节奏**，把总量也翻倍会是没人要的平衡改动 ✓ 改成 0.25 即每 0.25 秒发 2.5→2/3 点（会带一点取整残差，残差跨拍保留、不丢水）；写 0 或负数按 0.05s 兜底（不允许零周期死循环）✓",
+  "canAutoChargeInterval": 0.5,
+  "waterBonusPerTier": 0.05,
+  "fertBonusPerTier": 0.04,
+  "_note_v195_weapons": "★★ v195（用户原话：『武器基础伤害回调』）：**三把武器的 baseValue 40 / 30 / 50 → 4 / 3 / 5** ★★ 这是 v194 那条 ×10 的**整体反向**：敌人 `baseHp` 同步 28 → 2.8、抽卡三张伤害卡 10 → 1、`caps` 9990 → 999、道具表里全部 Melee/Ranged/BlastDamage 的 add ÷10（见 items.json 的 `_note_v195_revert`）⇒ 『几刀打死一只小兵』的比例**一位不变**（第 1 分钟 2.8/4 = 1 刀；第 20 分钟 80/4 = 20 刀），只有刻度回到个位 ✓ ★ 肥料那一条同时**删掉了第二层乘区**（`player.explodeDamage` 不再存在）⇒ 三把武器现在是同一个式子 `(基础 + 对应伤害) × 伤害倍率 × 暴击` ✓",
+  "_note_v199_weapons": "★★ v199（用户原话：『玩家锄头初始伤害调整为8，水壶6，肥料12』）：**三把武器的 baseValue 4 / 3 / 5 → 8 / 6 / 12** ★★ ⇒ 也就是锄 ×2.00、壶 ×2.00、肥 ×2.40 ✓ 这条改动**只动这三个数** —— 敌人五条 HP 曲线与 baseHp、三招伤害、抽卡的 `Melee/Ranged/BlastDamage Add 1`、道具表里所有伤害 add，**一个字节都没改**（用户明确要求『别动敌人血和抽卡』）⇒ ── 实际一击（含暴击，开局 critRate 5% / critDmg 150%，零加成）── 锄 `8.00`／暴击 `12.00`（改前 4.00／6.00）；壶 `6.00`／`9.00`（改前 3.00／4.50）；肥 `12.00`／`18.00`（改前 5.00／7.50）✓ ── 连带后果（已在交付里单独报，未擅自改）── ① 第 20 分钟基础兵 血 60.00 ⇒ 锄头 **15 刀 → 8 刀**（`ceil(60/4)` → `ceil(60/8)`）、第 30 分钟 282.83 ⇒ **71 → 36 刀** ✓ ② 『开局一刀死』**仍然成立**且余量变大：第 1 分钟基础兵 血 1.365，`ceil(1.365/8) = 1`；余量从 2.93× 涨到 **5.86×** ✓ ③ 抽卡 `+1 近战` 的相对价值**减半**：`(4+1)/4 = +25%` → `(8+1)/8 = +12.5%`；远程 `+33.3% → +16.7%`；爆炸 `+20% → +8.33%` ⇒ 三张伤害卡的价值排序（远程 > 近战 > 爆炸）不变，绝对值全部缩水 ✓ ④ 肥料 ×2.4 还会顺带把 `fert_poison` 的毒区每秒伤害抬高（`PoisonPerLayerPerSecond = explodeDmg × 0.50` ⇒ 每层 2.5/s → 6.0/s），因为它是**按这一炮的实际伤害**算的，不是独立常量 ✓",
+  "_note_v205_hoehit": "★★ v205（用户原话：『调整锄头实际攻击范围，用扇形判定框覆盖特效，且实际范围大于特效一点』）：**本轮只加注释，一个数值都没改** ★★ ── 改前的事实（两个方向，一个是反的）── ① 判定（`RunSession.DoHoeSwing`）：`dist ≤ range + e.Radius` 且 `Dot(AimDir, delta/|delta|) ≥ cos(arc/2)` ⇒ 那两行合起来本来就是『**圆 ∩ 方向锥 = 扇形**』，不是矩形走廊（`MeleeBoxHalfWidth` 只被**剑气**用，锄头近战从不走它）；`e.Radius` 已含 `Actor.HitRadiusScale = 1.486`（`Actors.cs:1671` = `ScaledRadius(def.Radius)`）⇒ 实际命中距离 = `range 3.8 + radius × 1.486`，`grunt 0.36` ⇒ **4.335m** ✓ ② 特效（`WorldView.FxBladeMesh`）：径向 = `MeleeSwingEvent.Range`（3.8m）、张角 = 网格里烘死的 `±55°` = **110°** ⇒ **径向短了 0.535m、角向宽了 5°/侧** ✗ 于是贴在弧边缘的怪『看着被劈到却不掉血』✓ ── 改后（判定一个字节没动）── 视觉**在两个方向都进到判定里面**：径向 `视觉 = (range + 最瘦敌人radius×1.486) × 0.95` = `(3.8 + 0.34×1.486) × 0.95` = **4.090m**（> range 3.8，且对五个敌人判定最小 4.305 ⇒ 余量 ≥ 0.215m）；角向 `视觉张角 = arc − 4°` = **96°**（`WorldView.cs` 的 `halfDeg 55f → 48f`）⇒ 判定 ±50° 在外圈 ✓ 唯一真相点：`RunSession.MeleeFxRadiusScale = 0.95` / `MeleeFxArcShrinkDeg = 4` / `MeleeFxRefBaseRadius = 0.34`（自检 `HoeReachChecks` 逐敌人验『视觉 < 判定』）✓ ── 剑气**不跟** ── 剑气是**会飞的弯月**，判定框是跟着弯月走的矩形（`HalfLen = range/2`、`HalfWidth = MeleeBoxHalfWidth(range, arc)` = `range×sin(arc/2)` = 2.911m），它的几何是**子弹**不是扇形；把玩家脚下的扇形套到一枚已经飞出 7.6m 的弯月上会打到身后 ✗ 而且『半宽 = 近战扇形在 range 处的半宽』这条链保证了调 `arc` 时剑气与近战**一起变**，不需要第二份常数 ✓",
+  "_note_v273_hoescale": "★★ v273（用户原话：『按比例略微同步缩小锄头初始攻击范围和特效范围』）：**`tools.hoe.range` 3.8 → 3.42（×0.90）** ★★ 旧值 **3.8**（要回滚就把它填回 3.8，代码侧一个数都不用动）✓ 为什么这一段是『初始攻击范围』的**正主**：全工程读它的就一处源头 —— `RunSession.SwingHoe` / `TickPendingSwings` / `WeaponRange` / `RunBot` / `ImGuiHud` 属性面板全部走 `tools.hoe.range × StatId.AtkRange` ⇒ 改这一个数，收割框、特效半径、判定外径**一起**变，因此不存在『改了判定忘了特效』的时间窗 ✓ ── 为什么代码里**没有**第二个 0.90 乘子（重要）── 锄头特效半径**只有一源**：`RunSession.MeleeFxRadius(range)` → `MeleeSwingEvent.Range` → ① `WorldView.FxBladeMesh`（主弧，外径 = **1.00×Range**）② `AttackVfx.SpawnSwing`（26 片窄弧，外径 = (BladeR1 1.00 + Depth/2 0.05)×Range = **1.05×Range**）。`AttackVfx` 的 `BladeR0 / BladeR1 / bandD` 是**比例**不是米 ⇒ 在那里再乘一个 0.90 会把 26 片刀光的外沿缩到 0.945R（缩进主弧 1.00R 的里面），并把『判定 / 最宽视觉』从 **1.15 打到 1.087** ✗ 两个文件的注释已互相点名这条纪律（`RunSession.MeleeFxBladeR1` ↔ `AttackVfx.BladeR1`）✓ ── 派生量（`arc = 100`、`AtkRange = 1.0`、参考敌人 `0.34 × HitRadiusScale 1.486 = 0.505`）── 视觉半径 R 4.090 → **3.729**、特效外沿 4.294 → **3.915**、判定外径 4.939 → **4.503** —— 三者**同比例 ×0.9117**（不是 ×0.90：`MeleeFxRadius` 里那个 0.505 的固定偏移不随 range 缩）⇒ 『判定 / 特效外沿』**仍精确 1.150**，`MeleeRingOuter = max(外沿×1.15, range)` 的 `range` 项**没有顶住**（3.42 < 4.503）✓ 没动的东西：`MeleeRingHalfArcDeg = 90°`（半圆张角）、`MeleeRingInner = 0`、伤害、去重、片数 26、贴图、配色来源（用户只要求缩范围，没要求改形状）✓ ★ 本条的**上一版读数**：`_note_v205_hoehit` 里的 `3.8 / 4.090 / 4.335` 是 v273 **之前**的数，现行是 **3.42 / 3.729 / 3.925** ✓",
+  "hoe": {
+   "damageType": "Physical",
+   "kind": "Melee",
+   "baseValue": 8,
+   "cooldown": 0.7,
+   "range": 3.42,
+   "arc": 100.0,
+   "hits": 3
   },
-  "growth": {
-    "hpPerLevel": 1.0,
-    "shieldPerLevel": 1.0,
-    "levelsPerPlot": 0,
-    "expBase": 20.0,
-    "expLinear": 11.0,
-    "expExponent": 1.35
+  "can": {
+   "damageType": "Magic",
+   "kind": "Ranged",
+   "baseValue": 6,
+   "cooldown": 0.8,
+   "projectileSpeed": 18.0,
+   "range": 9.5,
+   "radius": 0.4,
+   "beamWidth": 1.4
   },
-  "caps": {
-    "dodge": 0.6,
-    "critRate": 1.0,
-    "atkSpeed": 3.0,
-    "atkRange": 2.5,
-    "moveSpeed": 9.0,
-    "maxPlots": 6,
-    "knockback": 3.0,
-    "meleeDamage": 999,
-    "rangedDamage": 999,
-    "blastDamage": 999,
-    "explodeDamage": 999,
-    "explodeRange": 5.0
-  },
-  "farm": {
-    "arenaHalf": 20.0,
-    "tileSize": 2.5,
-    "gridSize": 6,
-    "initialRows": 3,
-    "maxRows": 6,
-    "rowGrowthSeconds": 300.0,
-    "digTime": 5.0,
-    "sowTime": 2.0,
-    "waterTime": 1,
-    "fertilizeTime": 1.0,
-    "waterMaxDefault": 100,
-    "waterPerHit": 10,
-    "fertilizeHits": 10,
-    "waterFactor": 1,
-    "treeGrowTime": 8,
-    "treeProductInterval": 10.0,
-    "fertilizeFactor": 0.5,
-    "growthFloor": 0.35,
-    "interactRange": 2.4,
-    "growingHpFactor": 0.4,
-    "wallThickness": 0.6,
-    "rootWhileActing": true,
-    "freePlotOnGrown": true
-  },
-  "formula": {
-    "plantHpBaseline": 10.0,
-    "plantShieldBaseline": 2.0,
-    "plantMoveBaseline": 5.0,
-    "healInheritMult": 0.8,
-    "guardInheritMult": 0.35,
-    "leechBase": 0.1,
-    "ailmentDelay": 1.5,
-    "tickInterval": 1.0,
-    "ailmentTickCount": 4,
-    "poisonTickFactor": 0.15,
-    "poisonDuration": 4.0,
-    "poisonContactSeconds": 1.0,
-    "poisonSpreadRatio": 1.0,
-    "poisonLeechRatio": 0.3,
-    "burnTickFactor": 0.18,
-    "burnDuration": 4.0,
-    "burnExplodeRadius": 2.2,
-    "burnExplodeFactor": 0.5,
-    "burnSpreadRadius": 2.5,
-    "burnSpreadTargets": 2,
-    "burnSpreadRatio": 0.3,
-    "chillPerHit": 0.25,
-    "chillSlowPerStack": 0.2,
-    "freezeSlow": 0.35,
-    "freezeThresholdRatio": 0.5,
-    "freezeThresholdMin": 4.0,
-    "freezeDuration": 1.0,
-    "freezeBreakFactor": 1.2,
-    "minDamage": 0.1,
-    "plantProjectileSpeed": 18.0,
-    "aimJitterDeg": 1.5,
-    "plantDetectFactor": 1.35,
-    "ailmentHitRatio": 0.5,
-    "ailmentDelayPoison": 2.0,
-    "poisonContactRadius": 1.2,
-    "poisonContactRatio": 0.3,
-    "poisonContactCooldown": 1.5
-  },
-  "tools": {
-    "switchWindup": 0.5,
-    "workCapMax": 4,
-    "waterBonusPerTier": 0.05,
-    "fertBonusPerTier": 0.04,
-    "hoe": {
-      "damageType": "Physical",
-      "kind": "Melee",
-      "baseValue": 3,
-      "cooldown": 0.7,
-      "range": 3.2,
-      "arc": 100.0,
-      "hits": 3
-    },
-    "can": {
-      "damageType": "Magic",
-      "kind": "Ranged",
-      "baseValue": 3,
-      "cooldown": 0.8,
-      "projectileSpeed": 18.0,
-      "range": 9.5,
-      "radius": 0.4,
-      "beamWidth": 1.4
-    },
-    "fertilizer": {
-      "damageType": "Ailment",
-      "kind": "Ranged",
-      "baseValue": 3,
-      "cooldown": 1.2,
-      "projectileSpeed": 15.0,
-      "range": 6.5,
-      "baseExplodeRange": 3,
-      "radius": 1.2,
-      "ailment": "Poison",
-      "beamWidth": 1.4
-    }
-  },
-  "shop": {
-    "slots": 4,
-    "prepareTime": 20.0,
-    "firstPrepareTime": 30.0,
-    "rerollBase": 3,
-    "rerollStep": 2,
-    "seedWeight": 55,
-    "itemWeight": 25,
-    "pluginWeight": 25,
-    "healWeight": 0,
-    "healPrice": 12,
-    "healPercent": 0.3,
-    "mutationChance": 0.01,
-    "infinitePrepare": true,
-    "itemGradeWeights": [
-      { "grade": "D", "weight": 62 },
-      { "grade": "C", "weight": 24 },
-      { "grade": "B", "weight": 10 },
-      { "grade": "A", "weight": 3.5 },
-      { "grade": "S", "weight": 0.5 }
-    ],
-    "itemGradePriceStep": 0.45,
-    "priceWaveStep": 0.13,
-    "luckRefreshBonus": 1.2,
-    "gradeWeights": [
-      { "grade": "D", "weight": 58 },
-      { "grade": "C", "weight": 26 },
-      { "grade": "B", "weight": 12 },
-      { "grade": "A", "weight": 3.5 },
-      { "grade": "S", "weight": 0.5 }
-    ]
-  },
-  "toolUpgrades": [
-    { "id": "hoe", "name": "锄头升级", "effect": "物理伤害提升；锄地可同时作用于横向 n 块地" },
-    { "id": "can", "name": "水壶升级", "effect": "射程提升；浇水可同时作用于横向 n 块地，生长减免更大" },
-    { "id": "fertilizer", "name": "肥料升级", "effect": "爆炸范围提升；施肥可同时作用于横向 n 块地，生长减免更大" },
-    { "id": "glove", "name": "撒种手套", "effect": "撒种可同时作用于横向 n 块地" }
-  ],
-  "levelReward": {
-    "drawsPerLevel": 1,
-    "rerollBasePrice": 3,
-    "rerollStepPrice": 2,
-    "patterns": [
-      { "kind": "AllDiff", "weight": 60 },
-      { "kind": "TwoSame", "weight": 30 },
-      { "kind": "AllSame", "weight": 10 }
-    ],
-    "stats": [
-      { "id": "MaxHp", "name": "最大生命", "mode": "Add", "amount": 1 },
-      { "id": "Shield", "name": "护盾", "mode": "Add", "amount": 1 },
-      { "id": "MeleeDamage", "name": "近战伤害", "mode": "Add", "amount": 1 },
-      { "id": "RangedDamage", "name": "远程伤害", "mode": "Add", "amount": 1 },
-      { "id": "BlastDamage", "name": "爆炸伤害", "mode": "Add", "amount": 1 },
-      { "id": "AtkMult", "name": "伤害倍率", "mode": "Percent", "amount": 5 },
-      { "id": "AtkSpeed", "name": "攻击速度", "mode": "Percent", "amount": 5 },
-      { "id": "AtkRange", "name": "攻击范围", "mode": "Percent", "amount": 5 },
-      { "id": "MoveSpeed", "name": "移动速度", "mode": "Percent", "amount": 3 },
-      { "id": "CritRate", "name": "暴击率", "mode": "Add", "amount": 3 },
-      { "id": "CritDmg", "name": "暴击伤害", "mode": "Percent", "amount": 3 }
-    ]
-  },
-  "seedBag": {
-    "slotCount": 1,
-    "chargesPerSlot": 0,
-    "initialChoices": 3,
-    "unlimitedSeeds": true
-  },
-  "quality": {
-    "names": ["普通", "一般", "稀有", "史诗", "传奇"],
-    "colorNames": ["白", "绿", "蓝", "紫", "金"],
-    "mult": [1.0, 1.0, 1.0, 1.0, 1.0],
-    "shopWeights": [62, 24, 10, 3, 1]
-  },
-  "waves": {
-    "pigChance": 0.01,
-    "maxLivePlants": 99999,
-
-    "spawnIntervalStart": 4,
-    "spawnIntervalMin": 2.0,
-    "spawnBaseCount": 2,
-    "spawnCountPerWave": 0.8,
-    "spawnCountByProgress": 2,
-    "maxAliveCap": 99999,
-    "spawnWarnSeconds": 2.0,
-    "maxAliveBase": 8,
-    "aliveLimitEnabled": true,
-    "maxAlivePerWave": 2.0,
-    "maxAliveGrowth": 9.8,
-    "spawnCountGrowth": 3.67,
-    "dropAttractRadius": 2.2,
-    "pickupRadius": 0.9,
-    "spawnRingRadius": 18.5,
-    "spawnRingInner": 15.5,
-    "hardCapFactor": 1.35,
-    "graceSeconds": 0,
-    "bossTimeLimit": 90.0
-  },
-  "enemies": {
-    "expCap": 64,
-    "_note_step": "★ v170：敌人成长曲线的系数必须写在这里 ★ —— 真公式在 Defs.WaveGrowth(wave,a,b)=1+a*t+b*t²（t=分钟−1）。这四个键就是那个 a/b。它们原先【没有键】，而代码用 `g.hpStepA > 0f ? g.hpStepA : 0.12f` 硬编码兜底 ⇒ 谁按下面的旧键去调，改了没有任何效果 ✗（审计发现：hpGrowth/dmgGrowth 全工程 0 个消费点）。下面写的就是代码原来的兜底值 ⇒ 行为与改前【完全一致】✓ 而现在配置是唯一来源 ✓",
-    "hpStepA": 0.12,
-    "hpStepB": 0.006,
-    "dmgStepA": 0.08,
-    "dmgStepB": 0.003,
-    "_note_legacy_removed": "★ v170：这里原有 hpGrowth / dmgGrowth 两个键，已【删除】★ —— 它们曾被 EnemyGrowthDef 接住，而全工程没有任何一处读它们（审计：0 个消费点）。留着的风险是【误导】：`Defs.cs:137` 的注释曾把 hpGrowth 说成生命成长系数 ⇒ 谁照它调都会白调 ✓ 真正的系数已经写在上面那四个 hpStepA/B、dmgStepA/B 里 ✓ 删掉它们不会报错（JsonUtility 忽略未知键，也忽略缺失键）✓",
-    "bossHpGrowth": 0.10,
-    "bossFlattenExponent": true
-  },
-  "camera": {
-    "pitch": 60.0,
-    "orthographic": false,
-    "orthoSize": 7.5,
-    "fov": 62.0,
-    "distance": 22.0,
-    "height": 38.1,
-    "followLerp": 10.0,
-    "clampToArena": false
-  },
-  "ui": {
-    "scale": 1.35,
-    "keyHelpDefault": true,
-    "popupRadius": 0.6,
-    "popupFontSize": 26
-  },
-  "meta": {
-    "fixedDt": 0.016666667,
-    "maxCatchUpTicks": 5,
-    "runSeed": 20240607
+  "fertilizer": {
+   "damageType": "Ailment",
+   "kind": "Ranged",
+   "baseValue": 12,
+   "cooldown": 1.2,
+   "projectileSpeed": 15.0,
+   "range": 6.5,
+   "baseExplodeRange": 3,
+   "radius": 1.2,
+   "ailment": "Poison",
+   "beamWidth": 1.4
   }
+ },
+ "shop": {
+  "slots": 4,
+  "prepareTime": 20.0,
+  "firstPrepareTime": 30.0,
+  "rerollBase": 3,
+  "rerollStep": 2,
+  "seedWeight": 25,
+  "itemWeight": 25,
+  "pluginWeight": 25,
+  "healWeight": 0,
+  "healPrice": 12,
+  "healPercent": 0.3,
+  "mutationChance": 0.01,
+  "infinitePrepare": true,
+  "_note_v274_rarity": "★★ v274（用户原话：「传说等高品质内容刷新概率过高，全面降低基础概率」）★★ 两张权重表同时下调**高品质基础权重**，低品质吃下剩余量以保证合计仍 = 100（归一化不变）✓ ── 种子 `gradeWeights`（改前 → 改后）：D 58 → **61.51**｜C 26 → **27.57**｜B 12 → **9**（×0.75）｜A 3.5 → **1.75**（×0.5）｜S 0.5 → **0.17**（×0.34 ≈ 1/3）；归一化 58.00/26.00/12.00/3.50/0.50 → **61.51/27.57/9.00/1.75/0.17**（A+S 4.00% → **1.92%**）── 道具/插件 `itemGradeWeights`（改前 → 改后）：D 62 → **65.3**｜C 24 → **25.28**｜B 10 → **7.5**（×0.75）｜A 3.5 → **1.75**（×0.5）｜S 0.5 → **0.17**（×0.34 ≈ 1/3）；静态归一化 62.00/24.00/10.00/3.50/0.50 → **65.30/25.28/7.50/1.75/0.17** ⇒ 第 10 波有效 A+S 6.749% → **3.312%**（这一项会打红自检 `SelfCheck.cs:4244` 的 `hi10 >= 5f`，见交付报告）✓ ── 回滚 ── 把上面十个数填回旧值即可（S 必须保持 **> 0**：v252 把 `GradeWeightDef.weight` 从 int 改成 float 就是为了让 0.5 不被截成 0，写成 0 等于把「晴天/雨天种子永远刷不出来」那个 bug 复活 ✗）── 没动的：`highTierEarlyFloor` / `highTierRampWaves`（波次递增与前期抑制原样保留）、`WeatherSeedPitySlots = 3` 天气种子保底（它是 S 档种子的**第二来源**，见交付报告）、主城 BOSS 掉落 `town_drops.json`（另一套表，不受本次影响）✓ ── 死键留档：`quality.shopWeights = [62,24,10,3,1]` 全工程 **0 个调用者**（`QualityDef.Roll` / `RollShifted` 都是死代码），本表**没有**动它 ✓",
+  "_note_v276_raritycurve": "★★ v276（用户原话：「调 rarity 概率，只改 tuning.json；传说(S) 概率随时间爬升：≤5 分钟 ≤1%、10 分钟 ≈3%、上限 10%；史诗(A)≈传说×2.5、稀有(B)≈传说×5，普通+优良吃剩余，每张表各品阶总和必须 = 100」）★★ ── 旧值（逐位留档，回滚就照这十个数填回去）── 种子 gradeWeights：D 61.51 / C 27.57 / B 9 / A 1.75 / S 0.17（合计 100）；道具+插件 itemGradeWeights：D 65.3 / C 25.28 / B 7.5 / A 1.75 / S 0.17（合计 100）；highTierEarlyFloor 0.15、highTierRampWaves 10（两个都**没动**，理由见下）✓ ── 新值 ── 种子：D 73.2 / C 18.3 / B 5 / A 2.5 / S 1（合计 100）；道具+插件：D 68.77 / C 17.19 / B 8.99 / A 3.75 / S 1.3（合计 100）✓ ── 有效概率（`RunSession.TierWeightsRaw`：bias=i/4、mult=1+bias·0.05·(w−1)−(1−bias)·0.04·(w−1)、dampen=1−(1−early)·bias·(1−floor)、归一）── 道具/插件表 S 档：第 1 波 0.22%｜5 波 0.9994%｜10 波 2.5318%｜15 波 3.67%｜20 波 5.50%｜30 波 9.91%（改前 0.03% / 0.13% / 0.34% / 0.49% / 0.76% / 1.49%）✓ 三条断言实算全部通过：5min S ≤ 1%（0.9994%）、10min S ∈ [2.5,3.5]%（2.5318%）、全时刻 S ≤ 10%（峰值 9.9148%）✓ ── 为什么 10 分钟落在 2.53% 而不是 3%：这是**结构上界**，不是没拟合好 ── 波次倾斜是代码里写死的（`TierWeightsRaw` 的 0.05/0.04 两个系数），S 档在第 5→10 波之间只能涨 m_S(10)/m_S(5) = 1.45/0.6333 = **2.29 倍**，而「5 分钟 1% → 10 分钟 3%」需要 **3 倍**；而低档 D 的 mult 在第 26 波起被 `Mathf.Max(0.05f, …)` 兜住 ⇒ 后期 D 的份额塌陷会把 S 的份额顶上去，于是 30 分钟 10% 又反过来给 10 分钟的 3% 封了顶 ✓ 在 (5min≤1%, 30min≤10%, S 单调) 三个约束下穷举权重（300 万组 Dirichlet + 220 万组两位小数网格）得到的 **S10 上界 = 2.55%**，本表取 2.53%（贴着上界），A/S 与 B/S 在第 10 波恰好 2.48 / 4.98 ✓ ── `highTierRampWaves` 为什么**不需要**动（也**不许**乱动）── 在同一个穷举里把 R 一起扫了：R=8 / 9 / 10 / 11 / 12 / 15 / 20 / 30 对应的 S10 上界是 2.209 / 2.384 / **2.550** / 2.509 / 2.470 / 2.376 / 2.265 / 2.088（%）⇒ **R=10 就是最优**，改它只会把 10 分钟的上界压得更低（R 越大，第 10 波自己也被 dampen 压，5→10 的斜率反而变缓）⇒ 本轮一个数都没动，保持 10 ✓ ── 种子表为什么是**静态**的 ── `RunSession.RollSeedOnce` （RunSession.cs:1422-1436）是**直接累加原表权重**，不走 `TierWeightsRaw` ⇒ 种子表**没有波次项**，无论填什么数，种子 S 档在 1/5/30 分钟都是同一个百分比（`Defs.cs:858` 的注释也写明了「只作用于掷档位这一处：种子的 gradeWeights 不动」）⇒ 只能取一个常数；取 **S=1%** 是因为它是「≤5 分钟 ≤1%」允许的最大值，既能满足用户的早段上界、又能让商店整体（种子 55 / 道具 25 / 插件 25 的类别权重下种子占 52.4%）的 S 档尽量高（整体 S：第 1 分钟 0.63%｜5 分钟 0.55%｜10 分钟 1.75%｜30 分钟 5.2%）✓ 想让**种子**也随时间爬升必须改代码（给 RollSeedOnce 接上 TierWeightsRaw），本轮按「不动代码」没做 ✓ ── A/B 比值的漂移（说明，不是 bug）── 三种档位的 mult 不同 ⇒ 比例只可能在**一个**波次上精确成立，本表把它锚在第 10 波（用户点名的那一分钟）：A/S = 2.48（第 15 波 2.35、30 波 2.12）、B/S = 4.98（第 15 波 4.35、30 波 3.23）—— 越到后期越低，因为 B 档的 mult(0.005/波) 天生比 S 档(0.05/波) 慢 ✓ ── 自检影响 ── `SelfCheck.cs:4244` 的 hi(A+S) 三条判据现在**全绿**：第 1 波 1.75%（<3 ✓）、第 5 波 4.26%、第 10 波 8.82%（≥5 ✓，改前 3.31% 是红的）✓ 没动的：`WeatherSeedPitySlots`、稀有度定义（`quality.names`/`mult`/`shopWeights` 死键）、价格（`priceWaveStep` 等）、`items.json`、`SelfCheck.cs`、`highTierEarlyFloor` ✓",
+  "itemGradeWeights": [
+   {
+    "grade": "D",
+    "weight": 68.77
+   },
+   {
+    "grade": "C",
+    "weight": 17.19
+   },
+   {
+    "grade": "B",
+    "weight": 8.99
+   },
+   {
+    "grade": "A",
+    "weight": 3.75
+   },
+   {
+    "grade": "S",
+    "weight": 1.3
+   }
+  ],
+  "_note_v277_raritycurve": "★★ v277（用户原话：「再次全面降低高品质刷新率」＋「给出明确的数值膨胀公式」）★★ 传说(S) 改成**按已进行分钟数**的显式曲线；参数全在下面的 `rarityCurve` 里，公式只有一处实现（`Defs.cs` 的 `RarityCurveDef.SAt/AAt/BAt`）⇒「表和代码谁算话」不存在分叉 ✓ ── 公式 ── t = 已进行分钟（= WaveIndex − 1，见 `ShopSystem.MinutesAtWave`）· u = clamp01(min(t, kneeMinutes)/kneeMinutes) · S(t) = clamp(s0 + (s10−s0)·u^gamma + postKneePerMinute·max(0, t−kneeMinutes), 0, sMax) · A(t) = kA·S(t) · B(t) = kB·S(t) · D+C 吃掉剩余 (1−S−A−B)，并在 D:C 之间按**两张表里各自的原比例**分配 ⇒ 每张表逐品阶精确达标、sum ≡ 100% ✓ ── 为什么 gamma = 3.5（不是 1.6）── 「t ≤ 5 分钟 S < 1%」在 s0 = 0.6%、s10 = 4.6% 下要求 f(0.5) ≤ (1%−0.6%)/(4.6%−0.6%) = 0.10；0.5^1.6 = 0.3299（S(5) = 1.92% ⇒ 破线 ✗）、0.5^3.5 = 0.0884（S(5) = 0.9535% ✓）⇒ gamma ≥ ln0.1/ln0.5 = 3.32，取 **3.5** 留 4.6% 余量 ✓ ── 为什么 postKneePerMinute = 0.0027 ── 让 S 恰好在第 30 分钟走到硬顶：4.6% + 0.27%×(30−10) = **10.0%**，之后恒 10% ✓（第 15 分钟 5.95%、第 20 分钟 7.30%、第 25 分钟 8.65%）── 种子表为什么现在也涨 ── `RunSession.RollSeedOnce` 改走 `TierWeightsRaw`（与道具/插件**同一个算式**）⇒ 道具 / 插件 / 种子三类同一条曲线，上一轮那个「种子静态、道具动态」的分叉被消掉 ✓ ── lowCap = 0.90 是什么 ── 纯安全网：高档合计超过 90% 时等比缩回去，保证 D+C 至少留 10%。按上面的 kA/kB 与 sMax 推算，S 封顶 10% 时高档合计恰为 85% ⇒ **正常参数下它永不触发**（只有把 kA/kB 调成畸形值才会）✓ ── 一个字节没动 ── `WeatherSeedPitySlots = 3`（天气种子保底）、稀有度定义、价格曲线、`items.json` ✓ ── 两个旧旋钮的去向 ── `highTierEarlyFloor` / `highTierRampWaves` **字段保留**（`SelfCheck.cs:4248` 的消息串与若干探针仍在读它们），但 v277 起**权重算式不再读**：档位权重只由 `rarityCurve` 决定 ✓",
+  "rarityCurve": {
+    "s0": 0.006,
+    "s10": 0.0499,
+    "sMax": 0.1,
+    "gamma": 3.5,
+    "kA": 2.5,
+    "kB": 5.0,
+    "kneeMinutes": 10.0,
+    "postKneePerMinute": 0.01002,
+    "lowCap": 0.9
+  },
+  "_note_v278_postknee": "★★ v278（用户原话：「全部修复，要求能够正确获取」＋「一局 20~30 分钟至少见到 1 件 S 道具」）★★ 只动两个键，三条硬约束**一个都没破**：`s10` 0.046 → **0.0499**（贴住「10 分钟 < 5%」的硬线，留 0.0001 余量）、`postKneePerMinute` 0.0027 → **0.01002**（= (0.10 − 0.0499)/5 ⇒ **第 15 分钟到 10% 硬顶**，改前是第 30 分钟才到顶）；`s0` / `gamma` / `kneeMinutes` / `sMax` / `kA` / `kB` / `lowCap` **一个字节没动**。实算（SAt 逐句镜像）：t=0..5 → 0.6000 / 0.6014 / 0.6157 / 0.6649 / 0.7777 / **0.9880%**（全部 < 1% ✓）；t=10 → **4.9900%**（< 5% ✓）；t=15 → 7.4950%、t=20 起恒 **10.0000%**（≤ 10% ✓）。效果（10 万次抽样，4 货位/分钟，道具占 25/105）：P(20 分钟内见到 ≥1 件 S 道具) 49.5% → **61.3%**、P(30 分钟) 77.7% → **85.2%**、首件 S 道具平均 20.6 → **18.9 分钟**。⚠️ 诚实的边界：三条硬约束把 S 在 0~10 分钟锁在 1%→5% 这段斜坡里，所以**纯数据到不了 100%**；这条曲线的理论最优是「t=10 分钟处从 4.99% 跳到 10%」（postKnee 0.1002）⇒ P(20 分钟) 64.7% / P(30 分钟) 86.6%，只比本表高 3.4 / 1.4 个百分点，代价是 S 概率在 1 分钟内翻倍（肉眼可见的断裂）⇒ 本表取第 15 分钟平滑到顶，不取那个跳变。要真正把「一局必见 S」做到 90%+ 得动**代码**加保底（与 `WeatherSeedPitySlots` 同一套手法）或改 `itemWeight`，两者都不在本轮的「只调数据 + 只动这两个键」范围里 ⇒ 已列为报告里的下一步建议，未擅自放宽硬约束。",
+  "highTierEarlyFloor": 0.15,
+  "highTierRampWaves": 10,
+  "_note_v253_earlytier": "★★ v253（用户原话：降低前期高品质物品刷新率）★★ 只在【前 10 波】生效的高档抑制：dampen(i) = 1 - (1 - t) * highBias(i) * (1 - highTierEarlyFloor)，t = clamp01((波-1)/(10-1))，highBias = 下标/(档数-1)（D=0 … S=1）⇒ 第 1 波 D x1.00 / C x0.79 / B x0.58 / A x0.15 / S x0.15；第 10 波起 dampen 恒 1 ⇒ 与改前逐位相同 ✓ 为什么不直接改 itemGradeWeights：那是【长期】分布（后期要靠它出货），把 A/S 直接调小会让整局都抽不到高档 ✗ 这条只压前期，后期自动恢复 ✓",
+  "itemGradePriceStep": 0.45,
+  "priceWaveStep": 0.04239,
+  "luckRefreshBonus": 1.2,
+  "_note_v195_prices": "★★ v195：**商品价格曲线整体重解**（用户原话：『即使到达 30 波，传奇商品价格还是以千为单位，普通商品价格以百为单位 … 商品价格 30 分钟最高理想达到 2000 … 拒绝后期超高收入和超高价格，防止前期买不起』）★★ ── 不等式（实付价 = 基础价 × 档位倍率 × 波次倍率 W）── 基础价按档统一 D20/C30/B40/A60/S80（种子表本来如此、道具表 v195 对齐）⇒ · 传奇 2000 ⇒ `W(30) ≤ 2000/(80×5.0) = 5.0` · 普通 ≥100 ⇒ `W(30) ≥ 100/(20×1.0) = 5.0` ⇒ **两条下/上界正好夹死 W(30) = 5.0** ✓ —— 所以本轮不是一个「口味值」，是**解出来的** ✓ 分解：`(1+priceWaveStep)^29 × post20(30) = 5.0`，取 `post20PriceSlope = 0.05`（第 30 分钟 ×1.5）⇒ `(1+s)^29 = 3.3333` ⇒ `s = 0.04239`（实测 `W(30) = 4.99998`，取 0.0424 会算成 2001 ⇒ **差 1 点就破线**，见探针 ⑤ 的『≤2000』检查）✓ 逐分钟读数（探针 `ProbeV195Num` 打表）：W(1)=1.000｜W(10)=1.453｜W(20)=2.200｜W(30)=5.001 ⇒ 实付价 30 分钟 **D 100 / C 270 / B 560 / A 1140 / S 2000**、**没有任何商品 ≥ 10000** ✓ 改前是 `priceWaveStep 0.13`（1.13^29 = 34.6×、×2.0 = 69.2×）⇒ S 会到 **13708**、D 到 **346**（普通件三位但传奇破万 ✗）—— 这正是用户报的『后期超高价格』✓",
+  "post20PriceSlope": 0.05,
+  "rerollWaveStep": 0.0682,
+  "_note_v196_cap30": "★★ v196（用户原话：『增加商品价格和刷新价格限制，30分钟后，商品价格和刷新价格锁定，敌人数值继续成长』）★★ 价格侧**锁在第 30 分钟**，锁的实现在代码里（不在本表）：`ShopDef.PriceWaveCap = 30` + 唯一夹紧点 `ShopDef.CappedPriceWave(wave)` —— `WavePriceMult` 与 `RerollWaveMult` 都先过它 ⇒ `m > 30` 时 `m` 一律当 30 用，`post20` 项也一起吃这个夹过的 `w` ⇒ 商品价与刷新价的**底价/倍率**在第 30/31/35/40 分钟**逐位相同**（W 恒 5.000、W_r 恒 10.16、首刷恒 30）✓ ── 为什么放在代码里而不是加一个表键 ── 那样就多出一个可调旋钮与一处'表和代码谁知道算话'的分叉；而'30 分钟锁定'是本轮的需求本身，不是平衡口味参数，写进 `Defs.cs` 才有唯一出处 ✓ ── ⚠️ 只锁**波次因子**：同一分钟内第 n 次刷新的 `1.5^n`（`ShopSystem.RerollMult`）**不动** ⇒ 第 30 分钟之后仍是 30 / 45 / 68 / 101（若把它也锁死就变成'无限刷新都是 30 金' ✗）✓ ── ⚠️ **敌人不吃这一条**：`EnemyGrowthDef.post20Slope = 0.15` 一个字没动 ⇒ 第 30/35/40 分钟血与三招继续涨（`EnemyDef.Post20Factor` 是另一个函数、另一个出口）✓ 读数见只读探针 `Assets/Scripts/Probe/ProbeV196Cap30.cs`（`Library/yowei-v196-cap30.txt`）✓",
+  "_note_v195_reroll": "★★ v195（用户原话：『重抽几个重新计算，前期个位数，后期 20 分钟初次重抽价格控制在以 10 为单位，30 分钟能达到控制在 100 内』）★★ 刷新/重抽价**从商品曲线里分出来**，走自己的 `RerollWaveMult`：`(1+0.0682)^(波−1) × post20` ⇒ W(1)=1.00｜W(5)=1.30｜W(10)=1.81｜W(20)=**3.50**｜W(30)=**10.16** ★ 逐档基础值（`shop.rerollBase = 3`）：第 1 分钟 **3**、第 5 分钟 **4**、第 10 分钟 **5**、第 20 分钟 **11**（十位 ✓）、第 30 分钟 **30** ✓ 再乘 `RerollMult = 1.5^次数`（v195 把底数 2 改成 1.5，见 `RunSession.RerollMult`）：第 1 分钟 **3 / 5 / 7 / 10**（前三次个位数 ✓）、第 20 分钟 **11 / 17 / 26 / 39**、第 30 分钟 **30 / 45 / 68 / 101**（前三次 ≤ 100 ✓）★ 为什么不能让刷新价继续跟商品共用一条曲线 ★ 商品那条被 `W(30) = 5.0` 钉死、20 分钟只有 2.2× ⇒ `3 × 2.2 = 7`（**个位**，用户要十位 ✗）⇒ 两个目标要的斜率不同（3.5 vs 2.2），只能各给一个旋钮 ✓ 抽卡重抽共用同一个 `RerollPrice`（`levelReward.rerollBasePrice = 3`）⇒ 一处改动两边同时生效 ✓",
+  "_note_v282_uniform": "★★ v282（用户原话：「让道具、种子、插件刷新概率相同，只按照品质产出」）★★ ① 类别权重改成 **1:1:1**：`seedWeight` 55 → **25**（`itemWeight` 25 / `pluginWeight` 25 本来就是 25，未动）⇒ 合计 75 ⇒ 每次刷新 4 个货位，每类期望 **4/3 ≈ 1.33 格**（改前 种子 2.10 / 道具 0.95 / 插件 0.95）✓ ② 品阶表**只剩一张**：`shop.gradeWeights`（旧种子表 D 73.2 / C 18.3 / B 5 / A 2.5 / S 1）**已删除**，全工程唯一来源 = 上方的 `shop.itemGradeWeights`（D 68.77 / C 17.19 / B 8.99 / A 3.75 / S 1.3）⇒ 道具 / 插件 / 种子三类**同一套品阶权重**（代码里也只剩一个字段：`ShopDef.itemGradeWeights`）✓ 旧表 D:C = 73.2:18.3 = **80.00:20.00**，新表 68.77:17.19 ≈ **80.006:19.994** ⇒ 种子低档内部比例一分没变；S/A/B 照旧由 `shop.rarityCurve` **覆盖**（曲线与它的参数本轮一个字节没动）⇒ 种子档位的逐品阶概率与改前**逐位相同** ✓ ③ 上线顺序 = **先类别（1:1:1）→ 再按统一品阶表 + 曲线定档 → 再从该类该档里随机一件**（`RunSession.RollOne` → `RollSeedOnce` / `RollPlugin` / `RollItemOnce`，三类都走 `RollGoodsTier`）⇒ 与「只按品质产出」同义 ✓ ④ 插件**没有 D 档**（plugins.json = C 6 / B 6 / A 6 / S 3，D = **0 件**），而统一表的 D 档约 69% ⇒ 插件格抽到 D 时靠 `RunSession.PickPluginOfTier` 的**该档无货兜底**接住（count == 0 ⇒ 从**全部插件**均匀取一件，RunSession.cs:1913-1922）⇒ 插件格的逐品阶占比里 D 恒 0、其余四档按「C/B/A 各 6/21、S 3/21」抬高（读数见交付报告）✓ ── 回滚 ── `seedWeight` 填回 55，把 `shop.gradeWeights` 整块填回（D 73.2 / C 18.3 / B 5 / A 2.5 / S 1），并把 `RunSession.RollSeedOnce` 里的 `cfg.itemGradeWeights` 改回 `cfg.gradeWeights`（同时把 `ShopDef` 的字段与 `TableDatabase.Sanitize` 那一行一起恢复）即可 ✓"
+ },
+ "toolUpgrades": [
+  {
+   "id": "hoe",
+   "name": "锄头升级",
+   "effect": "物理伤害提升；锄地可同时作用于横向 n 块地"
+  },
+  {
+   "id": "can",
+   "name": "水壶升级",
+   "effect": "射程提升；浇水可同时作用于横向 n 块地，生长减免更大"
+  },
+  {
+   "id": "fertilizer",
+   "name": "肥料升级",
+   "effect": "爆炸范围提升；施肥可同时作用于横向 n 块地，生长减免更大"
+  },
+  {
+   "id": "glove",
+   "name": "撒种手套",
+   "effect": "撒种可同时作用于横向 n 块地"
+  }
+ ],
+ "levelReward": {
+  "drawsPerLevel": 1,
+  "rerollBasePrice": 3,
+  "rerollStepPrice": 2,
+  "patterns": [
+   {
+    "kind": "AllDiff",
+    "weight": 60
+   },
+   {
+    "kind": "TwoSame",
+    "weight": 30
+   },
+   {
+    "kind": "AllSame",
+    "weight": 10
+   }
+  ],
+  "_note_v190_stats": "★★ v190 抽卡五项（用户需求②）★★ ① MaxHp Add 1→2 ② Shield Add 1→2 ③ **新增 ExplodeRange Percent 5**（『爆炸范围 +5%』）④ BlastDamage Add 1→2 ⑤ CritDmg —— ★ 用户说『从 Add 3 改成 Percent 3』，但**实测 `git show HEAD:Assets/Resources/Data/tuning.json` 里这一行本来就是 `Percent 3`**（语义 = 2.0 × (1+3/100) = 2.06 = 206%），所以本轮**一个字符都没改**，只在交付里报读数 ✓ ★ 新增的 ExplodeRange **不需要新建 StatId**：`StatId.ExplodeRange = 7` 早就存在，且三处消费点全部已接好 —— ① `RunSession.BlastRadiusNow()`（爆炸判定半径 = BlastBaseRadius(3) × Stats.Get(ExplodeRange)，base 1.0）② `Actors.cs:687` 与 `WorldView.cs:1294`（表现与判定同一乘积）③ `ImGuiHud.cs:1454`（属性面板『爆炸范围』一行）⇒ 本轮只是**把这张卡补进奖励池**，不存在『配置里有、代码里没人读』的死项 ✓ ★ Percent 走 `PickRewardCard` 的 `Mul(1+amount/100)` 分支（RunSession.cs:2565）⇒ 1.0 → 1.05 ✓ 上限 `caps.explodeRange` = 5.0 ⇒ 还能吃 +400% ✓",
+  "_note_v191_stats": "★★ v191（用户需求①）：池子在 v190 的 12 张之上**新增一张 `Luck`（幸运值 +3%）** ⇒ 12 → 13 张 ★★ 形态与 `CritRate` 那行逐字同形（`mode: Add, amount: 3`）：两者都是 0..1 小数属性，`Add 3` = **+3 个百分点**（`PickRewardCard` 走 `/100` 分支）✓ ★ 为什么不用 `Percent` ★ 它是**乘法**：`0.05 × 1.03 = 0.0515` ⇒ 面板按百分点差印出来仍是 **+0%** ⇒ 玩家抽了卡看不到任何变化 ✗（而且若基底为 0，`0 × (1+p)` 恒为 0 ⇒ 卡彻底是死的）✓ ⇒ 已把 Luck 加进 `TableDatabase.IsFractionStat`，那一条同时管表校验/自检/抽卡/面板四处 ✓",
+  "_note_v192_stats": "★★ v192 抽卡池两处改动 ★★ ①（用户需求⑥『抽卡中的爆炸伤害修改值改为 1』）`BlastDamage Add 2 → **1**` —— 与 `MeleeDamage` / `RangedDamage` 两张伤害卡**同档**（都是 +1），理由：用户点名要 1 ✓ ★ 同一节里的 `ExplodeRange`（**爆炸范围** Percent 5）**一个字符没动** —— 需求⑤ 说的是『子爆炸的爆炸范围 = 主爆的 1/2』（那是 `fert_subburst` 这件插件的运行时规则），与这张『爆炸范围 +5%』的卡是**两件事** ✗ ②（用户需求②的连带）`MaxHp Add 2 → **20**`、`Shield Add 2 → **20**` —— 玩家血池整体 ×10（`player.hpUnit`）⇒ 这两张卡不加倍就退化成 1/10 价值 ✓ 判据：`ImGuiHud` 的属性面板里三者都是『+绝对值』（`AddFlat`）⇒ 血条读数 100/100 与卡片 +20 自洽 ✓",
+  "_note_v195_stats": "★★ v195（用户原话：『抽卡提供数值，生命2，护盾2，近战伤害、远程伤害、爆炸伤害都为1，爱心恢复量3』）★★ 改法：`MaxHp 20 → **2**`、`Shield 20 → **2**`、`Melee/Ranged/BlastDamage 10 → **1**` ✓ —— 全部是**同一刻度的回调**（血池 100→10、武器 40/30/50→4/3/5）⇒ 一张卡的价值不变（生命卡 = +20% 血、伤害卡 = +25% 锄头）✓ · `爱心恢复量 3` 落在 `player.heartHeal = 3`（它不是卡，是玩家基底；本轮 30 → 3）✓ · `CritDmg Percent 5` 与 `CritRate/Luck Add 3` 保持 —— 它们是**比例/概率**，与刻度无关 ✓ · `ExplodeRange Percent 5` 也保持（爆炸**范围**，不是倍率，属性未删）✓ ★ 注意 ★ `ExplodeDamage` 那条卡**从来就不存在**（卡池里没有它）⇒ 删属性不需要动卡池 ✓",
+  "stats": [
+   {
+    "id": "MaxHp",
+    "name": "最大生命",
+    "mode": "Add",
+    "amount": 2
+   },
+   {
+    "id": "Shield",
+    "name": "护盾",
+    "mode": "Add",
+    "amount": 2
+   },
+   {
+    "id": "MeleeDamage",
+    "name": "近战伤害",
+    "mode": "Add",
+    "amount": 1
+   },
+   {
+    "id": "RangedDamage",
+    "name": "远程伤害",
+    "mode": "Add",
+    "amount": 1
+   },
+   {
+    "id": "BlastDamage",
+    "name": "爆炸伤害",
+    "mode": "Add",
+    "amount": 1
+   },
+   {
+    "id": "ExplodeRange",
+    "name": "爆炸范围",
+    "mode": "Percent",
+    "amount": 5
+   },
+   {
+    "id": "AtkMult",
+    "name": "伤害倍率",
+    "mode": "Percent",
+    "amount": 5
+   },
+   {
+    "id": "AtkSpeed",
+    "name": "攻击速度",
+    "mode": "Percent",
+    "amount": 5
+   },
+   {
+    "id": "AtkRange",
+    "name": "攻击范围",
+    "mode": "Percent",
+    "amount": 5
+   },
+   {
+    "id": "MoveSpeed",
+    "name": "移动速度",
+    "mode": "Percent",
+    "amount": 3
+   },
+   {
+    "id": "CritRate",
+    "name": "暴击率",
+    "mode": "Add",
+    "amount": 3
+   },
+   {
+    "id": "CritDmg",
+    "name": "暴击伤害",
+    "mode": "Percent",
+    "amount": 5
+   },
+   {
+    "id": "Luck",
+    "name": "幸运值",
+    "mode": "Add",
+    "amount": 3
+   }
+  ]
+ },
+ "seedBag": {
+  "slotCount": 1,
+  "chargesPerSlot": 0,
+  "initialChoices": 3,
+  "unlimitedSeeds": true
+ },
+ "quality": {
+  "names": [
+   "普通",
+   "一般",
+   "稀有",
+   "史诗",
+   "传奇"
+  ],
+  "colorNames": [
+   "白",
+   "绿",
+   "蓝",
+   "紫",
+   "金"
+  ],
+  "mult": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "shopWeights": [
+   62,
+   24,
+   10,
+   3,
+   1
+  ]
+ },
+ "waves": {
+  "_note_v191_pigchance": "★ v191：`pigChance`（原 0.01）**已从这里删除** ★ 小猪刷新概率不再是常量，而是属性「小猪刷新率」（`player.pigRate` 等级）查 `TuningDef.PigRateByLevel` ⇒ 2%/4%/6%/8% ✓ 留着这个键会形成「两处真相」（表里一个已经不生效的 1%），而调平衡的人会去改那个不生效的键 ⇒ 删掉更诚实（想调概率就改那 4 个数）",
+  "_note_v252_early": "★★ v252：**前期刷怪速度与数量下调**（用户原话：「降低游戏难度（前期敌人刷新速度和数量降低）」）★★ 只改五个键，全部只削**前期**：`spawnIntervalStart` 4 → **6.0**（第 1 分钟开头 6 秒一批，改前 4 秒）、`spawnIntervalMin` 2.0 → **2.5**（本分钟末尾最快 2.5 秒一批）、`spawnBaseCount` 2 → **1**（每批底数 1）、`spawnCountPerWave` 0.8 → **0.6**、`spawnCountByProgress` 2 → **1**（本分钟内进度带来的量减半）✓ **没动**：`spawnCountGrowth` 3.67（后期成长那一项照旧）、`maxAliveBase/PerWave/Growth`（存活上限）、敌人血量与伤害曲线、`earlyNerf`（那是另一条前段压低）✓ 逐点读数（每批数量 = base + 0.6×波 + 1×进度 + 3.67×√(波−1)，每 60 秒的批次 ≈ 60/间隔）：第 1 分钟 **1~2 只/批、约 12 批 ⇒ 12~18 只**（改前 2~4 只/批、约 17 批 ⇒ 34~51 只）｜第 5 分钟 **1+3+1+7 = 12 只/批**（改前 13）｜第 20 分钟 **1+12+1+16 = 30 只/批**（改前 31）⇒ 前期砍掉一半以上，中后期几乎不变 ✓ 另外难度选择（低/中/高，`RunDifficulty`）也在这条需求里，但它是**乘在敌人血量/伤害上**的，与这里的刷怪节奏是两条独立的旋钮 ✓",
+  "maxLivePlants": 99999,
+  "spawnIntervalStart": 5.2,
+  "spawnIntervalMin": 2.5,
+  "spawnBaseCount": 1,
+  "spawnCountPerWave": 0.6,
+  "spawnCountByProgress": 1,
+  "maxAliveCap": 99999,
+  "spawnWarnSeconds": 2.0,
+  "maxAliveBase": 8,
+  "aliveLimitEnabled": true,
+  "maxAlivePerWave": 2.0,
+  "maxAliveGrowth": 9.8,
+  "spawnCountGrowth": 3.67,
+  "dropAttractRadius": 2.2,
+  "pickupRadius": 0.9,
+  "spawnRingRadius": 18.5,
+  "spawnRingInner": 15.5,
+  "hardCapFactor": 1.35,
+  "graceSeconds": 0,
+  "bossTimeLimit": 90.0,
+  "_note_v272_earlyspawn": "v272 略微增加前期敌人刷新数：spawnIntervalStart 6.0->5.2、spawnBaseCount 1->2、spawnCountByProgress 1->2（spawnIntervalMin 2.5 与 spawnCountPerWave 0.6 未动，保证只是\"前期略多\"，不是回到 v251 的强度）",
+  "_note_v277_difficulty": "★★ v277：**前中期刷新数量下调**（用户原话：「前中期敌人刷新数量降低一点」）★★ 只改两个键，且两个都是**常数加数**项（权重随波次自然衰减 ⇒ 只压前中期、后期几乎不动）：`spawnBaseCount` **2 → 1**（旧值 2）、`spawnCountByProgress` **2 → 1**（旧值 2）✓ 没动的四个：`spawnCountPerWave` 0.6、`spawnCountGrowth` 3.67、`spawnIntervalStart` 5.2、`spawnIntervalMin` 2.5 —— 它们是**波次项 / 全时段项**，动一个就动后期 ✗ ✓ ── 逐波读数（每批 = max(1, base + floor(0.6×波) + floor(byProgress×进度) + floor(3.67×√(波−1)))，区间 = 本分钟进度 0 → 1）── 第 1 波 2-4 → **1-2**（−50%）｜第 2 波 6-8 → **5-6**（−21.4%）｜第 3 波 8-10 → **7-8**（−16.7%）｜第 5 波 12-14 → **11-12**（−11.5%）｜第 8 波 15-17 → **14-15**（−9.4%）｜第 10 波 19-21 → **18-19**（−7.5%）⇒ **前 10 波平均 −15.9%（落在 15~20% 目标带内）** ✓ 第 15 波 −6.0%｜第 20 波 29-31 → **28-29**（−5.0%）｜第 30 波 39-41 → **38-39**（−3.7%）（常数加数的权重被 √(波−1) 成长稀释 ⇒ 后期趋近 0）✓ ⚠️ **为什么做不到「前 10 波 −15~20% 且第 10 波之后精确为 0」**：本公式里与波次**解耦**的只有 `spawnBaseCount` 与 `spawnCountByProgress` 两个常数加数（另外两项 `spawnCountPerWave`×波、`spawnCountGrowth`×√(波−1) 都是波次项，动它们等于动后期）⇒ 削减量 Δ 只能是**与波次无关的常数**，而每批数量随波次增长 ⇒ 百分比 Δ/数量 必然单调衰减：要在第 10 波（19~21 只/批）拿到 −18% 需要 Δ≈3.6，而两个加数之和只有 2 ✗ ⇒ 纯数据最优就是把 Δ 拉满（Δ=2 = 本次改动）：前 10 波平均 −15.9% 达标，第 10 波 −7.5%、第 20 波 −5.0% 是算术下限，要做到「10 波后精确不变」必须加代码分支（本轮禁止）✓ 回滚：两个键改回 2 / 2 即完全复原 ✓"
+ },
+ "enemies": {
+  "expCap": 64,
+  "_note_step": "★ v170：敌人成长曲线的系数必须写在这里 ★ —— 真公式在 Defs.WaveGrowth(wave,a,b)=1+a*t+b*t²（t=分钟−1）。这四个键就是那个 a/b。它们原先【没有键】，而代码用 `g.hpStepA > 0f ? g.hpStepA : 0.12f` 硬编码兜底 ⇒ 谁按下面的旧键去调，改了没有任何效果 ✗（审计发现：hpGrowth/dmgGrowth 全工程 0 个消费点）。下面写的就是代码原来的兜底值 ⇒ 行为与改前【完全一致】✓ 而现在配置是唯一来源 ✓",
+  "_note_v190_solve": "★★ v190：三条曲线**重新解系数**（用户要求『20 分钟基础兵 80 血 / 跳跃者 200 血 / 碰撞 6、子弹 4、跳砸 8』）★★ 公式仍是 Defs.WaveGrowth(wave,a,b)=1+a·t+b·t²（t=分钟−1 ⇒ 第 20 分钟 t=19）⇒ 这是**一条过 (0,1) 的抛物线**，两个未知数只被一个点约束 ⇒ 欠定。★ 定形做法：**锁形状、解振幅** —— 沿用本工程原有的形状比 b/a = 0.006/0.12 = 5%，于是 f(19) = 1 + 19a + 361·(0.05a) = 1 + 37.05a ⇒ a = (目标倍率 − 1) / 37.05 ✓ 这样 t=0 恒为 1.0（『开局一刀死』靠它），且曲线形状（弯曲程度）与改前逐位同类。★ 为什么必须新增 eliteHp* 两条：单条曲线下 80/2.8 = 28.571× 而 200/16.8 = 11.905×，**同一个倍率不可能同时成立**；而把跳跃者 base 改成 7.0 会让它在第 1 分钟只值 2 刀（现在 5 刀）——那是没人要求的早期削弱 ⇒ 拆成『标准家族』与『精英家族』两条 HP 曲线，两个 20 分钟目标都精确命中，早期一字不动 ✓",
+  "_note_v277_difficulty": "★★ v277：**敌人生命值成长速度整体下调 −28%**（用户原话：「全部模式难度降低一点，怪物生命值成长速度降低」）★★ 改的只有**三条 HP 曲线的系数 a/b，全部 ×0.72**，`Defs.WaveGrowth(wave,a,b)=1+a·t+b·t²` 的**形状一个字没动**（a 与 b 同乘一个数 ⇒ 仍是同一条过 (0,1) 的抛物线、b/a 仍是 5%）⇒ 第 1 分钟恒为 1.000×（『开局一刀死』靠它，一位不变 ✓），之后每个分钟点的**成长量**统一乘 0.72 ⇒ 血量降幅随波次收敛到 −27%~−28% ✓ ── 改前 → 改后（旧值全部在此备案，回滚照这一行改回即可）── `hpStepA` **0.744168 → 0.535801**（旧 0.744168 ×0.72）｜`hpStepB` **0.0372084 → 0.02679005**｜`eliteHpStepA` **0.294326 → 0.2119147**｜`eliteHpStepB` **0.01471628 → 0.01059572**｜`bossHpStepA` **0.2699055 → 0.194332**｜`bossHpStepB` **0.01349528 → 0.009716602** ✓ ── 曲线倍率（改前 → 改后）── 标准：第 5 分 4.572→**3.572**、第 10 分 10.711→**7.992**、第 20 分 28.571→**20.851**、第 30 分 53.873→**39.069**｜精英：4.841→**3.765** / 11.905→**8.851** / 21.912→**16.057**｜BOSS：4.522→**3.536** / 11.000→**8.200** / 20.177→**14.807** ✓ ── 实际血量（改前 → 改后，baseHp 与 earlyNerf / post20 全未动）── 基础兵 grunt：第 5 分 8.76→**6.84**（−21.9%）、第 10 分 22.49→**16.78**（−25.4%）、第 20 分 60.00→**43.79**（−27.0%）、第 30 分 282.83→**205.11**（−27.5%）｜跳跃者 jumper：27.74→**23.19** / 61.00→**47.45** / 150.00→**111.53** / 690.22→**505.78**｜BOSS「墓园守望者」：516.50→**434.88** / 1017.51→**795.61**（−21.8%）/ 2475.00→**1845.00**（−25.5%）/ 11349.44→**8329.10**｜BOSS「飞蛾守夜者」：573.89→**483.20** / 1130.57→**884.01** / 2750.00→**2050.00** / 12610.49→**9254.56** ✓ 落点：−25.4%（第 10 分）～ −27.5%（第 30 分）在 25~30% 目标带内 ✓ ── 没动的 ── 五条 `baseHp`（含两个 BOSS 的 225 / 250）、`dmgStepA/B`、`bossDmgStepA/B`（伤害曲线不受本次影响）、`earlyNerf` 0.35 / `earlyNerfEnd` 8、`post20Slope` 0.15、`bossHpGrowth` 0.1 ✓ ── 三档难度怎么被覆盖 ── 低/中/高是**乘在 HP 出口上的全局倍率**（`RunDifficulty.HpMult` = 1.00 / 1.20 / 1.50，**写死在代码里**：`Assets/Scripts/Flow/RunDifficulty.cs:42-46`，本轮不动、只报告）⇒ 这里降的是**曲线本身** ⇒ 三档在同一比例下一起降（低 : 中 : 高 仍 = 1 : 1.2 : 1.5）✓ 回滚：六个 a/b 按上面的旧值改回即完全复原 ✓｜── v278（本次）── **只动 BOSS 两条曲线系数**：`bossHpStepA` **0.194332 → 0.0936569**、`bossHpStepB` **0.009716602 → 0.004682845**（b = 0.05a 的形状不变 ⇒ 仍是同一条过 (0,1) 的抛物线，`HpForWave(1,·)` 仍等于 baseHp：boss 225 / moth 250）✓ `enemies.json` 五条 baseHp **一个字节未动**（boss 225 / moth 250 保持）✓ 目标：第 10 分钟（首次出现，低难度 `RunDifficulty.HpMult` = 1.00）BOSS「墓园守望者」**795.61 → 500.00**（旧曲线的 0.628×）、BOSS「飞蛾守夜者」**884.01 → 555.56**（同比例 0.628×；moth 的 baseHp 250 比 boss 225 高 11.1%，两者共用同一条 BOSS 曲线 ⇒ 不可能同时落在 500，按住 boss = 500 求解，moth 落在 555.56）✓ 按 w10 反解：`1 + 9a + 81b = 500/225 = 2.222222`、b = 0.05a ⇒ `13.05a = 1.222222` ⇒ a = **0.0936569** ✓ 改后读数（boss）：w1 225.00｜w5 326.15｜w10 500.00｜w20 1005.75｜w30 4305.56；（moth）：250.00｜362.39｜555.56｜1117.50｜4783.95 ✓ 没动的：`hpStepA/B`、`eliteHpStepA/B`、`dmgStepA/B`、`bossDmgStepA/B`、`earlyNerf` 0.35 / `earlyNerfEnd` 8、`post20Slope` 0.15、`bossHpGrowth` 0.1 ✓ 回滚：把两个数填回 0.194332 / 0.009716602 即完全复原 ✓",
+  "hpStepA": 0.535801,
+  "hpStepB": 0.02679005,
+  "_note_elite": "★ 精英家族（Kind=Jumper 的 HP 曲线，Defs.EnemyDef.HpForWave 里显式分支）★ 目标：第 20 分钟 16.8 × 11.905 = 200 ✓ 解：a = (11.904762 − 1)/37.05 = 0.294326，b = 0.05a = 0.01471628 ✓ ★ 为什么不能共用上面的 hpStep*：共用 ⇒ 跳跃者第 20 分钟 = 16.8 × 28.571 = 480（要 200）✗ 而压 base 又会毁掉它『精英』的身份（见 _note_v190_solve）✓ ★ 这两条键**真的被读**：HpForWave 的 Jumper 分支（探针 ProbeV190.ProbeCurve 会打印『同一只跳跃者用两条曲线各是多少』来证明它没被读漏）",
+  "eliteHpStepA": 0.2119147,
+  "eliteHpStepB": 0.01059572,
+  "_note_dmg": "★ 伤害曲线（Defs.EnemyDef.DamageForWave，接触/弹幕/跳砸三种伤害共用）★ 目标第 20 分钟：碰撞 6 / 子弹 4 / 跳砸 8。★ 三者要的是 6/0.7 = 8.571×、4/0.35 = 11.43×、8/1.12 = 7.14× —— **不一致** ⇒ 一个倍率不可能同时满足 ⇒ 取 D = 6/0.7 = 8.571429（**碰撞 base 0.7 不动**，因为 enemies.json 的 grunt 触碰伤害设计值 0.7 被自检 L366 钉着），另两个 base 反解：子弹 4/8.571429 = 0.4666667、跳砸 8/8.571429 = 0.9333333 ✓ 解系数：a = (8.571429 − 1)/37.05 = 0.204357，b = 0.05a = 0.0102179 ✓",
+  "_note_v201_dmg": "★★ v201（用户原话：『伤害修改，30分钟，基础敌人碰撞伤害达到20，弹幕15，跳匝25，boss碰撞25，弹幕20，跳30』）：**两条伤害曲线重解到第 30 分钟** ★★ 第 30 分钟 = WaveGrowth(30) × post20(29)，其中 post20(29) = 1 + 0.15×(29−19) = **2.5**、WaveGrowth(30) = 1 + 71.05a（t = 29、b = 0.05a）⇒ 目标倍率 A ⇒ a = (A/2.5 − 1)/71.05 ✓ ── 标准家族（grunt / shooter / jumper）── 锚定**碰撞 base 0.7 不动**（enemies.json 的设计值，也是 SelfCheck 『首波基础兵触碰伤害 = 0.455』那条钉住的数）⇒ A = 20/0.7 = 28.571429 ⇒ **a = 0.1467779、b = 0.0073389** ⇒ 第 30 分钟 1 + 0.1467779×29 + 0.0073389×841 = 11.42857 ⇒ ×2.5 = 28.5714 ⇒ 碰撞 0.7×28.5714 = **20.00** ✓ ── 为什么必须同时改 base（比值对不上）── 用户要的三种普通伤害 20 : 15 : 25 = **4 : 3 : 5**，而旧 base 0.7 : 0.4666667 : 0.9333333 = **4 : 2.667 : 5.333**（弹幕低 12.5%、跳砸高 6.25%）⇒ 一条曲线乘下去**不可能同时落格** ⇒ 按 v190 的同一套先例（碰撞 base 当锚、另两个反解）改成 shooter.projectileDamage **0.525**、jumper.jumpDamage **0.875**（= 15/28.571429 与 25/28.571429，十进制上精确）✓ 见 enemies.json 的 `_note_v201` ✓ ── 前段压低 ── `earlyNerf` 0.35 **一个字节没动**：第 1 分钟三条仍是 max(1, round(base × 0.65)) = 0.455 / 0.34125 / 0.56875 = **1 / 1 / 1 点** ⇒ 『小兵打不动玩家』继续成立 ✓ ── 20 分钟（用户没点它）── post20 = 1 ⇒ 随曲线一起变成 **5 / 3 / 6 点**（改前 1 / 1 / 2），这是『30 分 20/15/25 ＋ post20 2.5×』的**必然算术结果** ⇒ 已写进交付报告，不是漏改 ✓ 改前 `a/b = 0.0242915 / 0.001214575`（30 分 6.8152× ⇒ 5 / 3 / 6 点）✓",
+  "dmgStepA": 0.1467779,
+  "dmgStepB": 0.0073389,
+  "_note_v195_dmg": "★★ v195：**伤害曲线振幅重解**（用户原话：『敌人伤害削弱，普通敌人和远程弹幕 20 分钟达到 8 下致死，精英敌人达到 5 下，boss 到达 3 下』）★★ 改前 `dmgStepA/B = 0.204357 / 0.0102179`（第 20 分钟 8.571×，为 v190 的『碰撞 6 / 子弹 4 / 跳砸 8』服务）✗ 那条曲线放在 10 血玩家身上就是『基础兵第 20 分钟打 6 点 ⇒ 2 下死』✗ 与用户要的 8 下差 4 倍 ⇒ 重解：**目标 D_std(20) = 1.900×**（`1 + 37.05a = 1.900` ⇒ a = 0.0242915，形状沿用 b = 0.05a）✓ 这个 1.9 是**反解出来的**：÷10 后的三个 base 是 0.70（基础兵触碰）/ 0.4667（远程弹）/ 0.9333（精英跳砸），它们想要的「1 / 1 / 2 点」分别给出 `D ∈ [0.71,2.14) / [1.07,3.21) / [1.61,2.68)` ⇒ **交集 = [1.61, 2.14)**，取中点 1.9 ⇒ 三个目标同时落在整数格上（1 / 1 / 2）✓ 第 20 分钟读数：基础兵触碰 1.33→**1 点**（10 血 ⇒ 10 下）、远程弹 0.89→**1 点**、精英跳砸 1.77→**2 点**（⇒ **5 下** ✓ 精确命中用户目标）✓ ⚠️ 8 下那条**做不到精确**，见交付报告的『冲突①』算式 ✓",
+  "_note_boss_v195": "★★ v195：BOSS 伤害曲线同步重解（**只看这一招**）★★ 目标 = 用户给的『BOSS 3 下致死』⇒ 10 血 ÷ 3 下 ⇒ **每下 4 点**（`ceil(10/4) = 3` ✓）⇒ BOSS 跳砸 base 1.75（÷10 后）× D_boss(20) = 4.00 ⇒ **D_boss(20) = 2.286×** ⇒ `a = (2.286−1)/37.05 = 0.0347098`、`b = 0.05a` ✓ 另外两招自动落格：触碰 0.84×2.286 = 1.92 → **2 点**（5 下）、弹幕 0.56×2.286 = 1.28 → **1 点**（10 下）⇒ 『BOSS 的威胁在跳砸』这条设计成立 ✓ 改前 D_boss(20) = 4.762×（为『碰撞 4 / 子弹 2.5~3 / 跳砸 8~10』服务）⇒ 跳砸 8.33 → 8 点 ⇒ **2 下**（比用户要的 3 下更凶）✗",
+  "_note_boss": "★★ v190：BOSS 单列两条曲线（用户裁决：『8571 血配 15 点跳砸 —— 那不是难，是不可玩』）★★ 目标带：20 分血 **3000~3500**（≈2× 改前 1634）、三招 **碰撞 4~5 / 子弹 2.5~3 / 跳砸 8~10**、且**玩家 25 血能挨 2~3 下跳砸**。★ 为什么不能复用标准两对：标准 HP 被解到 28.571×（基础兵 80 血逼出来的）⇒ BOSS 会变成 300×28.571 = 8571 ✗；标准伤害被解到 8.571×（6/4/8 逼出来的）⇒ BOSS 跳砸会变成 15 ✗。BOSS 需要的倍率是 11.000（血）与 4.761905（伤害），与标准两套（28.571 / 8.571）都不同 ⇒ 一条曲线装不下 ✓ ★ 取值：形状照旧 b/a = 5% ⇒ a = (目标倍率 − 1)/37.05：BOSS-HP 目标倍率 **11.000** ⇒ a = 10/37.05 = **0.2699055**、b = 0.05a = 0.01349528 ⇒ 20 分 = 300 × 11.000 = **3300** ✓；BOSS-伤害目标倍率 **4/0.84 = 4.761905**（锚定『碰撞 4』这一招）⇒ a = 3.761905/37.05 = **0.10153589**、b = 0.00507679 ⇒ 20 分 碰撞 **4.00** / 子弹 **2.67** / 跳砸 **8.33** ✓ ★★ BOSS 的 baseHp 与三个伤害 base **一个字没改**（300 / 0.84 / 0.56 / 1.75）★★ ⇒ 第 1 分钟与改前逐位相同（曲线起点恒为 1.0）✓ ★ 四条键**真的被读**：唯一出口是 `EnemyDef.HpCurveCoefficients / DmgCurveCoefficients` 的 Boss 分支；探针 ProbeCurve 会打印『同一只 BOSS 走专用曲线 vs 走标准曲线』的差分来证明没读漏 ✓ ★ 为什么不用『BOSS 固定成旧值 0.12/0.006』那条路：那是把两个浮点数写进 Defs.cs ⇒ 表不再是唯一真相、想动就要改代码，而且 1634 低于目标带下沿 ✓（现在要回到旧值只需把这两对填成 0.12/0.006，不用碰代码 ✓）",
+  "bossHpStepA": 0.0936569,
+  "bossHpStepB": 0.004682845,
+  "_note_v201_boss_dmg": "★★ v201：**BOSS 伤害曲线同步重解**（用户目标：30 分钟 碰撞 25 / 弹幕 20 / 跳砸 30）★★ 锚定**碰撞 base 0.84 不动** ⇒ A = 25/0.84 = 29.761905 ⇒ **a = 0.1534801、b = 0.007674005** ⇒ 第 30 分钟 11.90476 × 2.5 = 29.7619 ⇒ 碰撞 0.84×29.7619 = **25.00** ✓ ── 为什么 BOSS 也要动 base ── BOSS 三招比值 25 : 20 : 30 = **1.25 : 1 : 1.5**，旧 base 0.84 : 0.56 : 1.75 = **1.5 : 1 : 3.125**（弹幕低 20%、跳砸高 108%）⇒ 同样一条曲线装不下 ⇒ 反解 boss.projectileDamage **0.672**、boss.jumpDamage **1.008**（= 20/29.761905 与 30/29.761905）✓ 见 enemies.json 的 `_note_v201` ✓ ⚠️ 连带：BOSS **不吃** earlyNerf ⇒ base 的降幅在第 1 分钟直接可见 —— 跳砸 1.75（2 点）→ 1.008（1 点）；BOSS 最早第 10 分钟出场，实测第 10 分钟 3 / 2 / 3 点（改前 1 / 1 / 3）、第 20 分钟 6 / 4 / 7 点（改前 2 / 1 / 4）✓ ★ 两条曲线现在只差 4.2%（28.571 vs 29.762）—— BOSS 专用曲线仍**保留**：一旦合并，第 30 分钟碰撞会落到 24.0 而不是 25 ✗ 改前 `a/b = 0.0347098 / 0.00173549`（30 分 8.6653× ⇒ 7 / 5 / 15 点）✓",
+  "bossDmgStepA": 0.1534801,
+  "bossDmgStepB": 0.007674005,
+  "_note_legacy_removed": "★ v170：这里原有 hpGrowth / dmgGrowth 两个键，已【删除】★ —— 它们曾被 EnemyGrowthDef 接住，而全工程没有任何一处读它们（审计：0 个消费点）。留着的风险是【误导】：`Defs.cs:137` 的注释曾把 hpGrowth 说成生命成长系数 ⇒ 谁照它调都会白调 ✓ 真正的系数已经写在上面那四个 hpStepA/B、dmgStepA/B 里 ✓ 删掉它们不会报错（JsonUtility 忽略未知键，也忽略缺失键）✓",
+  "bossHpGrowth": 0.1,
+  "bossFlattenExponent": true,
+  "_note_early": "★★ v191：**前段压低项**（用户要求『下调前期敌人数值』）★★ 公式在 Defs.EnemyDef.EarlyNerfFactor：t = 分钟−1，t ≥ earlyNerfEnd ⇒ **精确 1.0**（不带残差），否则 1 − earlyNerf × (1 − t/earlyNerfEnd)²。★ 为什么不用指数衰减：e^(−t/k) 永远到不了 0 ⇒ 第 20 分钟会残留 early·e^(−19/k)（0.35、k=6 时 = 1.5% ⇒ 基础兵 80 变成 78.8）✗ 而 (1 − t/T0)² 在窗口后**精确为 0** ⇒ 上一轮定下的 20 分钟硬目标（80 / 6 / 4 / 200 / 8）逐位不变 ✓ 且 t=T0 处导数为 0 ⇒ 没有折角 ✓ ★ 取值 0.35 / 8 分钟的理由：第 1 分钟基础兵血 2.8 → 1.82（仍 ≤ 玩家每击 4 ⇒『开局一刀死』继续成立），第 2/3/5 分钟 3.65 / 5.93 / 11.68，第 10 分钟起与改前一字节相同；窗口止于第 8 分钟而 BOSS 最早第 10 分钟出场，且 BOSS 在 EarlyNerfFactor 里**显式排除**（用户原话『BOSS 暂时不调整』⇒ 它的任何波次都不许变）✓ ★ 这两个键**真的被读**：唯一消费点 EarlyNerfFactor，HpForWave 与 DamageForWave 都走它；自检五条断言钉住它们（第 1 分钟 = 1 − 0.35、窗口外恒 1、20 分仍 80.00、BOSS 不吃、前期单调）✓ 把 earlyNerf 填 0 即整体关闭、回到 v190 行为 ✓",
+  "earlyNerf": 0.35,
+  "earlyNerfEnd": 8.0,
+  "_note_v194_post20": "★★ v194（用户原话『检查20分钟后敌人数值是否还在成长，20分钟后的成长规则修改，额外提高敌人成长倍率』）：**20 分钟后的额外加速斜率 = 0.15 / 分钟** ★★ ── 先回答『20 分钟后还在不在长』── **在长**，而且是二次的：五条曲线的 `WaveGrowth` 是 `1 + a·t + b·t²`（`b > 0`）⇒ 单调且**加速度 > 0**，第 20 / 25 / 30 分钟的倍率实测：标准 HP **28.571 / 40.292 / 53.873**、伤害 **8.571 / 11.790 / 15.520**（见 `HpForWave` / `DamageForWave` 与探针 `ProbeV194Num` 的差分读数）✓ 所以『不成长』这个怀疑**不成立**；成立的是另一件事：**二次曲线的尾巴不够陡** —— 20→30 分钟只涨 1.89 倍，而这十分钟里玩家靠升级+道具的成长通常不止 1.9 倍 ⇒ 后期会反向变简单 ✗ ── 加的是什么 ── 一个新因子，**乘在整条曲线上**：`post20(t) = 1 + post20Slope × max(0, t − 19)`（`t = 分钟 − 1`，与 `WaveGrowth` 同一刻度）⇒ 第 20 分钟及以前**精确 1.0**（`max(0, 0)`，不带残差 ⇒ 既有的 20 分钟硬目标 800 / 60 / 40 / 80 / 2000 / 3300 一位不变 ✓）、第 21 分钟起每分钟多 +15% ✓ 取 0.15 的判据：把 20→30 的 1.89 倍抬成 **4.71 倍**（×`post20(29) = 1 + 0.15×10 = 2.5`），恰好压过玩家同期约 2~3 倍的强度增长 ⇒ 曲线由『后期变简单』变成『后期压力持续』✓ 写 0 即**整体关闭**、回到 v193 行为（一个数回退）✓ ★ 该键**真的被读**：唯一消费点是 `EnemyDef.Post20Factor(wave)`，`HpForWave` 与 `DamageForWave` 都只调它（不存在第二份实现），探针里有一条『同一只基础兵在 post20 = 0 / 0.15 下的第 20·25·30 分钟差分』来证明它没被读漏 ✓ ⚠️ BOSS 也吃这一项（『所有敌人』），但它的第 20 分钟同样精确 1.0 ⇒ 既有 BOSS 断言不变 ✓",
+  "post20Slope": 0.15
+ },
+ "camera": {
+  "pitch": 60.0,
+  "orthographic": false,
+  "orthoSize": 7.5,
+  "fov": 62.0,
+  "distance": 22.0,
+  "height": 38.1,
+  "followLerp": 10.0,
+  "clampToArena": false
+ },
+ "ui": {
+  "scale": 1.35,
+  "keyHelpDefault": true,
+  "popupRadius": 0.6,
+  "popupFontSize": 26
+ },
+ "meta": {
+  "fixedDt": 0.016666667,
+  "maxCatchUpTicks": 5,
+  "runSeed": 20240607
+ }
 }

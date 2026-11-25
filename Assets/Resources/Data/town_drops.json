@@ -1,0 +1,17 @@
+{
+  "_note": "★★ v213：BOSS 掉落的**主城种子权重表** ★★ 读它的唯一代码是 Assets/Scripts/Town/TownDrops.cs（构造时做一次权重前缀和）。战斗侧只在 `RunSession.OnEnemyKilled` 里调用 `TownDrops.OnBossKilled` 一处，不读本表的任何字段。",
+  "_note_为什么单独一张表": "不塞进 town_seeds.json 的理由：① 那是**种子定义**（成熟/产金/等级），掉落是**战斗侧的投放规则**，两者的生命周期不同 —— 改掉落概率不该动种子数值表；② 不在 town_shop.json 里加字段：那张表是**花金币买**的价目，掉落是**免费得**，同一张表里放两种来源会让「这个数是什么」读不出来；③ 本表允许只列**一部分种子**（没列到的权重 = 0），将来加种子不必同步改这里。",
+  "_note_权重口径": "weight 是**相对权重**，不是百分比 —— 实际概率 = weight / 所有 weight 之和（本表合计 96）。口径按品质自上而下递减，让「低品质多、A 少」这件事是**表里能读出来的**，而不是藏在代码里：D 级 26+22 = 48 ⇒ 50.0%｜C 级 16+12 = 28 ⇒ 29.2%｜B 级 9+6 = 15 ⇒ 15.6%｜A 级 3+2 = 5 ⇒ 5.2%。同一品质内贵的那个（goldPerSecond 高的）权重更低 —— 价值与概率反向，避免「掉一次就回本」把长周期种子变成最优解。",
+  "_note_随机源": "★★ 抽样**不消费 World.Rng** ★★ 用 `BossSchedule.DerivedHash(击杀序号 × 7919 + 1337)`（纯函数、不读写任何随机源）。理由与 BossSchedule 同类：World.Rng 是全局逻辑随机流，刷怪位置/战利品/暴击都从里取，只要掉落喝一口，之后每一个既有随机读数都会整体漂一位 ⇒ 工程里那批钉住种子的自检与 `RunSimulator.VerifyDeterminism` 会一起变红，而红的原因不是「掉落算错了」而是「我悄悄改了全局序列」。",
+  "_note_掉落数量": "每次 BOSS 死亡**恰好掉 1 颗**（用户原话：「掉落1个种子（主城种子）」）。不做暴击双掉、不做按 BOSS 种类加倍 —— 那是本轮范围外的设计。",
+  "bossSeeds": [
+    { "seedId": "town_radish",  "weight": 26 },
+    { "seedId": "town_wheat",   "weight": 22 },
+    { "seedId": "town_pea",     "weight": 16 },
+    { "seedId": "town_pumpkin", "weight": 12 },
+    { "seedId": "town_grape",   "weight": 9 },
+    { "seedId": "town_berry",   "weight": 6 },
+    { "seedId": "town_lotus",   "weight": 3 },
+    { "seedId": "town_crystal", "weight": 2 }
+  ]
+}

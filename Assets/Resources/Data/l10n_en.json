@@ -1,0 +1,5241 @@
+{
+ "lang": "en",
+ "version": 1,
+ "count": 1046,
+ "entries": [
+  {
+   "k": "ui.settings.title",
+   "z": "",
+   "v": "Settings"
+  },
+  {
+   "k": "ui.settings.language",
+   "z": "",
+   "v": "Language / 语言"
+  },
+  {
+   "k": "ui.settings.langShort",
+   "z": "",
+   "v": "Lang"
+  },
+  {
+   "k": "ui.settings.music",
+   "z": "",
+   "v": "Music Volume"
+  },
+  {
+   "k": "ui.settings.sfx",
+   "z": "",
+   "v": "SFX Volume"
+  },
+  {
+   "k": "ui.settings.quality",
+   "z": "",
+   "v": "Quality (shadows / AA / URP render scale)"
+  },
+  {
+   "k": "ui.settings.fpscap",
+   "z": "",
+   "v": "Frame Rate Cap (vsync off)"
+  },
+  {
+   "k": "ui.settings.resolution",
+   "z": "",
+   "v": "Resolution"
+  },
+  {
+   "k": "ui.settings.displaymode",
+   "z": "",
+   "v": "Display Mode"
+  },
+  {
+   "k": "ui.settings.windowed",
+   "z": "",
+   "v": "Windowed"
+  },
+  {
+   "k": "ui.settings.fullscreen",
+   "z": "",
+   "v": "Fullscreen"
+  },
+  {
+   "k": "ui.settings.bindings",
+   "z": "",
+   "v": "Key Bindings — town / combat"
+  },
+  {
+   "k": "ui.settings.close",
+   "z": "",
+   "v": "Close (Esc)"
+  },
+  {
+   "k": "ui.settings.backtitle",
+   "z": "",
+   "v": "Back to Title"
+  },
+  {
+   "k": "ui.login.title",
+   "z": "",
+   "v": "Seedfall · Town Login"
+  },
+  {
+   "k": "ui.login.continue",
+   "z": "",
+   "v": "Continue Game"
+  },
+  {
+   "k": "ui.login.newgame",
+   "z": "",
+   "v": "New Game"
+  },
+  {
+   "k": "ui.login.saves",
+   "z": "",
+   "v": "Saves (§ slots)"
+  },
+  {
+   "k": "ui.login.quit",
+   "z": "",
+   "v": "Quit Game"
+  },
+  {
+   "k": "hud.gold",
+   "z": "",
+   "v": "Gold"
+  },
+  {
+   "k": "hud.goldOf",
+   "z": "",
+   "v": "Town Gold"
+  },
+  {
+   "k": "hud.close",
+   "z": "",
+   "v": "Close (E)"
+  },
+  {
+   "k": "hud.buy",
+   "z": "",
+   "v": "Buy"
+  },
+  {
+   "k": "hud.sell",
+   "z": "",
+   "v": "Sell"
+  },
+  {
+   "k": "hud.unequip",
+   "z": "",
+   "v": "Unequip"
+  },
+  {
+   "k": "hud.wear",
+   "z": "",
+   "v": "Wear"
+  },
+  {
+   "k": "hud.unlock",
+   "z": "",
+   "v": "Unlock"
+  },
+  {
+   "k": "hud.unlocked",
+   "z": "",
+   "v": "Unlocked"
+  },
+  {
+   "k": "hud.notEnoughGold",
+   "z": "",
+   "v": "Not enough gold"
+  },
+  {
+   "k": "combat.shop",
+   "z": "",
+   "v": "Shop"
+  },
+  {
+   "k": "combat.weapons",
+   "z": "",
+   "v": "Weapons (3)"
+  },
+  {
+   "k": "combat.stats",
+   "z": "",
+   "v": "Character Stats"
+  },
+  {
+   "k": "combat.death",
+   "z": "",
+   "v": "Garden Lost"
+  },
+  {
+   "k": "combat.restart",
+   "z": "",
+   "v": "Restart"
+  },
+  {
+   "k": "combat.backToTown",
+   "z": "",
+   "v": "Back to Town"
+  },
+  {
+   "k": "combat.continue",
+   "z": "",
+   "v": "Resume Game (Esc)"
+  },
+  {
+   "k": "combat.leaveCombat",
+   "z": "",
+   "v": "Leave Combat (back to town)"
+  },
+  {
+   "k": "popup.gold",
+   "z": "",
+   "v": "Gold +§"
+  },
+  {
+   "k": "popup.goldShort",
+   "z": "",
+   "v": "G +§"
+  },
+  {
+   "k": "popup.exp",
+   "z": "",
+   "v": "EXP +§"
+  },
+  {
+   "k": "popup.ripe",
+   "z": "",
+   "v": "Ripe"
+  },
+  {
+   "k": "popup.thirst",
+   "z": "",
+   "v": "Dry"
+  },
+  {
+   "k": "bind.moveUp",
+   "z": "",
+   "v": "Move Up"
+  },
+  {
+   "k": "bind.moveDown",
+   "z": "",
+   "v": "Move Down"
+  },
+  {
+   "k": "bind.moveLeft",
+   "z": "",
+   "v": "Move Left"
+  },
+  {
+   "k": "bind.moveRight",
+   "z": "",
+   "v": "Move Right"
+  },
+  {
+   "k": "bind.interactTown",
+   "z": "",
+   "v": "Interact / Plant"
+  },
+  {
+   "k": "bind.attackTown",
+   "z": "",
+   "v": "Attack (no combat in town)"
+  },
+  {
+   "k": "bind.switchWeapon",
+   "z": "",
+   "v": "Switch Weapon"
+  },
+  {
+   "k": "bind.settings",
+   "z": "",
+   "v": "Settings (Esc)"
+  },
+  {
+   "k": "bind.interactCombat",
+   "z": "",
+   "v": "Interact / Shop"
+  },
+  {
+   "k": "bind.attack",
+   "z": "",
+   "v": "Attack"
+  },
+  {
+   "k": "bind.menu",
+   "z": "",
+   "v": "Menu / Pause (Esc)"
+  },
+  {
+   "k": "bind.reroll",
+   "z": "",
+   "v": "Reroll Shop / Redraw (R)"
+  },
+  {
+   "k": "bind.confirm",
+   "z": "",
+   "v": "Skip / Continue / Confirm (Space)"
+  },
+  {
+   "k": "bind.restart",
+   "z": "",
+   "v": "Restart Run (Shift + R)"
+  },
+  {
+   "k": "bind.keyhelp",
+   "z": "",
+   "v": "Toggle Controls (Tab)"
+  },
+  {
+   "k": "ui.settings.tierLow",
+   "z": "",
+   "v": "Low"
+  },
+  {
+   "k": "ui.settings.tierMid",
+   "z": "",
+   "v": "Medium"
+  },
+  {
+   "k": "ui.settings.tierHigh",
+   "z": "",
+   "v": "High"
+  },
+  {
+   "k": "unit.gold",
+   "z": "",
+   "v": "§ gold"
+  },
+  {
+   "k": "unit.seeds",
+   "z": "",
+   "v": "§ seeds"
+  },
+  {
+   "k": "unit.level",
+   "z": "",
+   "v": "Lv §"
+  },
+  {
+   "k": "unit.items",
+   "z": "",
+   "v": "§ items"
+  },
+  {
+   "k": "unit.seconds",
+   "z": "",
+   "v": "§ s"
+  },
+  {
+   "k": "codex.tabPlants",
+   "z": "",
+   "v": "Plants §"
+  },
+  {
+   "k": "codex.tabItems",
+   "z": "",
+   "v": "Items §"
+  },
+  {
+   "k": "codex.tabPlugins",
+   "z": "",
+   "v": "Plugins §"
+  },
+  {
+   "k": "hint.warehouse",
+   "z": "",
+   "v": "【E】Open Seed Warehouse"
+  },
+  {
+   "k": "hint.warehouseEmpty",
+   "z": "",
+   "v": "【E】Open Seed Warehouse (empty — seeds drop from BOSSes)"
+  },
+  {
+   "k": "hint.portal",
+   "z": "",
+   "v": "【E】Enter the portal · beat BOSSes in combat for seeds"
+  },
+  {
+   "k": "hint.shop",
+   "z": "",
+   "v": "【E】General Store · items / plugins / plants (no seeds)"
+  },
+  {
+   "k": "hint.clothing",
+   "z": "",
+   "v": "【E】Clothing Shop · skins"
+  },
+  {
+   "k": "hint.home",
+   "z": "",
+   "v": "【E】Home · Codex (plants / items / plugins / achievements)"
+  },
+  {
+   "k": "hint.plantHere",
+   "z": "",
+   "v": "【E】Plant a seed on this empty plot"
+  },
+  {
+   "k": "hint.noSeed",
+   "z": "",
+   "v": "No seeds in storage — beat BOSSes in combat first (the shop sells none)"
+  },
+  {
+   "k": "status.rebound",
+   "z": "",
+   "v": "Rebind done: "
+  },
+  {
+   "k": "status.audio",
+   "z": "",
+   "v": "Volume applied: "
+  },
+  {
+   "k": "status.quality",
+   "z": "",
+   "v": "Quality applied: "
+  },
+  {
+   "k": "status.fps",
+   "z": "",
+   "v": "Frame rate applied: "
+  },
+  {
+   "k": "status.resolution",
+   "z": "",
+   "v": "Resolution applied: "
+  },
+  {
+   "k": "status.bindReset",
+   "z": "",
+   "v": "Bindings reset to default: "
+  },
+  {
+   "k": "status.saved",
+   "z": "",
+   "v": "Saved → slot {0} ({1})"
+  },
+  {
+   "k": "login.slotNo",
+   "z": "",
+   "v": "Slot {0}"
+  },
+  {
+   "k": "hint.harvestNow",
+   "z": "",
+   "v": "【E】Harvest (now: {0} · ripe — take it, the seed goes back to storage)"
+  },
+  {
+   "k": "hint.replaceCrop",
+   "z": "",
+   "v": "【E】Change crop (now: {0} · {1}/{2} s)"
+  },
+  {
+   "k": "result.line1",
+   "z": "",
+   "v": "Survived {0} (minute {1})　kills {2}"
+  },
+  {
+   "k": "result.line2",
+   "z": "",
+   "v": "Gold {0}　Level {1}"
+  },
+  {
+   "k": "result.line3",
+   "z": "",
+   "v": "Plants {0}/{1}　Plots {2}"
+  },
+  {
+   "k": "defs.000",
+   "z": "",
+   "v": "Gold"
+  },
+  {
+   "k": "loginhud.001",
+   "z": "",
+   "v": "Town"
+  },
+  {
+   "k": "goods.002",
+   "z": "",
+   "v": "Price"
+  },
+  {
+   "k": "townhud.003",
+   "z": "",
+   "v": "Sell all"
+  },
+  {
+   "k": "loginhud.005",
+   "z": "",
+   "v": "Delete"
+  },
+  {
+   "k": "loginloading.006",
+   "z": "",
+   "v": "Pumpkin"
+  },
+  {
+   "k": "loginhud.008",
+   "z": "",
+   "v": "Cancel"
+  },
+  {
+   "k": "townhud.009",
+   "z": "",
+   "v": "Name"
+  },
+  {
+   "k": "runsession.010",
+   "z": "",
+   "v": "Goods"
+  },
+  {
+   "k": "townskins.011",
+   "z": "",
+   "v": "Scarf"
+  },
+  {
+   "k": "loginhud.012",
+   "z": "",
+   "v": "Copy"
+  },
+  {
+   "k": "townskins.013",
+   "z": "",
+   "v": "Headwear"
+  },
+  {
+   "k": "imguihud.014",
+   "z": "",
+   "v": "Stats"
+  },
+  {
+   "k": "townhud.015",
+   "z": "",
+   "v": "Bought"
+  },
+  {
+   "k": "townhud.016",
+   "z": "",
+   "v": "Achievements"
+  },
+  {
+   "k": "imguihud.017",
+   "z": "",
+   "v": "Grown"
+  },
+  {
+   "k": "loginhud.018",
+   "z": "",
+   "v": "Combat"
+  },
+  {
+   "k": "imguihud.019",
+   "z": "",
+   "v": "Shield"
+  },
+  {
+   "k": "townbootstrap.020",
+   "z": "",
+   "v": "Drop #"
+  },
+  {
+   "k": "runsession.021",
+   "z": "",
+   "v": "Plugin"
+  },
+  {
+   "k": "townhud.022",
+   "z": "",
+   "v": "Action"
+  },
+  {
+   "k": "townhud.023",
+   "z": "",
+   "v": "Harvest"
+  },
+  {
+   "k": "loginhud.024",
+   "z": "",
+   "v": "Rebind"
+  },
+  {
+   "k": "townskins.025",
+   "z": "",
+   "v": "Cape"
+  },
+  {
+   "k": "townhud.026",
+   "z": "",
+   "v": "Out of stock"
+  },
+  {
+   "k": "actors.027",
+   "z": "",
+   "v": "Plant"
+  },
+  {
+   "k": "actors.028",
+   "z": "",
+   "v": "Watering Can"
+  },
+  {
+   "k": "loginloading.029",
+   "z": "",
+   "v": "Onion"
+  },
+  {
+   "k": "imguihud.030",
+   "z": "",
+   "v": "Blast"
+  },
+  {
+   "k": "loginloading.031",
+   "z": "",
+   "v": "Corn"
+  },
+  {
+   "k": "loginloading.032",
+   "z": "",
+   "v": "Tomato"
+  },
+  {
+   "k": "loginhud.033",
+   "z": "",
+   "v": "Log In"
+  },
+  {
+   "k": "loginloading.034",
+   "z": "",
+   "v": "Cabbage"
+  },
+  {
+   "k": "townskins.035",
+   "z": "",
+   "v": "Glasses"
+  },
+  {
+   "k": "townhud.036",
+   "z": "",
+   "v": "Plant"
+  },
+  {
+   "k": "shoppool.037",
+   "z": "",
+   "v": "Seed"
+  },
+  {
+   "k": "loginhud.038",
+   "z": "",
+   "v": "Empty slot"
+  },
+  {
+   "k": "imguihud.039",
+   "z": "",
+   "v": "Space"
+  },
+  {
+   "k": "actors.042",
+   "z": "",
+   "v": "Fertilizer"
+  },
+  {
+   "k": "townskins.043",
+   "z": "",
+   "v": "Pauldrons"
+  },
+  {
+   "k": "townskins.044",
+   "z": "",
+   "v": "Backpack"
+  },
+  {
+   "k": "townskins.045",
+   "z": "",
+   "v": "Belt"
+  },
+  {
+   "k": "loginloading.046",
+   "z": "",
+   "v": "Eggplant"
+  },
+  {
+   "k": "runsession.050",
+   "z": "",
+   "v": "Melee"
+  },
+  {
+   "k": "runsession.051",
+   "z": "",
+   "v": "Ranged"
+  },
+  {
+   "k": "loginhud.052",
+   "z": "",
+   "v": "Select"
+  },
+  {
+   "k": "shoppool.053",
+   "z": "",
+   "v": "Items"
+  },
+  {
+   "k": "imguihud.054",
+   "z": "",
+   "v": "Lock"
+  },
+  {
+   "k": "actors.055",
+   "z": "",
+   "v": "Hoe"
+  },
+  {
+   "k": "townskins.056",
+   "z": "",
+   "v": "Mask"
+  },
+  {
+   "k": "loginhud.057",
+   "z": "",
+   "v": " slots full"
+  },
+  {
+   "k": "imguihud.058",
+   "z": "",
+   "v": "Knockback"
+  },
+  {
+   "k": "imguihud.060",
+   "z": "",
+   "v": "Function:"
+  },
+  {
+   "k": "townhud.061",
+   "z": "",
+   "v": "Shop /"
+  },
+  {
+   "k": "townhud.062",
+   "z": "",
+   "v": "Codex /"
+  },
+  {
+   "k": "loginhud.063",
+   "z": "",
+   "v": "Save:"
+  },
+  {
+   "k": "imguihud.064",
+   "z": "",
+   "v": "Tilled"
+  },
+  {
+   "k": "imguihud.066",
+   "z": "",
+   "v": "Luck"
+  },
+  {
+   "k": "townhud.067",
+   "z": "",
+   "v": "Achievements"
+  },
+  {
+   "k": "loginhud.068",
+   "z": "",
+   "v": "Press key..."
+  },
+  {
+   "k": "townhud.069",
+   "z": "",
+   "v": "Take Seeds"
+  },
+  {
+   "k": "imguihud.070",
+   "z": "",
+   "v": "Effect:"
+  },
+  {
+   "k": "imguihud.071",
+   "z": "",
+   "v": "Crit Chance"
+  },
+  {
+   "k": "loginhud.072",
+   "z": "",
+   "v": "Save found"
+  },
+  {
+   "k": "townbootstrap.073",
+   "z": "",
+   "v": "Clothing Shop"
+  },
+  {
+   "k": "imguihud.074",
+   "z": "",
+   "v": "Untilled"
+  },
+  {
+   "k": "runsession.075",
+   "z": "",
+   "v": "Unspecified"
+  },
+  {
+   "k": "imguihud.076",
+   "z": "",
+   "v": "Growing"
+  },
+  {
+   "k": "imguihud.077",
+   "z": "",
+   "v": "Seed Card"
+  },
+  {
+   "k": "townhud.078",
+   "z": "",
+   "v": "Wearing"
+  },
+  {
+   "k": "loginloading.079",
+   "z": "",
+   "v": "Carrot"
+  },
+  {
+   "k": "loginloading.080",
+   "z": "",
+   "v": "Loading"
+  },
+  {
+   "k": "imguihud.081",
+   "z": "",
+   "v": "Enter Shop"
+  },
+  {
+   "k": "imguihud.082",
+   "z": "",
+   "v": "Dodge"
+  },
+  {
+   "k": "townbuildings.083",
+   "z": "",
+   "v": "Market"
+  },
+  {
+   "k": "townpostfx.084",
+   "z": "",
+   "v": "(none)"
+  },
+  {
+   "k": "towndrops.085",
+   "z": "",
+   "v": "(unknown)"
+  },
+  {
+   "k": "townhud.086",
+   "z": "",
+   "v": "Town Map"
+  },
+  {
+   "k": "townhud.088",
+   "z": "",
+   "v": "After buying"
+  },
+  {
+   "k": "townhud.089",
+   "z": "",
+   "v": "In storage"
+  },
+  {
+   "k": "imguihud.090",
+   "z": "",
+   "v": "Any weapon"
+  },
+  {
+   "k": "imguihud.091",
+   "z": "",
+   "v": "Damage Multiplier"
+  },
+  {
+   "k": "townhud.092",
+   "z": "",
+   "v": "Unequip All"
+  },
+  {
+   "k": "imguihud.093",
+   "z": "",
+   "v": "Function —"
+  },
+  {
+   "k": "imguihud.094",
+   "z": "",
+   "v": "Rarity unknown"
+  },
+  {
+   "k": "imguihud.095",
+   "z": "",
+   "v": "Shop Details"
+  },
+  {
+   "k": "townbootstrap.096",
+   "z": "",
+   "v": "Grand Portal"
+  },
+  {
+   "k": "imguihud.098",
+   "z": "",
+   "v": "Stats Panel"
+  },
+  {
+   "k": "imguihud.099",
+   "z": "",
+   "v": "Bottom hint"
+  },
+  {
+   "k": "imguihud.100",
+   "z": "",
+   "v": "My Weapons"
+  },
+  {
+   "k": "imguihud.101",
+   "z": "",
+   "v": "Attack Range"
+  },
+  {
+   "k": "imguihud.102",
+   "z": "",
+   "v": "Attack Speed"
+  },
+  {
+   "k": "townhud.103",
+   "z": "",
+   "v": "Coming soon"
+  },
+  {
+   "k": "imguihud.104",
+   "z": "",
+   "v": "Value —"
+  },
+  {
+   "k": "imguihud.106",
+   "z": "",
+   "v": "No action needed"
+  },
+  {
+   "k": "imguihud.108",
+   "z": "",
+   "v": "Crit Damage"
+  },
+  {
+   "k": "imguihud.109",
+   "z": "",
+   "v": "Max Health"
+  },
+  {
+   "k": "townbootstrap.110",
+   "z": "",
+   "v": "General Store"
+  },
+  {
+   "k": "imguihud.111",
+   "z": "",
+   "v": "Plant Slot #"
+  },
+  {
+   "k": "townhud.112",
+   "z": "",
+   "v": "Growing"
+  },
+  {
+   "k": "imguihud.113",
+   "z": "",
+   "v": "Wave Hint"
+  },
+  {
+   "k": "imguihud.114",
+   "z": "",
+   "v": "Blast Damage"
+  },
+  {
+   "k": "imguihud.115",
+   "z": "",
+   "v": "Blast Radius"
+  },
+  {
+   "k": "loginhud.116",
+   "z": "",
+   "v": "Confirm Delete"
+  },
+  {
+   "k": "townhud.117",
+   "z": "",
+   "v": "Plant Seed"
+  },
+  {
+   "k": "townbootstrap.118",
+   "z": "",
+   "v": "Seed Warehouse"
+  },
+  {
+   "k": "imguihud.119",
+   "z": "",
+   "v": "Move Speed"
+  },
+  {
+   "k": "imguihud.120",
+   "z": "",
+   "v": "Empty plugin slot"
+  },
+  {
+   "k": "imguihud.121",
+   "z": "",
+   "v": "EXP Multiplier"
+  },
+  {
+   "k": "savestore.124",
+   "z": "",
+   "v": "Load failed"
+  },
+  {
+   "k": "imguihud.125",
+   "z": "",
+   "v": "Coin Multiplier"
+  },
+  {
+   "k": "imguihud.126",
+   "z": "",
+   "v": "Melee Damage"
+  },
+  {
+   "k": "imguihud.128",
+   "z": "",
+   "v": "Ranged Damage"
+  },
+  {
+   "k": "townhud.131",
+   "z": "",
+   "v": "Gold/sec"
+  },
+  {
+   "k": "townhud.133",
+   "z": "",
+   "v": "Remove Crop"
+  },
+  {
+   "k": "imguihud.136",
+   "z": "",
+   "v": "(Space)"
+  },
+  {
+   "k": "towncodex.137",
+   "z": "",
+   "v": "(fallback: "
+  },
+  {
+   "k": "townunlocks.138",
+   "z": "",
+   "v": "| failed: "
+  },
+  {
+   "k": "towndrops.139",
+   "z": "",
+   "v": "(reset)"
+  },
+  {
+   "k": "townhud.140",
+   "z": "",
+   "v": "Sell §"
+  },
+  {
+   "k": "imguihud.141",
+   "z": "",
+   "v": "Stacking:"
+  },
+  {
+   "k": "imguihud.142",
+   "z": "",
+   "v": "Max stacks:"
+  },
+  {
+   "k": "imguihud.143",
+   "z": "",
+   "v": "Plant slots"
+  },
+  {
+   "k": "townhud.144",
+   "z": "",
+   "v": "Rarity/Lv"
+  },
+  {
+   "k": "townhud.145",
+   "z": "",
+   "v": "Buyback/ea"
+  },
+  {
+   "k": "imguihud.146",
+   "z": "",
+   "v": "Pig Spawn Rate"
+  },
+  {
+   "k": "townhud.147",
+   "z": "",
+   "v": "Ripe(sec)"
+  },
+  {
+   "k": "imguihud.148",
+   "z": "",
+   "v": "Shield regenerating"
+  },
+  {
+   "k": "townhud.149",
+   "z": "",
+   "v": "Change Crop"
+  },
+  {
+   "k": "imguihud.150",
+   "z": "",
+   "v": "Heart Heal"
+  },
+  {
+   "k": "imguihud.151",
+   "z": "",
+   "v": "Heart Drop Rate"
+  },
+  {
+   "k": "townhud.152",
+   "z": "",
+   "v": "Gold on hand:"
+  },
+  {
+   "k": "loginhud.153",
+   "z": "",
+   "v": "Return?"
+  },
+  {
+   "k": "loginhud.154",
+   "z": "",
+   "v": "Save folder:"
+  },
+  {
+   "k": "imguihud.155",
+   "z": "",
+   "v": "Usable on:"
+  },
+  {
+   "k": "loginbootstrap.156",
+   "z": "",
+   "v": "Mask off: "
+  },
+  {
+   "k": "loginloading.157",
+   "z": "",
+   "v": "Mask on: "
+  },
+  {
+   "k": "loginloading.158",
+   "z": "",
+   "v": "Mask fading: "
+  },
+  {
+   "k": "imguihud.159",
+   "z": "",
+   "v": "Locking target"
+  },
+  {
+   "k": "imguihud.160",
+   "z": "",
+   "v": "Lock (⇧)"
+  },
+  {
+   "k": "gardencursor.161",
+   "z": "",
+   "v": "(not initialised)"
+  },
+  {
+   "k": "gardencursor.162",
+   "z": "",
+   "v": "(system default)"
+  },
+  {
+   "k": "townskins.163",
+   "z": "",
+   "v": "(none built yet)"
+  },
+  {
+   "k": "townhud.164",
+   "z": "",
+   "v": "(never drawn)"
+  },
+  {
+   "k": "imguihud.165",
+   "z": "",
+   "v": "— Situation —"
+  },
+  {
+   "k": "loginbootstrap.166",
+   "z": "",
+   "v": "❌ Path required"
+  },
+  {
+   "k": "towndrops.167",
+   "z": "",
+   "v": "Town drop table: "
+  },
+  {
+   "k": "townskins.168",
+   "z": "",
+   "v": "Town skin table: "
+  },
+  {
+   "k": "townhud.171",
+   "z": "",
+   "v": "Shop / Take Seeds"
+  },
+  {
+   "k": "townhud.172",
+   "z": "",
+   "v": "Codex · Home"
+  },
+  {
+   "k": "townbuildings.173",
+   "z": "",
+   "v": "Home · Codex"
+  },
+  {
+   "k": "townskins.174",
+   "z": "",
+   "v": "Everything removed"
+  },
+  {
+   "k": "imguihud.175",
+   "z": "",
+   "v": "Locked (⇧)"
+  },
+  {
+   "k": "imguihud.177",
+   "z": "",
+   "v": "Special: none"
+  },
+  {
+   "k": "imguihud.178",
+   "z": "",
+   "v": "Level effect —"
+  },
+  {
+   "k": "imguihud.179",
+   "z": "",
+   "v": "Continue (Space)"
+  },
+  {
+   "k": "imguihud.180",
+   "z": "",
+   "v": "Menu item function"
+  },
+  {
+   "k": "imguihud.181",
+   "z": "",
+   "v": "Menu item values"
+  },
+  {
+   "k": "imguihud.182",
+   "z": "",
+   "v": "Pick a card first"
+  },
+  {
+   "k": "imguihud.183",
+   "z": "",
+   "v": "Skip summon ▶"
+  },
+  {
+   "k": "townskins.184",
+   "z": "",
+   "v": "Worn decorations: "
+  },
+  {
+   "k": "combatfeedback.186",
+   "z": "",
+   "v": "| stop remaining="
+  },
+  {
+   "k": "combatfeedback.187",
+   "z": "",
+   "v": "| crit peak="
+  },
+  {
+   "k": "combatfeedback.188",
+   "z": "",
+   "v": "| blast peak="
+  },
+  {
+   "k": "imguihud.189",
+   "z": "",
+   "v": "EXP-leaning test crop"
+  },
+  {
+   "k": "loginhud.190",
+   "z": "",
+   "v": "Cannot be undone"
+  },
+  {
+   "k": "imguihud.191",
+   "z": "",
+   "v": "Reroll Shop (R)"
+  },
+  {
+   "k": "imguihud.192",
+   "z": "",
+   "v": "Merge (same level)"
+  },
+  {
+   "k": "towndrops.193",
+   "z": "",
+   "v": "Drop table not loaded: "
+  },
+  {
+   "k": "imguihud.194",
+   "z": "",
+   "v": "Till §s"
+  },
+  {
+   "k": "imguihud.195",
+   "z": "",
+   "v": "Sow §s"
+  },
+  {
+   "k": "imguihud.196",
+   "z": "",
+   "v": "Confirm (Space): "
+  },
+  {
+   "k": "imguihud.197",
+   "z": "",
+   "v": "Menu (Esc)"
+  },
+  {
+   "k": "loginhud.199",
+   "z": "",
+   "v": "Music / SFX"
+  },
+  {
+   "k": "imguihud.200",
+   "z": "",
+   "v": "(no role set)"
+  },
+  {
+   "k": "imguihud.201",
+   "z": "",
+   "v": "(no description)"
+  },
+  {
+   "k": "imguihud.202",
+   "z": "",
+   "v": "(no items yet)"
+  },
+  {
+   "k": "townunlocks.203",
+   "z": "",
+   "v": "(nothing unlocked yet)"
+  },
+  {
+   "k": "townhud.204",
+   "z": "",
+   "v": "(no seeds sold yet)"
+  },
+  {
+   "k": "loginloading.205",
+   "z": "",
+   "v": "· Loaded ·"
+  },
+  {
+   "k": "imguihud.206",
+   "z": "",
+   "v": "— Primary Stats —"
+  },
+  {
+   "k": "imguihud.207",
+   "z": "",
+   "v": "— Secondary Stats —"
+  },
+  {
+   "k": "loginbootstrap.208",
+   "z": "",
+   "v": "❌ Folder create failed: "
+  },
+  {
+   "k": "imguihud.210",
+   "z": "",
+   "v": "Early-land-clear cash crop"
+  },
+  {
+   "k": "imguihud.211",
+   "z": "",
+   "v": "Fastest balanced crop"
+  },
+  {
+   "k": "imguihud.212",
+   "z": "",
+   "v": "Capital-building gold crop"
+  },
+  {
+   "k": "townhud.213",
+   "z": "",
+   "v": "Harvest (seed to storage)"
+  },
+  {
+   "k": "imguihud.214",
+   "z": "",
+   "v": "Half-water-loss crop"
+  },
+  {
+   "k": "loginbootstrap.215",
+   "z": "",
+   "v": "Login screen failed to start"
+  },
+  {
+   "k": "townhud.216",
+   "z": "",
+   "v": "Skin table load failed: "
+  },
+  {
+   "k": "imguihud.217",
+   "z": "",
+   "v": "Move (WASD)"
+  },
+  {
+   "k": "imguihud.218",
+   "z": "",
+   "v": "Keep at least §"
+  },
+  {
+   "k": "imguihud.219",
+   "z": "",
+   "v": "Level catch-up crop"
+  },
+  {
+   "k": "townhud.220",
+   "z": "",
+   "v": "Unlock table load failed: "
+  },
+  {
+   "k": "combatfeedback.221",
+   "z": "",
+   "v": "| simultaneous peak="
+  },
+  {
+   "k": "townhud.222",
+   "z": "",
+   "v": "Town config table load failed"
+  },
+  {
+   "k": "imguihud.223",
+   "z": "",
+   "v": "Early level-pushing crop"
+  },
+  {
+   "k": "imguihud.224",
+   "z": "",
+   "v": "Level Reward · Draft"
+  },
+  {
+   "k": "imguihud.225",
+   "z": "",
+   "v": "Unique (only one)"
+  },
+  {
+   "k": "imguihud.227",
+   "z": "",
+   "v": "Faster-ripening crop"
+  },
+  {
+   "k": "imguihud.228",
+   "z": "",
+   "v": "Gives back a sip of water"
+  },
+  {
+   "k": "imguihud.229",
+   "z": "",
+   "v": "Quit? Click again"
+  },
+  {
+   "k": "imguihud.231",
+   "z": "",
+   "v": "Farming (cannot attack)"
+  },
+  {
+   "k": "townunlocks.232",
+   "z": "",
+   "v": "Unlock index out of range: "
+  },
+  {
+   "k": "imguihud.233",
+   "z": "",
+   "v": "Pays more when water is under half"
+  },
+  {
+   "k": "imguihud.234",
+   "z": "",
+   "v": "Hoe: harvest ripe plants"
+  },
+  {
+   "k": "imguihud.235",
+   "z": "",
+   "v": "High-tier gold crop"
+  },
+  {
+   "k": "imguihud.236",
+   "z": "",
+   "v": "Biggest D-grade crop"
+  },
+  {
+   "k": "townhud.237",
+   "z": "",
+   "v": "W A S D  Move"
+  },
+  {
+   "k": "imguihud.238",
+   "z": "",
+   "v": "Refills your watering can"
+  },
+  {
+   "k": "imguihud.239",
+   "z": "",
+   "v": "Brings you clear skies"
+  },
+  {
+   "k": "imguihud.240",
+   "z": "",
+   "v": "Fastest small-turnover crop"
+  },
+  {
+   "k": "imguihud.241",
+   "z": "",
+   "v": "Switch weapon (wheel)"
+  },
+  {
+   "k": "imguihud.242",
+   "z": "",
+   "v": "Best per-plot total yield"
+  },
+  {
+   "k": "imguihud.243",
+   "z": "",
+   "v": "Auto-plant seeds from shop"
+  },
+  {
+   "k": "loginhud.245",
+   "z": "",
+   "v": "Reset bindings (both)"
+  },
+  {
+   "k": "townhud.246",
+   "z": "",
+   "v": "Harvest / Change Crop"
+  },
+  {
+   "k": "townhud.247",
+   "z": "",
+   "v": "Clothing Shop · Wardrobe"
+  },
+  {
+   "k": "imguihud.248",
+   "z": "",
+   "v": "Click an item icon for details"
+  },
+  {
+   "k": "imguihud.249",
+   "z": "",
+   "v": "Grows faster the longer you stand"
+  },
+  {
+   "k": "imguihud.250",
+   "z": "",
+   "v": "EXP §"
+  },
+  {
+   "k": "imguihud.251",
+   "z": "",
+   "v": "Top-tier EXP crop"
+  },
+  {
+   "k": "imguihud.252",
+   "z": "",
+   "v": "Drought-proof crop"
+  },
+  {
+   "k": "imguihud.253",
+   "z": "",
+   "v": "Big-payout gold crop"
+  },
+  {
+   "k": "imguihud.255",
+   "z": "",
+   "v": "Top-tier gold crop"
+  },
+  {
+   "k": "imguihud.256",
+   "z": "",
+   "v": "Balanced long-cycle crop"
+  },
+  {
+   "k": "towndrops.257",
+   "z": "",
+   "v": "(no BOSS defeated yet)"
+  },
+  {
+   "k": "imguihud.258",
+   "z": "",
+   "v": "Per-plot gold bonus crop"
+  },
+  {
+   "k": "imguihud.260",
+   "z": "",
+   "v": "Faster swings after harvest"
+  },
+  {
+   "k": "imguihud.261",
+   "z": "",
+   "v": "Harder swings after harvest"
+  },
+  {
+   "k": "imguihud.262",
+   "z": "",
+   "v": "Fertilize (growth -§%)"
+  },
+  {
+   "k": "imguihud.263",
+   "z": "",
+   "v": "Show controls (Tab)"
+  },
+  {
+   "k": "imguihud.264",
+   "z": "",
+   "v": "Water (growth -§%)"
+  },
+  {
+   "k": "imguihud.265",
+   "z": "",
+   "v": "Short-cycle turnover crop"
+  },
+  {
+   "k": "imguihud.266",
+   "z": "",
+   "v": "Dodge bonus while standing on its plot"
+  },
+  {
+   "k": "imguihud.267",
+   "z": "",
+   "v": "Buy (§)"
+  },
+  {
+   "k": "imguihud.268",
+   "z": "",
+   "v": "Selected (§)"
+  },
+  {
+   "k": "imguihud.269",
+   "z": "",
+   "v": "Select (§)"
+  },
+  {
+   "k": "imguihud.270",
+   "z": "",
+   "v": "Gold §"
+  },
+  {
+   "k": "bossrewardpopup.272",
+   "z": "",
+   "v": "Town storage full, nothing stored"
+  },
+  {
+   "k": "imguihud.273",
+   "z": "",
+   "v": "Price §"
+  },
+  {
+   "k": "imguihud.274",
+   "z": "",
+   "v": "Kills §"
+  },
+  {
+   "k": "imguihud.275",
+   "z": "",
+   "v": "Longest cycle, fattest single harvest"
+  },
+  {
+   "k": "imguihud.276",
+   "z": "",
+   "v": "Sold out — reroll the shop"
+  },
+  {
+   "k": "imguihud.277",
+   "z": "",
+   "v": "Selected (§)"
+  },
+  {
+   "k": "imguihud.278",
+   "z": "",
+   "v": "Combat Controls (Tab to hide)"
+  },
+  {
+   "k": "imguihud.279",
+   "z": "",
+   "v": "Double harvest while planted"
+  },
+  {
+   "k": "loginhud.280",
+   "z": "",
+   "v": "Press a key... (Esc cancels)"
+  },
+  {
+   "k": "imguihud.281",
+   "z": "",
+   "v": "Prep · Choose starting seed"
+  },
+  {
+   "k": "loginhud.282",
+   "z": "",
+   "v": "Saves · § slots"
+  },
+  {
+   "k": "imguihud.283",
+   "z": "",
+   "v": "Ripe → harvest with the hoe"
+  },
+  {
+   "k": "townhud.284",
+   "z": "",
+   "v": "Adds it to the combat pool (permanent)"
+  },
+  {
+   "k": "imguihud.285",
+   "z": "",
+   "v": "Slot §  empty"
+  },
+  {
+   "k": "imguihud.286",
+   "z": "",
+   "v": "§ more buffs"
+  },
+  {
+   "k": "imguihud.287",
+   "z": "",
+   "v": "Restart (Shift+R)"
+  },
+  {
+   "k": "bossrewardpopup.288",
+   "z": "",
+   "v": "BOSS Reward · Town Seed"
+  },
+  {
+   "k": "imguihud.289",
+   "z": "",
+   "v": "Shop  Gold §"
+  },
+  {
+   "k": "imguihud.290",
+   "z": "",
+   "v": "Chain-harvests other ripe plots"
+  },
+  {
+   "k": "townhud.291",
+   "z": "",
+   "v": "§ listed on this page"
+  },
+  {
+   "k": "loginhud.292",
+   "z": "",
+   "v": "—— this slot is empty ——"
+  },
+  {
+   "k": "townhud.293",
+   "z": "",
+   "v": "Unlocked · already in the combat pool"
+  },
+  {
+   "k": "imguihud.294",
+   "z": "",
+   "v": "Show / hide this help (Tab)"
+  },
+  {
+   "k": "imguihud.295",
+   "z": "",
+   "v": "Can: laser attack + waters the soil"
+  },
+  {
+   "k": "imguihud.296",
+   "z": "",
+   "v": "Fertilizer: throws bombs + insta-ripens"
+  },
+  {
+   "k": "townhud.297",
+   "z": "",
+   "v": "No unlocked entries in this category yet."
+  },
+  {
+   "k": "imguihud.298",
+   "z": "",
+   "v": "(cap §)"
+  },
+  {
+   "k": "towncodex.299",
+   "z": "",
+   "v": "| seed price §"
+  },
+  {
+   "k": "imguihud.300",
+   "z": "",
+   "v": "Buy plugins in the shop ⇒ fit them here"
+  },
+  {
+   "k": "imguihud.301",
+   "z": "",
+   "v": "Attack / interact with a plot (LMB)"
+  },
+  {
+   "k": "loginhud.302",
+   "z": "",
+   "v": "Save found — continue your last town."
+  },
+  {
+   "k": "bossrewardpopup.303",
+   "z": "",
+   "v": "Click to collect (auto in §s)"
+  },
+  {
+   "k": "imguihud.304",
+   "z": "",
+   "v": "(cap ×§)"
+  },
+  {
+   "k": "townhud.305",
+   "z": "",
+   "v": "E  Interact / close panel  Esc Close"
+  },
+  {
+   "k": "runsession.306",
+   "z": "",
+   "v": "Level reward: §"
+  },
+  {
+   "k": "imguihud.307",
+   "z": "",
+   "v": "Attack range §m"
+  },
+  {
+   "k": "imguihud.308",
+   "z": "",
+   "v": "Attack speed §s/hit"
+  },
+  {
+   "k": "imguihud.309",
+   "z": "",
+   "v": "Time  §s"
+  },
+  {
+   "k": "townskins.310",
+   "z": "",
+   "v": "Skin table not loaded ⇒ nothing is worn"
+  },
+  {
+   "k": "imguihud.311",
+   "z": "",
+   "v": "Level §"
+  },
+  {
+   "k": "imguihud.312",
+   "z": "",
+   "v": "Merge ×§"
+  },
+  {
+   "k": "bossrewardpopup.313",
+   "z": "",
+   "v": "Stored in town + §"
+  },
+  {
+   "k": "townunlocks.314",
+   "z": "",
+   "v": "Failed to charge gold (balance changed?)"
+  },
+  {
+   "k": "imguihud.315",
+   "z": "",
+   "v": "Stackable, max §"
+  },
+  {
+   "k": "imguihud.316",
+   "z": "",
+   "v": "Goes to your inventory; choose the weapon later"
+  },
+  {
+   "k": "loginhud.317",
+   "z": "",
+   "v": "(press Esc in town to open / close)"
+  },
+  {
+   "k": "townskins.318",
+   "z": "",
+   "v": "Town skin: town state unavailable, cannot buy ("
+  },
+  {
+   "k": "imguihud.319",
+   "z": "",
+   "v": "Multiplicative, max §"
+  },
+  {
+   "k": "loginhud.320",
+   "z": "",
+   "v": "No saves yet — start a new game first."
+  },
+  {
+   "k": "imguihud.321",
+   "z": "",
+   "v": "Ripe  §s"
+  },
+  {
+   "k": "imguihud.322",
+   "z": "",
+   "v": "§ swings/hit"
+  },
+  {
+   "k": "imguihud.323",
+   "z": "",
+   "v": "Level  §"
+  },
+  {
+   "k": "loginloading.324",
+   "z": "",
+   "v": ")| label= §"
+  },
+  {
+   "k": "runsession.325",
+   "z": "",
+   "v": "Current seed: §"
+  },
+  {
+   "k": "imguihud.326",
+   "z": "",
+   "v": "All plugin slots empty (buy plugins ⇒ fit here)"
+  },
+  {
+   "k": "imguihud.327",
+   "z": "",
+   "v": "Blast radius §m"
+  },
+  {
+   "k": "imguihud.328",
+   "z": "",
+   "v": "Choose a starting seed (click, or press §–§)"
+  },
+  {
+   "k": "imguihud.329",
+   "z": "",
+   "v": "(cap §%)"
+  },
+  {
+   "k": "imguihud.330",
+   "z": "",
+   "v": "max level §"
+  },
+  {
+   "k": "towndrops.331",
+   "z": "",
+   "v": "Town drop: credit failed (combat continues): "
+  },
+  {
+   "k": "imguihud.332",
+   "z": "",
+   "v": "Merge → Lv §"
+  },
+  {
+   "k": "townhud.333",
+   "z": "",
+   "v": "(left empty until achievements ship)"
+  },
+  {
+   "k": "bossrewardpopup.334",
+   "z": "",
+   "v": "Ripe § sec"
+  },
+  {
+   "k": "imguihud.336",
+   "z": "",
+   "v": "Items (§)"
+  },
+  {
+   "k": "imguihud.337",
+   "z": "",
+   "v": "Gold §  ·  EXP §"
+  },
+  {
+   "k": "towndrops.338",
+   "z": "",
+   "v": "Seeds missing from the town drop table (weight §, never drops): "
+  },
+  {
+   "k": "imguihud.339",
+   "z": "",
+   "v": "/ last row bottom §px"
+  },
+  {
+   "k": "imguihud.340",
+   "z": "",
+   "v": "HUD-AUDIT ok: every text drawn this frame fits"
+  },
+  {
+   "k": "imguihud.341",
+   "z": "",
+   "v": "Crit damage §%"
+  },
+  {
+   "k": "imguihud.342",
+   "z": "",
+   "v": "Crit chance §%"
+  },
+  {
+   "k": "imguihud.344",
+   "z": "",
+   "v": "Growth halted, dry (water §/§)"
+  },
+  {
+   "k": "imguihud.345",
+   "z": "",
+   "v": "—— price § gold, goes to your inventory"
+  },
+  {
+   "k": "imguihud.346",
+   "z": "",
+   "v": "Invincible §s"
+  },
+  {
+   "k": "townskins.347",
+   "z": "",
+   "v": "town_skins.json has no items array"
+  },
+  {
+   "k": "townskins.348",
+   "z": "",
+   "v": "town_skins.json entry § has no id"
+  },
+  {
+   "k": "imguihud.349",
+   "z": "",
+   "v": "Enemies  §"
+  },
+  {
+   "k": "imguihud.350",
+   "z": "",
+   "v": "Shield  §"
+  },
+  {
+   "k": "towndrops.351",
+   "z": "",
+   "v": "town_drops.json entry § is null"
+  },
+  {
+   "k": "townskins.352",
+   "z": "",
+   "v": "town_skins.json entry § is null"
+  },
+  {
+   "k": "townunlocks.353",
+   "z": "",
+   "v": "§.json has no items array"
+  },
+  {
+   "k": "townskins.354",
+   "z": "",
+   "v": "Town skin table load failed (continuing with nothing worn): "
+  },
+  {
+   "k": "imguihud.355",
+   "z": "",
+   "v": "Click again to return to town (this run ends; town progress is kept)"
+  },
+  {
+   "k": "imguihud.356",
+   "z": "",
+   "v": "Reroll shop  §"
+  },
+  {
+   "k": "imguihud.357",
+   "z": "",
+   "v": "Max Health  §"
+  },
+  {
+   "k": "imguihud.358",
+   "z": "",
+   "v": "Can water §/§"
+  },
+  {
+   "k": "imguihud.359",
+   "z": "",
+   "v": "Growing §s"
+  },
+  {
+   "k": "imguihud.360",
+   "z": "",
+   "v": "Rarity: §"
+  },
+  {
+   "k": "imguihud.361",
+   "z": "",
+   "v": "Plots  §"
+  },
+  {
+   "k": "loginhud.362",
+   "z": "",
+   "v": "(Login screen: Settings button only; Esc works in town)"
+  },
+  {
+   "k": "townskins.363",
+   "z": "",
+   "v": "town_skins.json duplicate id: §"
+  },
+  {
+   "k": "loginloading.364",
+   "z": "",
+   "v": "Mask host created (DontDestroyOnLoad, cross-scene)"
+  },
+  {
+   "k": "bossrewardpopup.365",
+   "z": "",
+   "v": "Gold § / sec"
+  },
+  {
+   "k": "imguihud.366",
+   "z": "",
+   "v": "(cap § plots)"
+  },
+  {
+   "k": "imguihud.367",
+   "z": "",
+   "v": "(cap § levels)"
+  },
+  {
+   "k": "towndrops.368",
+   "z": "",
+   "v": "town_drops.json has no bossSeeds array"
+  },
+  {
+   "k": "towndrops.369",
+   "z": "",
+   "v": "town_drops.json entry § has no seedId"
+  },
+  {
+   "k": "imguihud.370",
+   "z": "",
+   "v": "Switch windup §s (cannot attack)"
+  },
+  {
+   "k": "bossrewardpopup.371",
+   "z": "",
+   "v": "Rarity § · Lv §"
+  },
+  {
+   "k": "imguihud.372",
+   "z": "",
+   "v": "Auto-charge §/sec"
+  },
+  {
+   "k": "towndrops.373",
+   "z": "",
+   "v": "town_drops.json has a duplicate §"
+  },
+  {
+   "k": "towndrops.374",
+   "z": "",
+   "v": "§.json parse failed: §"
+  },
+  {
+   "k": "imguihud.375",
+   "z": "",
+   "v": "Remaining §s"
+  },
+  {
+   "k": "townhud.376",
+   "z": "",
+   "v": "Only unlocked entries: old stock is free, new stock must be bought in the store."
+  },
+  {
+   "k": "imguihud.378",
+   "z": "",
+   "v": "Can: laser + refill | Fertilizer: throw + ripen | Pig → Fertilizer"
+  },
+  {
+   "k": "imguihud.379",
+   "z": "",
+   "v": "Reroll § gold (R · gold §)"
+  },
+  {
+   "k": "townunlocks.380",
+   "z": "",
+   "v": "| old stock unlocked by default: IsUnlocked(\"iron_hoe\")="
+  },
+  {
+   "k": "towndrops.381",
+   "z": "",
+   "v": "Town drop table loaded: § tiers, total weight §"
+  },
+  {
+   "k": "townskins.382",
+   "z": "",
+   "v": "Town skin: unequipped \"§\" (slot §)"
+  },
+  {
+   "k": "imguihud.383",
+   "z": "",
+   "v": "Sell §"
+  },
+  {
+   "k": "townbootstrap.384",
+   "z": "",
+   "v": "§ name labels"
+  },
+  {
+   "k": "imguihud.385",
+   "z": "",
+   "v": "Gold §  Level §\n"
+  },
+  {
+   "k": "townunlocks.386",
+   "z": "",
+   "v": "| new stock locked by default: IsUnlocked(\"plank_shoes\")="
+  },
+  {
+   "k": "imguihud.387",
+   "z": "",
+   "v": "}  ·  hold cap §"
+  },
+  {
+   "k": "townhud.388",
+   "z": "",
+   "v": "Storage is empty — town seeds only drop from BOSSes; the shop sells none."
+  },
+  {
+   "k": "townhud.389",
+   "z": "",
+   "v": "Seeds are kept here; stand on a plot and press E to plant one of them."
+  },
+  {
+   "k": "towndrops.390",
+   "z": "",
+   "v": "Drop entry § does not exist in town_seeds.json"
+  },
+  {
+   "k": "townskins.391",
+   "z": "",
+   "v": "Skin § price must be > § (now §)"
+  },
+  {
+   "k": "townhud.392",
+   "z": "",
+   "v": "No seeds in storage — defeat BOSSes in combat to drop seeds (the shop sells none)."
+  },
+  {
+   "k": "imguihud.393",
+   "z": "",
+   "v": "Hoe §  Can §  Blast §"
+  },
+  {
+   "k": "towndrops.394",
+   "z": "",
+   "v": "Town storage + § (now §, gold §)"
+  },
+  {
+   "k": "townhud.395",
+   "z": "",
+   "v": "No seeds in storage — only from BOSS drops (north portal returns to combat)."
+  },
+  {
+   "k": "townunlocks.396",
+   "z": "",
+   "v": "Plugin §)"
+  },
+  {
+   "k": "towndrops.397",
+   "z": "",
+   "v": "Missing config Assets/Resources/§.json"
+  },
+  {
+   "k": "imguihud.398",
+   "z": "",
+   "v": "Fertilizer §/§"
+  },
+  {
+   "k": "imguihud.399",
+   "z": "",
+   "v": "HUD-AUDIT found § too wide:\n"
+  },
+  {
+   "k": "imguihud.400",
+   "z": "",
+   "v": "⏱ §  minute §"
+  },
+  {
+   "k": "towncodex.401",
+   "z": "",
+   "v": "Rarity §| price §| type §"
+  },
+  {
+   "k": "imguihud.402",
+   "z": "",
+   "v": "HP §/§"
+  },
+  {
+   "k": "townskins.403",
+   "z": "",
+   "v": "Skin § has no bones (must use PlayerBean node names)"
+  },
+  {
+   "k": "imguihud.404",
+   "z": "",
+   "v": "Level §  ·  Ripe  §s"
+  },
+  {
+   "k": "imguihud.405",
+   "z": "",
+   "v": "Water §/§ (hit the soil with the watering can)"
+  },
+  {
+   "k": "townskins.406",
+   "z": "",
+   "v": "Town skin table: § items (§ slots)"
+  },
+  {
+   "k": "imguihud.407",
+   "z": "",
+   "v": "Minute §  played §"
+  },
+  {
+   "k": "loginhud.408",
+   "z": "",
+   "v": "Select = load · Delete = confirm twice · Copy = use an empty slot"
+  },
+  {
+   "k": "imguihud.409",
+   "z": "",
+   "v": "Seeds (§/§)"
+  },
+  {
+   "k": "imguihud.410",
+   "z": "",
+   "v": "(§ plugin slots per weapon)"
+  },
+  {
+   "k": "imguihud.411",
+   "z": "",
+   "v": ", § beams × §"
+  },
+  {
+   "k": "imguihud.412",
+   "z": "",
+   "v": "⏱ §  minute §  Shop"
+  },
+  {
+   "k": "towndrops.413",
+   "z": "",
+   "v": "Town storage full (already §), nothing stored"
+  },
+  {
+   "k": "towndrops.414",
+   "z": "",
+   "v": "Drop entry § weight must be > § (now §)"
+  },
+  {
+   "k": "townskins.415",
+   "z": "",
+   "v": "Skin § slot \"§\" unknown (available: §)"
+  },
+  {
+   "k": "townhud.416",
+   "z": "",
+   "v": "(§, §) · radius §"
+  },
+  {
+   "k": "townunlocks.417",
+   "z": "",
+   "v": "Not enough town gold: § needs §, you have §"
+  },
+  {
+   "k": "imguihud.418",
+   "z": "",
+   "v": "Damage § · range §m · speed §s"
+  },
+  {
+   "k": "towncodex.419",
+   "z": "",
+   "v": "(battle tables not read) town unlock price § gold"
+  },
+  {
+   "k": "loginloading.420",
+   "z": "",
+   "v": "| lit vegetables=§/§| alpha=§"
+  },
+  {
+   "k": "imguihud.421",
+   "z": "",
+   "v": "Knockback §"
+  },
+  {
+   "k": "townunlocks.422",
+   "z": "",
+   "v": "Unlock \"§\" (§ · § gold) ⇒ now rolls in combat"
+  },
+  {
+   "k": "loginloading.423",
+   "z": "",
+   "v": "Needs a number §..§, e.g. \"§,enter SeedfallArena\"; \"off\" turns it off"
+  },
+  {
+   "k": "townhud.424",
+   "z": "",
+   "v": "(storage § left · gold on hand §)"
+  },
+  {
+   "k": "towncodex.425",
+   "z": "",
+   "v": "Rarity §| base price §| stacks §"
+  },
+  {
+   "k": "imguihud.426",
+   "z": "",
+   "v": "Plants (§/§)  one per column"
+  },
+  {
+   "k": "imguihud.427",
+   "z": "",
+   "v": "#§ viewport §px / content §px"
+  },
+  {
+   "k": "imguihud.428",
+   "z": "",
+   "v": "Shield back in §s"
+  },
+  {
+   "k": "townhud.430",
+   "z": "",
+   "v": "Skins are real meshes fitted to the skeleton — buy one, wear it, and it appears at once (no scene reload). This shop sells skins only."
+  },
+  {
+   "k": "townhud.431",
+   "z": "",
+   "v": "§ entries · one page: wheel / drag the bar / PageUp·PageDown"
+  },
+  {
+   "k": "imguihud.432",
+   "z": "",
+   "v": "Level effect  harvest ×§, ripen −§%"
+  },
+  {
+   "k": "loginloading.433",
+   "z": "",
+   "v": "Vegetable icons: §/§ from Resources, the rest generated"
+  },
+  {
+   "k": "loginhud.434",
+   "z": "",
+   "v": "Keys: ↑↓ slot  Enter/Space select  Del delete (twice)  C copy  Esc back"
+  },
+  {
+   "k": "loginloading.435",
+   "z": "",
+   "v": "| progress=§% (target §%)"
+  },
+  {
+   "k": "imguihud.436",
+   "z": "",
+   "v": "Damage Multiplier  §"
+  },
+  {
+   "k": "imguihud.437",
+   "z": "",
+   "v": "Crit Damage  §"
+  },
+  {
+   "k": "imguihud.438",
+   "z": "",
+   "v": "EXP Multiplier  §"
+  },
+  {
+   "k": "gardencursor.439",
+   "z": "",
+   "v": "(see the cursor_ branch in Assets/Scripts/Art/UiTextureImport.cs)"
+  },
+  {
+   "k": "imguihud.440",
+   "z": "",
+   "v": "/ scroll max §px / now §px"
+  },
+  {
+   "k": "towndrops.441",
+   "z": "",
+   "v": "BOSS kills §| drops credited §| latest: §"
+  },
+  {
+   "k": "imguihud.442",
+   "z": "",
+   "v": "(§/sec§)"
+  },
+  {
+   "k": "townhud.443",
+   "z": "",
+   "v": "§ was not sold (storage only §)"
+  },
+  {
+   "k": "townhud.444",
+   "z": "",
+   "v": "Plot § (§, §)"
+  },
+  {
+   "k": "imguihud.445",
+   "z": "",
+   "v": "Coin Multiplier  §"
+  },
+  {
+   "k": "imguihud.446",
+   "z": "",
+   "v": "Plant time §s — no spawns yet, till and sow!"
+  },
+  {
+   "k": "imguihud.447",
+   "z": "",
+   "v": "§: needs §px / has §px (§ rows) \"§\""
+  },
+  {
+   "k": "townhud.448",
+   "z": "",
+   "v": "Buying unlocks it in combat: from then on it appears in shop rolls. Seeds are NOT sold here (BOSS drops only), but town seeds are bought back."
+  },
+  {
+   "k": "imguihud.449",
+   "z": "",
+   "v": "Charge §s/hit · ammo §/§"
+  },
+  {
+   "k": "townskins.450",
+   "z": "",
+   "v": "Town skin: wearing \"§\" (slot §)"
+  },
+  {
+   "k": "townhud.451",
+   "z": "",
+   "v": "Buyback prices live in town_seeds.json sellPrice (§~§% of the original); selling never affects growing crops."
+  },
+  {
+   "k": "imguihud.452",
+   "z": "",
+   "v": "Shield §/§  §"
+  },
+  {
+   "k": "imguihud.453",
+   "z": "",
+   "v": "Plugin §/§"
+  },
+  {
+   "k": "imguihud.454",
+   "z": "",
+   "v": "Heart Heal  §§"
+  },
+  {
+   "k": "townbootstrap.455",
+   "z": "",
+   "v": "Gave § ×§ ⇒ stored § (§→§)"
+  },
+  {
+   "k": "loginloading.456",
+   "z": "",
+   "v": "Debug pinned progress = §% (§ of § vegetables lit)"
+  },
+  {
+   "k": "townhud.457",
+   "z": "",
+   "v": "| viewport=(§,§,§,§)"
+  },
+  {
+   "k": "imguihud.458",
+   "z": "",
+   "v": "Lv§  EXP §/§"
+  },
+  {
+   "k": "imguihud.459",
+   "z": "",
+   "v": "§  Plugin §/§"
+  },
+  {
+   "k": "townskins.460",
+   "z": "",
+   "v": "Town skin: bought \"§\" (§ gold, balance §)"
+  },
+  {
+   "k": "imguihud.461",
+   "z": "",
+   "v": "Luck  §§"
+  },
+  {
+   "k": "imguihud.462",
+   "z": "",
+   "v": "Plot cap  § (§ per level, +§)§"
+  },
+  {
+   "k": "imguihud.463",
+   "z": "",
+   "v": "Role  §: one harvest every §s, § gold § exp per plot"
+  },
+  {
+   "k": "imguihud.464",
+   "z": "",
+   "v": "Gold §    Plots § (cap §)"
+  },
+  {
+   "k": "townhud.465",
+   "z": "",
+   "v": "§/§ · ripe §s · § gold/s"
+  },
+  {
+   "k": "townbootstrap.466",
+   "z": "",
+   "v": "Sold § ×§ ⇒ +§ gold (§→§)"
+  },
+  {
+   "k": "towncodex.467",
+   "z": "",
+   "v": "Rarity §| ripe §s| yield § gold / § exp"
+  },
+  {
+   "k": "imguihud.468",
+   "z": "",
+   "v": "Dodge  §§"
+  },
+  {
+   "k": "imguihud.469",
+   "z": "",
+   "v": "Damage = (base § + § §) × multiplier §"
+  },
+  {
+   "k": "runsession.470",
+   "z": "",
+   "v": "Merged → § Lv § (sell refunds ×§)"
+  },
+  {
+   "k": "townhud.471",
+   "z": "",
+   "v": "§| panel=(§,§,§,§)"
+  },
+  {
+   "k": "imguihud.472",
+   "z": "",
+   "v": "§\n\nSurvived § (minute §)  kills §\n"
+  },
+  {
+   "k": "townhud.473",
+   "z": "",
+   "v": "Gold §  ·  unlocked §/§ listed"
+  },
+  {
+   "k": "towndrops.474",
+   "z": "",
+   "v": "Defeated \"§\" (§ @ §,§) ⇒ dropped \"§\""
+  },
+  {
+   "k": "towndrops.476",
+   "z": "",
+   "v": "§ tier| ripe §s| § gold/s"
+  },
+  {
+   "k": "imguihud.477",
+   "z": "",
+   "v": "Crit Chance  §§"
+  },
+  {
+   "k": "imguihud.478",
+   "z": "",
+   "v": "Knockback  §§"
+  },
+  {
+   "k": "imguihud.479",
+   "z": "",
+   "v": "Plants §/§  Plots §"
+  },
+  {
+   "k": "imguihud.480",
+   "z": "",
+   "v": "Attack Range  §§"
+  },
+  {
+   "k": "imguihud.481",
+   "z": "",
+   "v": "Attack Speed  §§"
+  },
+  {
+   "k": "townhud.482",
+   "z": "",
+   "v": "Sold § ×§ ⇒ +§ gold"
+  },
+  {
+   "k": "imguihud.483",
+   "z": "",
+   "v": "Move Speed  §§"
+  },
+  {
+   "k": "imguihud.484",
+   "z": "",
+   "v": "Blast Damage  §§"
+  },
+  {
+   "k": "imguihud.485",
+   "z": "",
+   "v": "Melee Damage  §§"
+  },
+  {
+   "k": "townhud.486",
+   "z": "",
+   "v": "Storage total §| BOSSes defeated §, dropped §"
+  },
+  {
+   "k": "imguihud.487",
+   "z": "",
+   "v": "Ranged Damage  §§"
+  },
+  {
+   "k": "imguihud.488",
+   "z": "",
+   "v": "Pig Spawn Rate  § (§%) §"
+  },
+  {
+   "k": "imguihud.489",
+   "z": "",
+   "v": "§/§  (duplicate stats merged)"
+  },
+  {
+   "k": "imguihud.490",
+   "z": "",
+   "v": "Blast Radius  §§"
+  },
+  {
+   "k": "imguihud.491",
+   "z": "",
+   "v": "Heart Drop Rate  § (§%) §"
+  },
+  {
+   "k": "townskins.492",
+   "z": "",
+   "v": "Skins: § goods| bought §| worn §| objects §| ver §| material pool §"
+  },
+  {
+   "k": "name.dusk_berry",
+   "z": "",
+   "v": "Dusk Berry"
+  },
+  {
+   "k": "name.tide_gourd",
+   "z": "",
+   "v": "Tide Gourd"
+  },
+  {
+   "k": "name.hollow_vine",
+   "z": "",
+   "v": "Hollow Vine"
+  },
+  {
+   "k": "name.dune_cactus",
+   "z": "",
+   "v": "Dune Cactus"
+  },
+  {
+   "k": "name.harvest_bell",
+   "z": "",
+   "v": "Harvest Bell"
+  },
+  {
+   "k": "name.star_ladder",
+   "z": "",
+   "v": "Star Ladder"
+  },
+  {
+   "k": "name.elder_oak",
+   "z": "",
+   "v": "Elder Oak"
+  },
+  {
+   "k": "name.quick_reed",
+   "z": "",
+   "v": "Quick Reed"
+  },
+  {
+   "k": "name.plank_shoes",
+   "z": "",
+   "v": "Plank Shoes"
+  },
+  {
+   "k": "name.wind_vane",
+   "z": "",
+   "v": "Wind Vane"
+  },
+  {
+   "k": "name.spark_bag",
+   "z": "",
+   "v": "Spark Bag"
+  },
+  {
+   "k": "name.yew_shaft",
+   "z": "",
+   "v": "Yew Shaft"
+  },
+  {
+   "k": "name.brass_nozzle",
+   "z": "",
+   "v": "Brass Nozzle"
+  },
+  {
+   "k": "name.lucky_coal",
+   "z": "",
+   "v": "Lucky Coal"
+  },
+  {
+   "k": "name.dodge_sash",
+   "z": "",
+   "v": "Dodge Sash"
+  },
+  {
+   "k": "name.thick_hide",
+   "z": "",
+   "v": "Thick Hide"
+  },
+  {
+   "k": "name.brass_knuckle",
+   "z": "",
+   "v": "Brass Knuckle"
+  },
+  {
+   "k": "name.beeswax_glove",
+   "z": "",
+   "v": "Beeswax Glove"
+  },
+  {
+   "k": "name.iron_tendon",
+   "z": "",
+   "v": "Iron Tendon"
+  },
+  {
+   "k": "name.wide_pauldron",
+   "z": "",
+   "v": "Wide Pauldron"
+  },
+  {
+   "k": "name.peak_hood",
+   "z": "",
+   "v": "Peak Hood"
+  },
+  {
+   "k": "name.verdant_idol",
+   "z": "",
+   "v": "Verdant Idol"
+  },
+  {
+   "k": "name.salted_cap",
+   "z": "",
+   "v": "Salted Cap"
+  },
+  {
+   "k": "name.clover_badge",
+   "z": "",
+   "v": "Clover Badge"
+  },
+  {
+   "k": "name.amber_sickle",
+   "z": "",
+   "v": "Amber Sickle"
+  },
+  {
+   "k": "name.tide_prism",
+   "z": "",
+   "v": "Tide Prism"
+  },
+  {
+   "k": "name.soot_flask",
+   "z": "",
+   "v": "Soot Flask"
+  },
+  {
+   "k": "name.gale_cuff",
+   "z": "",
+   "v": "Gale Cuff"
+  },
+  {
+   "k": "name.fortune_well",
+   "z": "",
+   "v": "Fortune Well"
+  },
+  {
+   "k": "name.thunder_fist",
+   "z": "",
+   "v": "Thunder Fist"
+  },
+  {
+   "k": "name.grudge_chain",
+   "z": "",
+   "v": "Grudge Chain"
+  },
+  {
+   "k": "name.town_radish",
+   "z": "",
+   "v": "Crimson Radish"
+  },
+  {
+   "k": "name.town_wheat",
+   "z": "",
+   "v": "Golden Wheat"
+  },
+  {
+   "k": "name.town_pea",
+   "z": "",
+   "v": "Green Pea Pod"
+  },
+  {
+   "k": "name.town_pumpkin",
+   "z": "",
+   "v": "Warm Pumpkin"
+  },
+  {
+   "k": "name.town_grape",
+   "z": "",
+   "v": "Violet Grape"
+  },
+  {
+   "k": "name.town_berry",
+   "z": "",
+   "v": "Midnight Berry"
+  },
+  {
+   "k": "name.town_lotus",
+   "z": "",
+   "v": "Jade Lotus"
+  },
+  {
+   "k": "name.town_crystal",
+   "z": "",
+   "v": "Phantom Crystal"
+  },
+  {
+   "k": "name.skin_flower_crown",
+   "z": "",
+   "v": "Straw Flower Crown"
+  },
+  {
+   "k": "desc.skin_flower_crown",
+   "z": "",
+   "v": "A flattened rope ring wrapped around the straw hat brim, holding § flowers and § leaves — the cheapest piece in town, and it shows the moment you buy it."
+  },
+  {
+   "k": "name.skin_red_scarf",
+   "z": "",
+   "v": "Red Scarf"
+  },
+  {
+   "k": "desc.skin_red_scarf",
+   "z": "",
+   "v": "A loop knot at the neck with two tails falling from the collarbone to the chest — it swings with the body as you walk and still hangs when you stand still."
+  },
+  {
+   "k": "name.skin_seed_pack",
+   "z": "",
+   "v": "Seed Backpack"
+  },
+  {
+   "k": "desc.skin_seed_pack",
+   "z": "",
+   "v": "A boxy pack on the back: flap, two bedrolls, two shoulder straps. The first piece you can recognise as gear even from behind."
+  },
+  {
+   "k": "name.skin_rope_belt",
+   "z": "",
+   "v": "Rope Belt"
+  },
+  {
+   "k": "desc.skin_rope_belt",
+   "z": "",
+   "v": "A coil of hemp rope with a brass buckle and a loose end on the right — an ellipse fitted to the egg-shaped body, so it never sticks out like an iron ring."
+  },
+  {
+   "k": "name.skin_leaf_cape",
+   "z": "",
+   "v": "Leaf Cape"
+  },
+  {
+   "k": "desc.skin_leaf_cape",
+   "z": "",
+   "v": "Three capes narrowing layer by layer hang down the back with a pair of clasps at the shoulders — a silhouette that tapers downward, the only read you get from behind."
+  },
+  {
+   "k": "name.skin_owl_mask",
+   "z": "",
+   "v": "Watcher's Mask"
+  },
+  {
+   "k": "desc.skin_owl_mask",
+   "z": "",
+   "v": "A wooden mask with two sunken eyes, a pointed beak and a pair of ear tufts — it covers the whole face and leaves only two bright silver dots. One of the priciest tiers."
+  },
+  {
+   "k": "name.skin_moth_glasses",
+   "z": "",
+   "v": "Moth Glasses"
+  },
+  {
+   "k": "desc.skin_moth_glasses",
+   "z": "",
+   "v": "Two round frames, a bridge and two temples, each frame edge carrying a small moth wing — the rings sit in front of the existing eyes, so the pupils never smear."
+  },
+  {
+   "k": "name.skin_iron_pauldron",
+   "z": "",
+   "v": "Iron Pauldron"
+  },
+  {
+   "k": "desc.skin_iron_pauldron",
+   "z": "",
+   "v": "Two layered plates, one per shoulder, each with a short spike and two brass studs — hung off the shoulder joint so it lifts with the arm when you swing."
+  },
+  {
+   "k": "name.pig",
+   "z": "",
+   "v": "Piglet"
+  },
+  {
+   "k": "name.grunt",
+   "z": "",
+   "v": "Grunt"
+  },
+  {
+   "k": "name.shooter",
+   "z": "",
+   "v": "Shooter"
+  },
+  {
+   "k": "name.jumper",
+   "z": "",
+   "v": "Elite Jumper"
+  },
+  {
+   "k": "name.boss",
+   "z": "",
+   "v": "Graveyard Warden"
+  },
+  {
+   "k": "name.moth",
+   "z": "",
+   "v": "Moth Nightwatch"
+  },
+  {
+   "k": "name.iron_hoe",
+   "z": "",
+   "v": "Whetstone"
+  },
+  {
+   "k": "desc.iron_hoe",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a honed hoe blade — every hoe hit lands heavier. Numbers: melee damage +§ (opening hoe hit § ⇒ §; on a crit § × § = §). Limit: only the hoe line; the can and the fertilizer are untouched. You can buy it repeatedly, as long as you can pay."
+  },
+  {
+   "k": "name.water_pouch",
+   "z": "",
+   "v": "Water Pouch"
+  },
+  {
+   "k": "desc.water_pouch",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a fuller pouch — the water it spits out hits harder. Numbers: ranged damage +§ (opening can beam § ⇒ §). Limit: only the can line; it adds no water cost and no beam width."
+  },
+  {
+   "k": "name.ash_pouch",
+   "z": "",
+   "v": "Gunpowder Pouch"
+  },
+  {
+   "k": "desc.ash_pouch",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: one more pinch of powder — the blast burns hotter. Numbers: blast damage +§ (opening fertilizer blast § ⇒ §). Limit: only the fertilizer line; it does not widen the blast radius."
+  },
+  {
+   "k": "name.scarecrow",
+   "z": "",
+   "v": "Scarecrow"
+  },
+  {
+   "k": "desc.scarecrow",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a decoy stands in the field — you can take more punishment. Numbers: max health +§ (opening § ⇒ §). Limit: it raises the cap only — buying it **does not heal you on the spot**; current health stays as it is."
+  },
+  {
+   "k": "name.snail_shell",
+   "z": "",
+   "v": "Snail Shell"
+  },
+  {
+   "k": "desc.snail_shell",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a hard shell on your back — it breaks first. Numbers: shield +§ (opening § ⇒ §). Limit: the shield is spent before health when hit; after § s without damage it refills at §%/sec (its cap is exactly these § points)."
+  },
+  {
+   "k": "name.sprinter_boots",
+   "z": "",
+   "v": "Sprinter Boots"
+  },
+  {
+   "k": "desc.sprinter_boots",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: light boots — you run without dragging. Numbers: move speed +§% (opening § m/s ⇒ § m/s). Limit: it only affects walking; how fast you swing is a different stat."
+  },
+  {
+   "k": "name.glass_cannon",
+   "z": "",
+   "v": "Glass Cannon"
+  },
+  {
+   "k": "desc.glass_cannon",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: trade health for power — you cut harder but bleed thinner. Numbers: melee damage +§ (opening hoe § ⇒ §), at the cost of max health −§ (§ ⇒ §). Limit: the gain strictly exceeds the cost (§ > §); current health is clamped to the new cap."
+  },
+  {
+   "k": "name.plow_weight",
+   "z": "",
+   "v": "Plow Weight"
+  },
+  {
+   "k": "desc.plow_weight",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: heavier fertilizer, a floatier can — bigger blasts, lighter sprays. Numbers: blast damage +§ (opening § ⇒ §), at the cost of ranged damage −§ (can § ⇒ §). Limit: the two lines settle separately and do not cancel out; the can is permanently weaker."
+  },
+  {
+   "k": "name.lens",
+   "z": "",
+   "v": "Magnifier"
+  },
+  {
+   "k": "desc.lens",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: you see further but swing slower. Numbers: attack range +§% (hoe § m ⇒ § m), at the cost of attack speed −§% (speed § ⇒ §, interval §x). Limit: the distance gain shows most on the hoe; the attack-speed cost is paid by all three weapons."
+  },
+  {
+   "k": "name.hardwood_haft",
+   "z": "",
+   "v": "Hardwood Haft"
+  },
+  {
+   "k": "desc.hardwood_haft",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: all the force goes into the blade — you can no longer push enemies away. Numbers: melee damage +§ (§ ⇒ §), at the cost of knockback −§% (opening § ⇒ §, hit enemies are pushed less far). Limit: knockback only changes how far they are pushed, never the damage."
+  },
+  {
+   "k": "name.twin_blade",
+   "z": "",
+   "v": "Twin-Blade Bracer"
+  },
+  {
+   "k": "desc.twin_blade",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: both weapon lines gain power, at the cost of one layer of shield. Numbers: melee +§ and ranged +§ (hoe § ⇒ §, can § ⇒ §), at the cost of shield −§ (§ ⇒ §). Limit: the shield is drained first; once gone, hits go straight to health."
+  },
+  {
+   "k": "name.ferment_jar",
+   "z": "",
+   "v": "Ferment Jar"
+  },
+  {
+   "k": "desc.ferment_jar",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: faster swings, a frailer body. Numbers: attack speed +§% (speed § ⇒ §, interval §x), at the cost of shield −§ (§ ⇒ §). Limit: the faster you swing, the faster all three weapons become; the shield only shrinks, never refills."
+  },
+  {
+   "k": "name.overclock_core",
+   "z": "",
+   "v": "Overclock Core"
+  },
+  {
+   "k": "desc.overclock_core",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: everything is pushed up — except the body cannot keep up. Numbers: damage multiplier +§% (opening ×§ ⇒ ×§; hoe hit § ⇒ §), at the cost of max health −§ (§ ⇒ §). Limit: once the health cap is pushed down, current health is squeezed down with it."
+  },
+  {
+   "k": "name.thorn_collar",
+   "z": "",
+   "v": "Thorn Collar"
+  },
+  {
+   "k": "desc.thorn_collar",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: one push sends them much further, but you must stand much closer to connect. Numbers: knockback +§% (§ ⇒ §), at the cost of attack range −§% (hoe § m ⇒ § m). Limit: after knockback pushes them out of reach you need an extra step before the next hit."
+  },
+  {
+   "k": "name.iron_bark",
+   "z": "",
+   "v": "Iron Bark"
+  },
+  {
+   "k": "desc.iron_bark",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: thick, therefore clumsy — harder to kill, but slower on foot and slower to swing. Numbers: max health +§ (§ ⇒ §) and shield +§ (§ ⇒ §); at the cost of move speed −§% (§ ⇒ § m/s) and attack speed −§% (speed §, interval §x). Limit: four changes settle on two separate ledgers, and both are really applied."
+  },
+  {
+   "k": "name.sniper_scope",
+   "z": "",
+   "v": "Sniper Scope"
+  },
+  {
+   "k": "desc.sniper_scope",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: to aim precisely you must give up rapid fire. Numbers: ranged damage +§ (can § ⇒ §) and attack range +§% (can § m ⇒ § m); at the cost of attack speed −§% (interval §x). Limit: reach and damage both go to the can; the attack-speed cost is paid by all three weapons."
+  },
+  {
+   "k": "name.barbed_tip",
+   "z": "",
+   "v": "Barbed Tip"
+  },
+  {
+   "k": "desc.barbed_tip",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: you hit harder, and less often. Numbers: crit damage +§% (×§ ⇒ ×§), at the cost of crit chance −§ points (§% ⇒ §%). Limit: both sit on the same \"crit\" line, so the expected damage gain is limited."
+  },
+  {
+   "k": "name.lucky_clover",
+   "z": "",
+   "v": "Lucky Clover"
+  },
+  {
+   "k": "desc.lucky_clover",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: spend cash for luck and growth. Numbers: heart drop rate +§ tier (low §% ⇒ mid §%) and EXP +§% (×§ ⇒ ×§); at the cost of gold −§% (×§ ⇒ ×§). Limit: −§% gold means every single income is smaller, harvesting and selling included."
+  },
+  {
+   "k": "name.gambler_dice",
+   "z": "",
+   "v": "Gambler's Dice"
+  },
+  {
+   "k": "desc.gambler_dice",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: cash and crits come faster, growth slows down. Numbers: gold +§% (×§ ⇒ ×§) and crit chance +§ points (§% ⇒ §%); at the cost of EXP −§% (×§ ⇒ ×§). Limit: levelling slows a notch; early snowballing comes from gold, not levels."
+  },
+  {
+   "k": "name.wax_seal",
+   "z": "",
+   "v": "Wax Seal"
+  },
+  {
+   "k": "desc.wax_seal",
+   "z": "",
+   "v": "Trigger: always on after purchase, and it gets **stronger over time**. Effect: sealed with blood — the moment you buy it you are slightly worse off. Numbers: melee damage +§ (§ ⇒ §), at the cost of max health −§ (§ ⇒ §); afterwards melee damage grows by another § every § minutes (§ rounds). Limit: the growth is on the gain side only; the cost never gets heavier with rounds."
+  },
+  {
+   "k": "name.blood_pact",
+   "z": "",
+   "v": "Blood Pact"
+  },
+  {
+   "k": "desc.blood_pact",
+   "z": "",
+   "v": "Trigger: always on after purchase, and it gets **stronger over time**. Effect: bet your health — the first stretch after signing is the worst. Numbers: damage multiplier +§% (×§ ⇒ ×§), at the cost of max health −§ (§ ⇒ §); afterwards the multiplier grows by § points every § minutes (§ rounds). Limit: rounds are the only growth source for this item, roughly +§% by minute §."
+  },
+  {
+   "k": "name.greedy_sickle",
+   "z": "",
+   "v": "Greedy Sickle"
+  },
+  {
+   "k": "desc.greedy_sickle",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: to be greedier you have to stand further forward. Numbers: attack speed +§% (interval §x) and gold +§% (×§ ⇒ ×§); at the cost of move speed −§% (§ ⇒ § m/s). Limit: running slow means you cannot dodge, and you cannot get back to the plots either."
+  },
+  {
+   "k": "name.hollow_fruit",
+   "z": "",
+   "v": "Hollow Fruit"
+  },
+  {
+   "k": "desc.hollow_fruit",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: it feels far too light — because there is no blade left in your hand. Numbers: move speed +§% (§ ⇒ § m/s) and heart drop rate +§ tier (low §% ⇒ mid §%); at the cost of melee damage −§ (§ ⇒ §) and blast damage −§ (§ ⇒ §). Limit: two of the three lines are cut; only the can comes out untouched."
+  },
+  {
+   "k": "name.heirloom",
+   "z": "",
+   "v": "Heirloom"
+  },
+  {
+   "k": "desc.heirloom",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the whole inheritance on one card — a little thicker everywhere. Numbers: melee +§, ranged +§, blast +§, max health +§, shield +§, move speed +§%, crit chance +§ points; at the cost of damage multiplier −§%, crit damage −§%, heart drop rate −§ tier. Limit: ten changes settle together — before buying, look at which line you actually live on."
+  },
+  {
+   "k": "name.whet_oil",
+   "z": "",
+   "v": "Whet Oil"
+  },
+  {
+   "k": "desc.whet_oil",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: oiled edges make all three weapons cut cleaner. Numbers: damage multiplier +§% (opening ×§ ⇒ ×§; hoe hit § ⇒ §, can § ⇒ §, fertilizer § ⇒ §). Limit: it multiplies the whole block of (base damage + the matching damage stat), so the payoff grows along with damage."
+  },
+  {
+   "k": "name.wind_bell",
+   "z": "",
+   "v": "Wind Bell"
+  },
+  {
+   "k": "desc.wind_bell",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: when the wind rings, your hands move half a beat faster. Numbers: attack speed +§% (opening speed § ⇒ §, interval becomes §x of the original). Limit: all three weapons speed up; it does not change damage."
+  },
+  {
+   "k": "name.long_handle",
+   "z": "",
+   "v": "Long Handle"
+  },
+  {
+   "k": "desc.long_handle",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a longer haft reaches the one standing further away. Numbers: attack range +§% (opening hoe § m ⇒ § m, can § m ⇒ § m). Limit: length only; no extra width or hit angle."
+  },
+  {
+   "k": "name.lucky_bead",
+   "z": "",
+   "v": "Lucky Bead"
+  },
+  {
+   "k": "desc.lucky_bead",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a lucky charm in your hand — swings land on weak points more often. Numbers: crit chance +§ points (opening §% ⇒ §%). Limit: crit chance is a chance, not a guarantee; a crit deals ×§ damage (crit damage §%)."
+  },
+  {
+   "k": "name.grind_stone",
+   "z": "",
+   "v": "Grindstone"
+  },
+  {
+   "k": "desc.grind_stone",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a finer edge line hurts more when it lands on a weak point. Numbers: crit damage +§% (opening ×§ ⇒ ×§; a hoe crit hit §). Limit: it only applies **on the crit**; a non-crit gains nothing."
+  },
+  {
+   "k": "name.blast_grain",
+   "z": "",
+   "v": "Blast Grain"
+  },
+  {
+   "k": "desc.blast_grain",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: grains mixed into the fertilizer make the blast burn hotter. Numbers: blast damage +§ (opening blast § ⇒ §). Limit: fertilizer only; no wider blast radius and no extra powder charges."
+  },
+  {
+   "k": "name.wide_funnel",
+   "z": "",
+   "v": "Wide Funnel"
+  },
+  {
+   "k": "desc.wide_funnel",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a wider mouth throws a wider ring. Numbers: blast radius +§% (opening main radius § m ⇒ § m; coverage about ×§). Limit: radius only; blast damage is unchanged."
+  },
+  {
+   "k": "name.healing_herb",
+   "z": "",
+   "v": "Healing Herb"
+  },
+  {
+   "k": "desc.healing_herb",
+   "z": "",
+   "v": "Trigger: when a heart is picked up. Effect: one bite brings the heartbeat back harder. Numbers: heart heal +§ (opening § per heart ⇒ §). Limit: it only changes **how many points you get back when picking a heart up**; the drop rate is untouched."
+  },
+  {
+   "k": "name.dual_straps",
+   "z": "",
+   "v": "Dual Straps"
+  },
+  {
+   "k": "desc.dual_straps",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: two straps share the effort between hoe and water. Numbers: melee damage +§ and ranged damage +§ (opening hoe § ⇒ §, can § ⇒ §). Limit: each weapon gains on its own; the fertilizer line gets nothing."
+  },
+  {
+   "k": "name.spring_basket",
+   "z": "",
+   "v": "Spring Basket"
+  },
+  {
+   "k": "desc.spring_basket",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the basket holds more — harvest and insight rise together. Numbers: EXP +§% and gold +§% (opening both ×§ ⇒ ×§). Limit: it multiplies **income** only; plant yield itself is unchanged."
+  },
+  {
+   "k": "name.heart_lantern",
+   "z": "",
+   "v": "Heart Lantern"
+  },
+  {
+   "k": "desc.heart_lantern",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the lantern lights the way — hearts come more often and heal more. Numbers: heart drop rate +§ tier (opening \"low §%\" ⇒ \"mid §%\") and heart heal +§ (§ ⇒ §). Limit: the drop rate tops out at \"MAX §%\" (tier §); buy it out and it caps."
+  },
+  {
+   "k": "name.fertile_core",
+   "z": "",
+   "v": "Fertile Core"
+  },
+  {
+   "k": "desc.fertile_core",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: power buried in the soil — bigger and meaner blasts. Numbers: blast damage +§ (opening § ⇒ §) and blast radius +§% (main radius § m ⇒ § m). Limit: only the fertilizer line; buy both to feel \"big and painful\" together."
+  },
+  {
+   "k": "name.berserk_mask",
+   "z": "",
+   "v": "Berserk Mask"
+  },
+  {
+   "k": "desc.berserk_mask",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: you hit hard, but you cannot catch them. Numbers: damage multiplier +§% (×§ ⇒ ×§), at the cost of move speed −§% (§ ⇒ § m/s). Limit: when you cannot catch the enemy, a higher multiplier still cannot land a hit."
+  },
+  {
+   "k": "name.longbow_arm",
+   "z": "",
+   "v": "Longbow Arm"
+  },
+  {
+   "k": "desc.longbow_arm",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: reach further, but walk slower. Numbers: attack range +§% (can § m ⇒ § m), at the cost of move speed −§% (§ ⇒ § m/s). Limit: the range goes to all three lines; the move-speed cost is paid by all three too."
+  },
+  {
+   "k": "name.thorn_whip",
+   "z": "",
+   "v": "Thorn Whip"
+  },
+  {
+   "k": "desc.thorn_whip",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: it pushes them away but cuts them softly. Numbers: knockback +§% (§ ⇒ §), at the cost of melee damage −§ (§ ⇒ §). Limit: once knocked away they need another step before the next cut; pairs well with area styles."
+  },
+  {
+   "k": "name.big_bore",
+   "z": "",
+   "v": "Big Bore"
+  },
+  {
+   "k": "desc.big_bore",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: bigger blasts, but each one is lighter. Numbers: blast radius +§% (main radius § m ⇒ § m), at the cost of blast damage −§ (§ ⇒ §). Limit: coverage is about ×§, but every blast is lighter — good against packs, poor against a single target."
+  },
+  {
+   "k": "name.stone_draught",
+   "z": "",
+   "v": "Stone Draught"
+  },
+  {
+   "k": "desc.stone_draught",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: tougher to kill, but slower to swing. Numbers: shield +§ (§ ⇒ §), at the cost of attack speed −§% (speed §, interval §x). Limit: the shield only absorbs hits, not terrain or trampling."
+  },
+  {
+   "k": "name.night_lamp",
+   "z": "",
+   "v": "Night Lamp"
+  },
+  {
+   "k": "desc.night_lamp",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: level up faster, with less money. Numbers: EXP +§% (×§ ⇒ ×§), at the cost of gold −§% (×§ ⇒ ×§). Limit: faster levelling means more card draws; the payoff has to be cashed in through levels."
+  },
+  {
+   "k": "name.frenzy_band",
+   "z": "",
+   "v": "Frenzy Band"
+  },
+  {
+   "k": "desc.frenzy_band",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: faster swings, thinner blood. Numbers: attack speed +§% (speed § ⇒ §, interval §x), at the cost of max health −§ (§ ⇒ §). Limit: the faster you swing, the harder the counter-hits land."
+  },
+  {
+   "k": "name.tailwind_sash",
+   "z": "",
+   "v": "Tailwind Sash"
+  },
+  {
+   "k": "desc.tailwind_sash",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: run fast, but with a thin shield. Numbers: move speed +§% (§ ⇒ § m/s), at the cost of shield −§ (§ ⇒ §). Limit: with no shield every hit goes straight to health; suits a dodge-based play style."
+  },
+  {
+   "k": "name.lucky_stone",
+   "z": "",
+   "v": "Lucky Stone"
+  },
+  {
+   "k": "desc.lucky_stone",
+   "z": "",
+   "v": "Trigger: when a ripe crop is harvested. Effect: a stone with a feel for it — every harvest rolls one extra doubling chance. Numbers: luck +§ points (opening §% ⇒ §%); luck is the chance that \"this plot harvests double\", so §% means about § of every § plots pay twice. Limit: it only affects harvest gold/EXP, never crits."
+  },
+  {
+   "k": "name.pig_bell",
+   "z": "",
+   "v": "Pig Bell"
+  },
+  {
+   "k": "desc.pig_bell",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: ring the bell and the pigs come more often. Numbers: pig spawn rate +§ tier (opening \"low §%\" ⇒ \"mid §%\"); pigs are the only source of fertilizer ammo — **defeat one → fertilizer ammo +§** (cap §), and they never drop it on their own. Limit: the tier caps at § (MAX §%); buy it out and it stops growing."
+  },
+  {
+   "k": "name.carrot_ring",
+   "z": "",
+   "v": "Carrot Ring"
+  },
+  {
+   "k": "desc.carrot_ring",
+   "z": "",
+   "v": "Trigger: passive, always on. Effect: carrots orbit you and knock down the projectiles enemies fire at you. Numbers: § fitted = § carrots, up to § fitted = § carrots, circling in an equilateral triangle at **§ m** and **§°** per second; each has an intercept radius of **§ m**, and an enemy projectile that touches it vanishes on the spot with a \"Blocked\" popup. Limit: carrots are **never consumed** — after one intercept they keep orbiting; they stop projectiles only, not melee bites; hold cap § (§th cannot be bought)."
+  },
+  {
+   "k": "name.bunny_pet",
+   "z": "",
+   "v": "Bunny Pet"
+  },
+  {
+   "k": "desc.bunny_pet",
+   "z": "",
+   "v": "Trigger: passive, always on. Effect: a rabbit follows you and bites the enemy closest to you. Numbers: it chases at **§ m/s**, bites within **§ m**, one bite **every § s**; each bite deals **§% of your max health** (opening § HP ⇒ § per bite, floor §). Limit: only § of them (hold cap §); the damage follows your health cap — the more health, the harder the bite."
+  },
+  {
+   "k": "name.evade_helm",
+   "z": "",
+   "v": "Evade Helm"
+  },
+  {
+   "k": "desc.evade_helm",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: light as a shell — wearing it raises dodge, and it also lifts the dodge ceiling. Numbers: dodge **+§ points** (the table writes § = §%; dodge is always whole points); it also raises the global dodge cap from §% to **§%**. Opening dodge §% ⇒ **§%** while worn. The cost is max health −§ (§ ⇒ §) and shield −§ (§ ⇒ §). Limit: it grants a **bonus**, not \"fill dodge to the cap\" — further dodge still stacks but never exceeds §%; take it off and the cap falls back to §%."
+  },
+  {
+   "k": "name.big_can",
+   "z": "",
+   "v": "Big Can"
+  },
+  {
+   "k": "desc.big_can",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a bigger belly — you can carry more water on one trip. Numbers: can ammo cap = **§ + § × count** (§ fitted = §, § fitted = §, § fitted = §…). Limit: it only raises the **cap** — buying it gives no water up front; raindrops, the auto-charge plugin and the per-minute resupply all settle against this larger cap; crops and plant levels are unaffected."
+  },
+  {
+   "k": "name.windup_gear",
+   "z": "",
+   "v": "Windup Gear"
+  },
+  {
+   "k": "desc.windup_gear",
+   "z": "",
+   "v": "Trigger: passive and always on, but any hit taken resets it to zero. Effect: sticky at first, smoother the longer you stand. Numbers: the cost is attack speed −§% (interval §x); in exchange, **every § s of standing still** adds § points of attack speed, climbing up to § s = **+§% (speed ×§)** where it caps. Limit: the climb starts at §, so entering the arena or taking a hit drops you to the slowest state; both the climb rate and the cap **do not depend on how many are fitted** — extra copies only turn the −§% into −§%, −§%… so do not buy twice."
+  },
+  {
+   "k": "name.charge_coil",
+   "z": "",
+   "v": "Charge Coil"
+  },
+  {
+   "k": "desc.charge_coil",
+   "z": "",
+   "v": "Trigger: passive and always on, but any hit taken resets it to zero. Effect: soft at first, harder the longer you stand. Numbers: the cost is damage multiplier −§% (×§ ⇒ ×§); in exchange, **every § s of standing still** adds § points, climbing up to § s = **+§% (final damage ×§)** where it caps. Limit: any hit drains it to the bottom and it rebuilds from §; climb rate and cap do not depend on the count, extra copies only stack the passive cost (§ fitted = −§%); paired with Windup Gear you climb slowly and softly."
+  },
+  {
+   "k": "name.aegis_lamp",
+   "z": "",
+   "v": "Aegis Lamp"
+  },
+  {
+   "k": "desc.aegis_lamp",
+   "z": "",
+   "v": "Trigger: the moment you are hit. Effect: a lamp that takes one hit for you; once it goes out it needs a while to relight. Numbers: it **blocks one whole hit** (no health, no shield lost), then goes on a **§ s** cooldown and relights itself when ready. The cost is shield −§ (§ ⇒ §). Limit: **it works as soon as you hold one**; more copies shorten nothing and add no second block; the shelf sells at most §, and from the §th on there is no extra gain."
+  },
+  {
+   "k": "name.gamble_glove",
+   "z": "",
+   "v": "Gamble Glove"
+  },
+  {
+   "k": "desc.gamble_glove",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the wrist feels heavier and the step a little slower, but every swing lands harder. Numbers: crit chance +§ points (§% ⇒ §%), crit damage +§% (×§ ⇒ ×§, i.e. §%); the cost is **movement speed −§%** (§ m/s ⇒ § m/s) and **attack speed −§%** (speed § ⇒ §, so hoe swings ×§, i.e. §% slower). Limit: this is a **cost-for-gain** item — both halves always apply and you cannot keep only one; buying more stacks linearly (§ copies = crit chance §%, crit damage ×§, movement and attack speed −§% each), and the more you stack the slower you walk and swing, but the two crit halves stack with them; it does not touch attack range or the damage multiplier."
+  },
+  {
+   "k": "name.sharp_spray",
+   "z": "",
+   "v": "Sharp Spray"
+  },
+  {
+   "k": "desc.sharp_spray",
+   "z": "",
+   "v": "Trigger: when the spray sweeps over crops. Effect: the beam turns into a blade — sweeping a fully grown crop harvests it without walking over. Numbers: any plot the beam touches that is \"ripe\" is harvested instantly (gold/EXP settle per plot as usual); the cost is ranged damage −§ (can § ⇒ §). Limit: hold cap §; ripe plots only — touching a growing crop does nothing."
+  },
+  {
+   "k": "name.tycoon_coin",
+   "z": "",
+   "v": "Tycoon Coin"
+  },
+  {
+   "k": "desc.tycoon_coin",
+   "z": "",
+   "v": "Trigger: every time an attack is resolved. Effect: the more money you hold, the heavier the strike. Numbers: bonus damage = floor(gold × §%), **at most §** (gold § ⇒ §; § ⇒ §; § ⇒ §; § ⇒ still capped at §); it also grants luck +§ points (§% ⇒ §%); the cost is damage multiplier −§% (×§ ⇒ ×§). Limit: the bonus damage is **additive** and capped at §, so it never scales exponentially with gold."
+  },
+  {
+   "k": "desc.plank_shoes",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: wooden soles do not slip in the mud. Numbers: move speed +§% (opening § m/s ⇒ § m/s). Limit: walking only; it does not change how fast you swing."
+  },
+  {
+   "k": "desc.wind_vane",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: swing with the wind — you reach an inch further. Numbers: attack range +§% (opening hoe § m ⇒ § m, can § m ⇒ § m). Limit: length only, not hit width or angle."
+  },
+  {
+   "k": "desc.spark_bag",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the spark bag is full of kindling — a wider blast ring. Numbers: blast radius +§% (opening main radius § m ⇒ § m). Limit: radius only; blast damage is unchanged."
+  },
+  {
+   "k": "desc.yew_shaft",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: yew is hard wood — the haft does not shake. Numbers: melee damage +§ (opening hoe § ⇒ §). Limit: only the hoe line; it does not speed up the swing."
+  },
+  {
+   "k": "desc.brass_nozzle",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the brass nozzle tightens the stream and concentrates the pressure. Numbers: ranged damage +§ (opening can § ⇒ §). Limit: only the can line; beam width unchanged."
+  },
+  {
+   "k": "desc.lucky_coal",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a warm coal keeps your hands steady. Numbers: crit chance +§ points (opening §% ⇒ §%). Limit: crit is a chance, not a guarantee; a crit deals ×§ damage."
+  },
+  {
+   "k": "desc.dodge_sash",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: cinching the belt makes your steps light and quick — melee hits are easier to slip. Numbers: move speed +§% (opening § m/s ⇒ § m/s). Limit: walking and footwork only; it does not touch the dodge roll (dodge comes only from whole items like the Evade Helm, capped at §%)."
+  },
+  {
+   "k": "desc.thick_hide",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: thick hide stops damage but weighs your steps down. Numbers: shield +§ (opening § ⇒ §), at the cost of move speed −§% (§ ⇒ § m/s). Limit: the shield is spent first; the move-speed cost cannot be dodged."
+  },
+  {
+   "k": "desc.brass_knuckle",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: all the force goes into the fist, so the hand holding the can loosens. Numbers: melee damage +§ (§ ⇒ §), at the cost of ranged damage −§ (can § ⇒ §). Limit: the two lines settle separately and do not cancel out."
+  },
+  {
+   "k": "desc.beeswax_glove",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the waxed surface does not slip — swings chain together. Numbers: attack speed +§% (speed § ⇒ §, interval §x), at the cost of max health −§ (§ ⇒ §). Limit: attack speed rises on all three weapons; less health means one big hit can punch through."
+  },
+  {
+   "k": "desc.iron_tendon",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: tendons taut — whoever you hit cannot keep their footing. Numbers: knockback +§% (opening § ⇒ §). Limit: it changes how far they fly, not the damage; push too far and you need another step."
+  },
+  {
+   "k": "desc.wide_pauldron",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the pauldron spreads the blast shape, at the price of a slower swing. Numbers: blast radius +§% (main radius § m ⇒ § m), at the cost of attack speed −§% (speed §, interval §x). Limit: bigger radius only; no extra damage."
+  },
+  {
+   "k": "desc.peak_hood",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the hood narrows your view to weak points only. Numbers: crit chance +§ points (§% ⇒ §%), at the cost of move speed −§% (§ ⇒ § m/s). Limit: crit is a chance; when you cannot dodge, crit chance will not save you."
+  },
+  {
+   "k": "desc.verdant_idol",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the idol lengthens your arm, at the price of a thinner shield. Numbers: attack range +§% (hoe § m ⇒ § m, can § m ⇒ § m), at the cost of shield −§ (§ ⇒ §). Limit: the range goes to all three lines."
+  },
+  {
+   "k": "desc.salted_cap",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a salted hat is tough, and heavy. Numbers: max health +§ (§ ⇒ §), at the cost of attack speed −§% (speed §, interval §x). Limit: it raises the cap; current health is topped up proportionally."
+  },
+  {
+   "k": "desc.clover_badge",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: a clover on the chest brings more hearts to the ground. Numbers: heart drop rate +§ tier (opening \"low §%\" ⇒ \"mid §%\"). Limit: hold cap § (tier up to § = MAX §%)."
+  },
+  {
+   "k": "desc.amber_sickle",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: an amber blade cuts flesh smoothly, but you lose a layer of protection. Numbers: melee damage +§ (§ ⇒ §), at the cost of shield −§ (§ ⇒ §). Limit: the gain strictly exceeds the cost (§ > §); once the shield is gone, hits go to health."
+  },
+  {
+   "k": "desc.tide_prism",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the prism folds the stream into a thinner, meaner beam — at the price of a frailer body. Numbers: ranged damage +§ (can § ⇒ §), at the cost of max health −§ (§ ⇒ §). Limit: only the can line; range unchanged."
+  },
+  {
+   "k": "desc.soot_flask",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: soot mixed into the powder — heavier blasts, heavier feet. Numbers: blast damage +§ (§ ⇒ §), at the cost of move speed −§% (§ ⇒ § m/s). Limit: only the fertilizer line; the move-speed cost cannot be dodged."
+  },
+  {
+   "k": "desc.gale_cuff",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: wind in the cuffs makes you fast, but the shove is gone. Numbers: move speed +§% (§ ⇒ § m/s), at the cost of knockback −§% (§ ⇒ §). Limit: less knockback means enemies stick to you more easily."
+  },
+  {
+   "k": "desc.fortune_well",
+   "z": "",
+   "v": "Trigger: when a ripe crop is rolled for harvest. Effect: live water in the well lifts your luck, but your swing slows. Numbers: luck +§ points (opening §% ⇒ §%), at the cost of attack speed −§% (speed §, interval §x). Limit: luck only affects harvest doubling, never crits."
+  },
+  {
+   "k": "desc.thunder_fist",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: thunder rolls inside the gauntlets — swings too fast to follow, on a body that cannot take it. Numbers: attack speed +§% (speed § ⇒ §, interval §x), at the cost of max health −§ (§ ⇒ §). Limit: attack speed rises on all three weapons; less health means less room for error."
+  },
+  {
+   "k": "desc.grudge_chain",
+   "z": "",
+   "v": "Trigger: always on after purchase. Effect: the chain flings them away, but all its weight hangs on your wrist. Numbers: knockback +§% (§ ⇒ §), at the cost of melee damage −§ (§ ⇒ §). Limit: the further they fly, the further you must walk to finish them."
+  },
+  {
+   "k": "desc.hoe_swordwave",
+   "z": "",
+   "v": "Swinging the hoe sends an extra sword wave along the attack direction. Stacks § layers, one wave per layer."
+  },
+  {
+   "k": "desc.hoe_burn",
+   "z": "",
+   "v": "Hoe hits set the enemy burning and draining health. § layer only, no stacking."
+  },
+  {
+   "k": "desc.hoe_doublestrike",
+   "z": "",
+   "v": "One swing cleaves several cuts, each rolling its own crit and on-hit effects. Stacks § layers."
+  },
+  {
+   "k": "desc.hoe_lifesteal",
+   "z": "",
+   "v": "Direct hoe damage turns part of the damage into your own health. Stacks § layers."
+  },
+  {
+   "k": "desc.can_multijet",
+   "z": "",
+   "v": "One spray fires several beams at once, spread out in a fan. Stacks § layers."
+  },
+  {
+   "k": "desc.can_slow",
+   "z": "",
+   "v": "Can hits slow the enemy and drain its health over time. § layer only, no stacking."
+  },
+  {
+   "k": "desc.can_thickjet",
+   "z": "",
+   "v": "The beam grows wider, and its hit width widens with it. Stacks § layers."
+  },
+  {
+   "k": "desc.can_autocharge",
+   "z": "",
+   "v": "Water keeps refilling, and spending it also fires homing water balls. Stacks § layers."
+  },
+  {
+   "k": "desc.fert_subburst",
+   "z": "",
+   "v": "When the fertilizer bursts, a ring of smaller blasts goes off around the main one. Stacks § layers."
+  },
+  {
+   "k": "desc.fert_poison",
+   "z": "",
+   "v": "The burst leaves a poison zone that drains the health of enemies walking in. § layer only, no stacking."
+  },
+  {
+   "k": "desc.fert_freeburst",
+   "z": "",
+   "v": "Throwing fertilizer sometimes costs no charge. Stacks § layers."
+  },
+  {
+   "k": "desc.fert_chain",
+   "z": "",
+   "v": "One throw detonates several times, each burst matching the main blast in range and damage. Stacks § layers."
+  },
+  {
+   "k": "name.radish_guard",
+   "z": "",
+   "v": "Radish"
+  },
+  {
+   "k": "name.pea_shooter",
+   "z": "",
+   "v": "Pea"
+  },
+  {
+   "k": "name.toxic_mushroom",
+   "z": "",
+   "v": "Mushroom"
+  },
+  {
+   "k": "name.frost_ivy",
+   "z": "",
+   "v": "Ivy"
+  },
+  {
+   "k": "name.stone_fist",
+   "z": "",
+   "v": "Yam"
+  },
+  {
+   "k": "name.chili_mage",
+   "z": "",
+   "v": "Chili"
+  },
+  {
+   "k": "name.starvine",
+   "z": "",
+   "v": "Starvine"
+  },
+  {
+   "k": "name.moontree",
+   "z": "",
+   "v": "Moontree"
+  },
+  {
+   "k": "name.moss_shield",
+   "z": "",
+   "v": "Moss Ball"
+  },
+  {
+   "k": "name.healing_clover",
+   "z": "",
+   "v": "Clover"
+  },
+  {
+   "k": "name.life_spring",
+   "z": "",
+   "v": "Water Lily"
+  },
+  {
+   "k": "name.char_flower",
+   "z": "",
+   "v": "Char Flower"
+  },
+  {
+   "k": "name.holy_tree_guard",
+   "z": "",
+   "v": "Crown Tree"
+  },
+  {
+   "k": "name.plague_mother",
+   "z": "",
+   "v": "Toadstool"
+  },
+  {
+   "k": "name.ironroot_colossus",
+   "z": "",
+   "v": "Iron Tree"
+  },
+  {
+   "k": "name.warblade_bloom",
+   "z": "",
+   "v": "Warblade Bloom"
+  },
+  {
+   "k": "name.gale_vine",
+   "z": "",
+   "v": "Gale Vine"
+  },
+  {
+   "k": "name.sunflower_crown",
+   "z": "",
+   "v": "Sunflower"
+  },
+  {
+   "k": "name.rainlily",
+   "z": "",
+   "v": "Rain Lily"
+  },
+  {
+   "k": "name.shelter_ivy",
+   "z": "",
+   "v": "Shelter Ivy"
+  },
+  {
+   "k": "name.lucky_monarch",
+   "z": "",
+   "v": "Four-Leaf Monarch"
+  },
+  {
+   "k": "runsession.m000",
+   "z": "",
+   "v": "Empty"
+  },
+  {
+   "k": "runsession.m001",
+   "z": "",
+   "v": "Pick two different seed slots"
+  },
+  {
+   "k": "runsession.m002",
+   "z": "",
+   "v": "An empty slot can't be merged"
+  },
+  {
+   "k": "runsession.m003",
+   "z": "",
+   "v": "Only the same seed can be merged"
+  },
+  {
+   "k": "runsession.m004",
+   "z": "",
+   "v": "Both seeds must be the same level (now Lv § + Lv §)"
+  },
+  {
+   "k": "runsession.m005",
+   "z": "",
+   "v": "Already max level (§) — can't merge further"
+  },
+  {
+   "k": "runsession.m006",
+   "z": "",
+   "v": "Empty slot"
+  },
+  {
+   "k": "runsession.m007",
+   "z": "",
+   "v": "No matching seed in the bag (same kind and level)"
+  },
+  {
+   "k": "runsession.m008",
+   "z": "",
+   "v": "Seed bag is full — merge or sell first"
+  },
+  {
+   "k": "runsession.m009",
+   "z": "",
+   "v": " ·Mutated"
+  },
+  {
+   "k": "runsession.m010",
+   "z": "",
+   "v": "A sold slot can't be locked"
+  },
+  {
+   "k": "runsession.m011",
+   "z": "",
+   "v": "Locked (kept for the next round)"
+  },
+  {
+   "k": "runsession.m012",
+   "z": "",
+   "v": "Lv § seed · § · merge cost §"
+  },
+  {
+   "k": "runsession.m013",
+   "z": "",
+   "v": "§ · Plugin (you choose the weapon)"
+  },
+  {
+   "k": "runsession.m014",
+   "z": "",
+   "v": "[Shop v§] Town unlock table not loaded ⇒ item/plugin/plant pools are NOT filtered (pre-change behaviour)."
+  },
+  {
+   "k": "runsession.m015",
+   "z": "",
+   "v": "The normal flow (town Awake, then combat) never reaches this."
+  },
+  {
+   "k": "runsession.m016",
+   "z": "",
+   "v": "[Lv § item] §"
+  },
+  {
+   "k": "runsession.m017",
+   "z": "",
+   "v": "This slot is sold (reroll the shop with gold to change it)"
+  },
+  {
+   "k": "runsession.m018",
+   "z": "",
+   "v": "Seed bag is full and there is no same-level match to merge (merge or sell first)"
+  },
+  {
+   "k": "runsession.m019",
+   "z": "",
+   "v": "This item is at max stacks"
+  },
+  {
+   "k": "runsession.m020",
+   "z": "",
+   "v": "Plugin slots unavailable"
+  },
+  {
+   "k": "runsession.m021",
+   "z": "",
+   "v": "Sowing Gloves"
+  },
+  {
+   "k": "runsession.m022",
+   "z": "",
+   "v": "Invalid tool"
+  },
+  {
+   "k": "runsession.m023",
+   "z": "",
+   "v": "This weapon is already the top tier"
+  },
+  {
+   "k": "runsession.m024",
+   "z": "",
+   "v": "You already own a higher tier"
+  },
+  {
+   "k": "runsession.m025",
+   "z": "",
+   "v": "(§/§ plugin slots, "
+  },
+  {
+   "k": "runsession.m026",
+   "z": "",
+   "v": "§ stacks)"
+  },
+  {
+   "k": "runsession.m027",
+   "z": "",
+   "v": "Can't fit: "
+  },
+  {
+   "k": "runsession.m028",
+   "z": "",
+   "v": "(no compatible weapon)"
+  },
+  {
+   "k": "runsession.m029",
+   "z": "",
+   "v": "§ (§)"
+  },
+  {
+   "k": "runsession.m030",
+   "z": "",
+   "v": "Auto-fitted §; § left in the bag"
+  },
+  {
+   "k": "runsession.m031",
+   "z": "",
+   "v": ", not fitted: "
+  },
+  {
+   "k": "runsession.m032",
+   "z": "",
+   "v": " / "
+  },
+  {
+   "k": "runsession.m033",
+   "z": "",
+   "v": "Picked a raindrop → Can +§ (§/§)"
+  },
+  {
+   "k": "runsession.m034",
+   "z": "",
+   "v": "Pig defeated → Fertilizer +§ (§/§)"
+  },
+  {
+   "k": "runsession.m035",
+   "z": "",
+   "v": "Not enough gold (reroll costs §)"
+  },
+  {
+   "k": "runsession.m036",
+   "z": "",
+   "v": "Rerolled (cost §, next §)"
+  },
+  {
+   "k": "runsession.m037",
+   "z": "",
+   "v": "Heal"
+  },
+  {
+   "k": "runsession.m038",
+   "z": "",
+   "v": "Guard"
+  },
+  {
+   "k": "runsession.m039",
+   "z": "",
+   "v": "Support"
+  },
+  {
+   "k": "runsession.m040",
+   "z": "",
+   "v": "Anomaly"
+  },
+  {
+   "k": "runsession.m041",
+   "z": "",
+   "v": "Utility"
+  },
+  {
+   "k": "runsession.m042",
+   "z": "",
+   "v": "Physical"
+  },
+  {
+   "k": "runsession.m043",
+   "z": "",
+   "v": "§ (Lv §) auto-planted — harvest with the hoe once ripe"
+  },
+  {
+   "k": "runsession.m044",
+   "z": "",
+   "v": "Replant: no plots"
+  },
+  {
+   "k": "runsession.m045",
+   "z": "",
+   "v": "Replant: stand next to a plot and press Q"
+  },
+  {
+   "k": "runsession.m046",
+   "z": "",
+   "v": "Replant: this plot is empty (replant only swaps an existing crop)"
+  },
+  {
+   "k": "runsession.m047",
+   "z": "",
+   "v": "Replant: the seed bag is empty"
+  },
+  {
+   "k": "runsession.m048",
+   "z": "",
+   "v": "Replant: no other seed in the bag (this plot grows §)"
+  },
+  {
+   "k": "runsession.m049",
+   "z": "",
+   "v": "Replant: pick a seed first"
+  },
+  {
+   "k": "runsession.m050",
+   "z": "",
+   "v": "Replant: that seed isn't in the bag"
+  },
+  {
+   "k": "runsession.m051",
+   "z": "",
+   "v": "Replant: no column head for this plot"
+  },
+  {
+   "k": "runsession.m052",
+   "z": "",
+   "v": "Replant: this plot already grows §"
+  },
+  {
+   "k": "runsession.m053",
+   "z": "",
+   "v": "Replant: § → § (Lv §) | § returned to the bag"
+  },
+  {
+   "k": "runsession.m054",
+   "z": "",
+   "v": "bomb!!!"
+  },
+  {
+   "k": "runsession.m055",
+   "z": "",
+   "v": "Weapon: § (windup §s, can't attack)"
+  },
+  {
+   "k": "runsession.m056",
+   "z": "",
+   "v": "The shop cart has arrived — stand under it and press E (§s stay)"
+  },
+  {
+   "k": "runsession.m057",
+   "z": "",
+   "v": "The shop cart has driven off"
+  },
+  {
+   "k": "runsession.m058",
+   "z": "",
+   "v": "| progress §"
+  },
+  {
+   "k": "runsession.m059",
+   "z": "",
+   "v": "| position §,§"
+  },
+  {
+   "k": "runsession.m060",
+   "z": "",
+   "v": "| arena half-width §"
+  },
+  {
+   "k": "runsession.m061",
+   "z": "",
+   "v": "| t=§s"
+  },
+  {
+   "k": "runsession.m062",
+   "z": "",
+   "v": "| elapsed §s"
+  },
+  {
+   "k": "runsession.m063",
+   "z": "",
+   "v": "/ duration §s"
+  },
+  {
+   "k": "runsession.m064",
+   "z": "",
+   "v": "| period §s"
+  },
+  {
+   "k": "runsession.m065",
+   "z": "",
+   "v": "§:§|"
+  },
+  {
+   "k": "runsession.m066",
+   "z": "",
+   "v": "minute §| derived wave §| actual round §|"
+  },
+  {
+   "k": "runsession.m067",
+   "z": "",
+   "v": "diff §| enemies §"
+  },
+  {
+   "k": "runsession.m068",
+   "z": "",
+   "v": "| time §| next in § min"
+  },
+  {
+   "k": "runsession.m069",
+   "z": "",
+   "v": "You fell in minute §"
+  },
+  {
+   "k": "runsession.m070",
+   "z": "",
+   "v": "Couldn't beat the BOSS within §s (minute §)"
+  },
+  {
+   "k": "runsession.m071",
+   "z": "",
+   "v": "Harvested § → gold and EXP (the soil regrows)"
+  },
+  {
+   "k": "runsession.m072",
+   "z": "",
+   "v": "Soil is dry (§/§) → hit it with the watering can"
+  },
+  {
+   "k": "runsession.m073",
+   "z": "",
+   "v": "Not ripe yet (§s, §% grown)"
+  },
+  {
+   "k": "runsession.m074",
+   "z": "",
+   "v": "Harvested § → gold and EXP (the plot regrows)"
+  },
+  {
+   "k": "runsession.m075",
+   "z": "",
+   "v": "Fertilizer ripened it → harvest with the hoe"
+  },
+  {
+   "k": "runsession.m076",
+   "z": "",
+   "v": "Keep at least § seed(s) — can't sell"
+  },
+  {
+   "k": "runsession.m077",
+   "z": "",
+   "v": "Sold, refunded §G (§ plots freed)"
+  },
+  {
+   "k": "runsession.m078",
+   "z": "",
+   "v": "Sold, refunded §G"
+  },
+  {
+   "k": "runsession.m079",
+   "z": "",
+   "v": "Seedling removed"
+  },
+  {
+   "k": "runsession.m080",
+   "z": "",
+   "v": "A grown plant can't be removed (T-§)"
+  },
+  {
+   "k": "runsession.m081",
+   "z": "",
+   "v": "§ (§ plots at once)"
+  },
+  {
+   "k": "runsession.m082",
+   "z": "",
+   "v": "Tilling done"
+  },
+  {
+   "k": "runsession.m083",
+   "z": "",
+   "v": "Sowing done"
+  },
+  {
+   "k": "runsession.m084",
+   "z": "",
+   "v": "Watered (growth -§%)"
+  },
+  {
+   "k": "runsession.m085",
+   "z": "",
+   "v": "Fertilized (growth -§%)"
+  },
+  {
+   "k": "runsession.m086",
+   "z": "",
+   "v": "Tilling"
+  },
+  {
+   "k": "runsession.m087",
+   "z": "",
+   "v": "Sowing"
+  },
+  {
+   "k": "runsession.m088",
+   "z": "",
+   "v": "Watering"
+  },
+  {
+   "k": "runsession.m089",
+   "z": "",
+   "v": "Fertilizing"
+  },
+  {
+   "k": "runsession.m090",
+   "z": "",
+   "v": "Harvested § ripe plants"
+  },
+  {
+   "k": "runsession.m091",
+   "z": "",
+   "v": "The can is empty (pick up raindrops +§)"
+  },
+  {
+   "k": "runsession.m092",
+   "z": "",
+   "v": "Out of fertilizer (defeat pigs to get more)"
+  },
+  {
+   "k": "runsession.m093",
+   "z": "",
+   "v": "Free: this throw costs no fertilizer (§/§)"
+  },
+  {
+   "k": "runsession.m094",
+   "z": "",
+   "v": "Fertilizer ripened and harvested § plants → gold and EXP"
+  },
+  {
+   "k": "imguihud.m095",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m096",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m097",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m098",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m099",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m100",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m101",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m102",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m103",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m104",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m105",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m106",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m107",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m108",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m109",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m110",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m111",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m112",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m113",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m114",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m115",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m116",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m117",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m118",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m119",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m120",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m121",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "imguihud.m122",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townhud.m123",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townhud.m124",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townhud.m125",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townhud.m126",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townhud.m127",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townhud.m128",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townhud.m129",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townhud.m130",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townhud.m131",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townhud.m132",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m133",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m134",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m135",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m136",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m137",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m138",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m139",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m140",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m141",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m142",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m143",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m144",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "townunlocks.m145",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "combatfeedback.m146",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "combatfeedback.m147",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "combatfeedback.m148",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "combatfeedback.m149",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "combatfeedback.m150",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "combatfeedback.m151",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "combatfeedback.m152",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "combatfeedback.m153",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "combatfeedback.m154",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "combatfeedback.m155",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "combatfeedback.m156",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "towndrops.m157",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "towndrops.m158",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "towndrops.m159",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "towndrops.m160",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "towndrops.m161",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "towndrops.m162",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "towndrops.m163",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "towndrops.m164",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "towndrops.m165",
+   "z": "",
+   "v": ""
+  },
+  {
+   "k": "difficulty.title",
+   "z": "",
+   "v": "Choose Difficulty"
+  },
+  {
+   "k": "difficulty.sub",
+   "z": "",
+   "v": "Pick before you step in: difficulty only scales enemy HP and damage — your weapons, gold and drops are untouched."
+  },
+  {
+   "k": "difficulty.current",
+   "z": "",
+   "v": "Current"
+  },
+  {
+   "k": "difficulty.pick",
+   "z": "",
+   "v": "Select"
+  },
+  {
+   "k": "difficulty.hint",
+   "z": "",
+   "v": "Saved with your file — same tier next time. Low = original numbers."
+  },
+  {
+   "k": "difficulty.start",
+   "z": "",
+   "v": "Start Run"
+  },
+  {
+   "k": "difficulty.low",
+   "z": "",
+   "v": "Low"
+  },
+  {
+   "k": "difficulty.mid",
+   "z": "",
+   "v": "Medium"
+  },
+  {
+   "k": "difficulty.high",
+   "z": "",
+   "v": "High"
+  },
+  {
+   "k": "difficulty.low.fx",
+   "z": "",
+   "v": "Enemy HP x1.00, damage x1.00 (original)"
+  },
+  {
+   "k": "difficulty.mid.fx",
+   "z": "",
+   "v": "Enemy HP x1.20, damage x1.20"
+  },
+  {
+   "k": "difficulty.high.fx",
+   "z": "",
+   "v": "Enemy HP x1.50, damage x1.50"
+  },
+  {
+   "k": "ui.diff.portalhint",
+   "z": "",
+   "v": "[E] Choose difficulty · step into the portal to start"
+  },
+  {
+   "k": "name.good_wateringcan",
+   "z": "",
+   "v": "Copper Watering Can"
+  },
+  {
+   "k": "desc.good_wateringcan",
+   "z": "",
+   "v": "Trigger: permanent. Effect: the town's copper can moves into combat — a steadier stream, but heavier in hand. Numbers: ranged damage +§ (jet § => §); cost: attack speed -§% (interval x§). Limit: water line only."
+  },
+  {
+   "k": "name.good_fertilizer",
+   "z": "",
+   "v": "Ash Fertilizer"
+  },
+  {
+   "k": "desc.good_fertilizer",
+   "z": "",
+   "v": "Trigger: permanent. Effect: the town's ash sack becomes a bigger, heavier blast. Numbers: blast damage +§ (§ => §), blast range +§% (§m => §m); cost: move speed -§% (§ => § m/s). Limit: fertilizer line only."
+  },
+  {
+   "k": "name.good_beehive",
+   "z": "",
+   "v": "Beehive"
+  },
+  {
+   "k": "desc.good_beehive",
+   "z": "",
+   "v": "Trigger: permanent. Effect: the hive hangs by the field — money and hearts both come faster, but the swarm blurs your aim. Numbers: gold +§% (x§ => x§), heart heal +§ (§ => §); cost: crit rate -§ point (§% => §%). Limit: gold multiplies income only."
+  },
+  {
+   "k": "name.good_sprinkler",
+   "z": "",
+   "v": "Ring Sprinkler"
+  },
+  {
+   "k": "desc.good_sprinkler",
+   "z": "",
+   "v": "Trigger: permanent. Effect: the ring sprinkler lightens your feet and hands, but wets the powder. Numbers: attack speed +§% (interval x§), move speed +§% (§ => § m/s); cost: blast damage -§ (§ => §). Limit: attack speed applies to all three weapons."
+  },
+  {
+   "k": "name.iron_bucket",
+   "z": "",
+   "v": "Iron Bucket"
+  },
+  {
+   "k": "desc.iron_bucket",
+   "z": "",
+   "v": "Trigger: permanent. Effect: an iron bucket on your back — more HP, more shield, but you cannot reach as far. Numbers: max HP +§ (§ => §), shield +§ (§ => §); cost: attack range -§% (hoe §m => §m). Limit: adds to the cap only (no instant heal); shield is spent before HP."
+  },
+  {
+   "k": "name.glass_lens_array",
+   "z": "",
+   "v": "Lens Array"
+  },
+  {
+   "k": "desc.glass_lens_array",
+   "z": "",
+   "v": "Trigger: permanent. Effect: three lenses stretch your reach and find weak points, but the rig drags your feet. Numbers: attack range +§% (hoe §m => §m), crit rate +§ points (§% => §%); cost: move speed -§% (§ => § m/s). Limit: range applies to all three weapons; crit is a chance, not a guarantee."
+  },
+  {
+   "k": "name.honey_jar",
+   "z": "",
+   "v": "Honey Jar"
+  },
+  {
+   "k": "desc.honey_jar",
+   "z": "",
+   "v": "Trigger: when you pick up a heart. Effect: the jar is full of honey, so each heart heals more. Numbers: heart heal +§ (§ per heart => §). Limit: only the heal amount — not the drop rate, not the HP cap."
+  },
+  {
+   "k": "name.twin_lantern",
+   "z": "",
+   "v": "Twin Lantern"
+  },
+  {
+   "k": "desc.twin_lantern",
+   "z": "",
+   "v": "Trigger: permanent. Effect: a lantern on each side raises both earnings and learning, at the cost of your body. Numbers: exp +§% (x§ => x§), gold +§% (x§ => x§); cost: max HP -§ (§ => §). Limit: only income-side multipliers; the HP cap drop also compresses current HP."
+  },
+  {
+   "k": "name.thorn_wall",
+   "z": "",
+   "v": "Thorn Wall"
+  },
+  {
+   "k": "desc.thorn_wall",
+   "z": "",
+   "v": "Trigger: permanent. Effect: a wall of thorns behind you adds shove and blast, but slows your swing. Numbers: knockback +§% (§ => §), blast damage +§ (§ => §); cost: attack speed -§% (interval x§). Limit: knocked-back enemies need another step to reach; the attack-speed cost hits all three weapons."
+  },
+  {
+   "k": "name.moon_bracelet",
+   "z": "",
+   "v": "Moon Bracelet"
+  },
+  {
+   "k": "desc.moon_bracelet",
+   "z": "",
+   "v": "Trigger: permanent. Effect: a thin moon on your wrist makes you a little lighter and easier to slip away. Numbers: dodge +§ points (§% => §%). Limit: dodge is a chance capped at §% (§% with the Evade Helm); this is a bonus, not a fill-up."
+  },
+  {
+   "k": "name.seed_drum",
+   "z": "",
+   "v": "Seed Drum"
+  },
+  {
+   "k": "desc.seed_drum",
+   "z": "",
+   "v": "Trigger: permanent. Effect: the drum pulls in pigs and money, but your grip loosens and crits land softer. Numbers: pig spawn rate +§ levels (§% => §%), gold +§% (x§ => x§); cost: crit damage -§% (x§ => x§). Limit: pigs are the only source of fertilizer ammo; the rate level caps at § (§%)."
+  },
+  {
+   "k": "name.storm_lens",
+   "z": "",
+   "v": "Storm Lens"
+  },
+  {
+   "k": "desc.storm_lens",
+   "z": "",
+   "v": "Trigger: permanent. Effect: a storm trapped in the lens — heavier hits and harder crits, but slower wind-up. Numbers: damage multiplier +§% (x§ => x§), crit damage +§% (x§ => x§); cost: attack speed -§% (interval x§). Limit: the multiplier applies to all three weapons' full damage."
+  },
+  {
+   "k": "name.mint_sprout",
+   "z": "",
+   "v": "Mint Sprout"
+  },
+  {
+   "k": "name.cinder_pepper",
+   "z": "",
+   "v": "Cinder Pepper"
+  },
+  {
+   "k": "name.glass_melon",
+   "z": "",
+   "v": "Glass Melon"
+  },
+  {
+   "k": "name.frost_reed",
+   "z": "",
+   "v": "Frost Reed"
+  },
+  {
+   "k": "save.summary",
+   "z": "",
+   "v": "{0} | Gold {1} | Played {2} | Plots {3}/{4} (ripe {5}) | Plants {6} kinds/{7} seeds | Items {8} | Skins {9} (worn {10}) | Saved {11}"
+  },
+  {
+   "k": "login.newestNone",
+   "z": "",
+   "v": "Latest save: none — that is why Continue is greyed out."
+  },
+  {
+   "k": "login.newestSlot",
+   "z": "",
+   "v": "Latest save: slot {0} | {1}"
+  },
+  {
+   "k": "login.allSlotsFull",
+   "z": "",
+   "v": "All {0} save slots are full — open Saves and delete one first."
+  },
+  {
+   "k": "login.slotUsage",
+   "z": "",
+   "v": "Save slots: {0} / {1}"
+  },
+  {
+   "k": "save.labelMainSlot",
+   "z": "",
+   "v": "Main town save {0}"
+  },
+  {
+   "k": "name.iron_bracer",
+   "z": "",
+   "v": "Iron Bracer"
+  },
+  {
+   "k": "desc.iron_bracer",
+   "z": "",
+   "v": "Trigger: permanent. Effect: an iron band on the wrist makes every hoe swing heavier. Numbers: melee damage +§ (§ => §). Limit: the hoe line only; no drawback."
+  },
+  {
+   "k": "name.bronze_lens",
+   "z": "",
+   "v": "Bronze Lens"
+  },
+  {
+   "k": "desc.bronze_lens",
+   "z": "",
+   "v": "Trigger: permanent. Effect: a bronze lens tightens the water jet so it hits harder. Numbers: ranged damage +§ (§ => §). Limit: the can line only; no ammo or width change."
+  },
+  {
+   "k": "name.ash_flask",
+   "z": "",
+   "v": "Ash Flask"
+  },
+  {
+   "k": "desc.ash_flask",
+   "z": "",
+   "v": "Trigger: permanent. Effect: a flask of dry ash makes every blast land harder. Numbers: blast damage +§ (§ => §). Limit: the fertilizer line only; no radius or charge change."
+  },
+  {
+   "k": "name.feather_fan",
+   "z": "",
+   "v": "Feather Fan"
+  },
+  {
+   "k": "desc.feather_fan",
+   "z": "",
+   "v": "Trigger: permanent. Effect: a flick of the fan speeds up all three weapons. Numbers: attack speed +§% (attack speed § => §, interval x§). Limit: speed only — not damage, not range."
+  },
+  {
+   "k": "name.hive_plate",
+   "z": "",
+   "v": "Hive Plate"
+  },
+  {
+   "k": "desc.hive_plate",
+   "z": "",
+   "v": "Trigger: permanent. Effect: honeycomb plate — more HP and shield, heavier legs. Numbers: max HP +§ (§ => §), shield +§ (§ => §); cost: move speed -§% (§ => § m/s). Limit: cap only, no instant heal."
+  },
+  {
+   "k": "name.spyglass",
+   "z": "",
+   "v": "Spyglass Array"
+  },
+  {
+   "k": "desc.spyglass",
+   "z": "",
+   "v": "Trigger: permanent. Effect: three spyglasses find weak points far away, at the cost of your body. Numbers: attack range +§% (§ => §m), crit damage +§% (x§ => x§); cost: max HP -§ (§ => §). Limit: range applies to all three weapons."
+  },
+  {
+   "k": "name.forge_heart",
+   "z": "",
+   "v": "Forge Heart"
+  },
+  {
+   "k": "desc.forge_heart",
+   "z": "",
+   "v": "Trigger: permanent. Effect: a forge heart feeds both blast power and blast size, at the cost of aim. Numbers: blast damage +§ (§ => §), blast range +§% (§m => §m); cost: crit rate -§ points (§% => §%). Limit: the fertilizer line only."
+  },
+  {
+   "k": "name.down_boots",
+   "z": "",
+   "v": "Down Boots"
+  },
+  {
+   "k": "desc.down_boots",
+   "z": "",
+   "v": "Trigger: permanent. Effect: down soles make you fast and slippery, but your swings lose bite. Numbers: move speed +§% (§ => § m/s), dodge +§ points (§% => §%); cost: melee damage -§ (§ => §). Limit: dodge is a chance capped at §%."
+  },
+  {
+   "k": "name.mead_vat",
+   "z": "",
+   "v": "Mead Vat"
+  },
+  {
+   "k": "desc.mead_vat",
+   "z": "",
+   "v": "Trigger: permanent. Effect: mead makes hearts come often and heal more, but your purse leaks. Numbers: heart heal +§ (§ => §), heart drop +§ level (§% => §%); cost: gold -§% (x§ => x§). Limit: drop rate caps at §%."
+  },
+  {
+   "k": "name.star_atlas",
+   "z": "",
+   "v": "Star Atlas"
+  },
+  {
+   "k": "desc.star_atlas",
+   "z": "",
+   "v": "Trigger: permanent. Effect: reading the atlas while farming — more exp and luck, less power. Numbers: exp +§% (x§ => x§), luck +§ points (§% => §%); cost: damage multiplier -§% (x§ => x§). Limit: luck only affects harvest doubling."
+  },
+  {
+   "k": "name.glow_moss",
+   "z": "",
+   "v": "Glow Moss"
+  },
+  {
+   "k": "name.salt_melon",
+   "z": "",
+   "v": "Salt Melon"
+  },
+  {
+   "k": "name.cloud_orchid",
+   "z": "",
+   "v": "Cloud Orchid"
+  },
+  {
+   "k": "name.mirror_bloom",
+   "z": "",
+   "v": "Mirror Bloom"
+  },
+  {
+   "k": "name.ember_reed",
+   "z": "",
+   "v": "Ember Reed"
+  },
+  {
+   "k": "shop.footer",
+   "z": "",
+   "v": "Gold: {0}  ·  Unlocked {1} / {2} on sale"
+  },
+  {
+   "k": "name.hoe_echo",
+   "z": "",
+   "v": "Echo"
+  },
+  {
+   "k": "desc.hoe_echo",
+   "z": "",
+   "v": "A hoe cut that lands settles one more time, a moment later. Stacks § layers."
+  },
+
+
+  {
+   "k": "name.hoe_focus",
+   "z": "",
+   "v": "Focus"
+  },
+  {
+   "k": "desc.hoe_focus",
+   "z": "",
+   "v": "Repeated hoe hits on the same enemy add one finishing strike. Stacks § layers."
+  },
+  {
+   "k": "name.can_ricochet",
+   "z": "",
+   "v": "Ricochet"
+  },
+  {
+   "k": "desc.can_ricochet",
+   "z": "",
+   "v": "After a beam hit the splash bounces onto another enemy nearby. Stacks § layers."
+  },
+  {
+   "k": "name.can_ripen",
+   "z": "",
+   "v": "Ripen"
+  },
+  {
+   "k": "desc.can_ripen",
+   "z": "",
+   "v": "A beam crossing an unripe planted plot pushes its growth along. Stacks § layers."
+  },
+  {
+   "k": "name.can_tide",
+   "z": "",
+   "v": "Tide"
+  },
+  {
+   "k": "desc.can_tide",
+   "z": "",
+   "v": "A beam hit shoves the enemy back along the water line. Stacks § layers."
+  },
+  {
+   "k": "name.fert_mine",
+   "z": "",
+   "v": "Buried Charge"
+  },
+  {
+   "k": "desc.fert_mine",
+   "z": "",
+   "v": "The fertilizer sinks into the soil and arms itself, bursting only when an enemy steps in. Stacks § layers."
+  },
+  {
+   "k": "name.fert_ward",
+   "z": "",
+   "v": "Soil Ward"
+  },
+  {
+   "k": "desc.fert_ward",
+   "z": "",
+   "v": "When the burst goes off, a player standing inside its range gains a shield. § layer only, no stacking."
+  },
+  {
+   "k": "name.fert_mark",
+   "z": "",
+   "v": "Brand Mark"
+  },
+  {
+   "k": "desc.fert_mark",
+   "z": "",
+   "v": "A burst that hits an enemy brands it and amplifies the next damage it takes. Stacks § layers."
+  },
+  {
+   "k": "plant.standingdodge.role",
+   "z": "",
+   "v": "Role　A crop that raises dodge while you stand on its plot: one harvest every §s, § gold § exp per plot"
+  },
+  {
+   "k": "plant.standingdodge.short",
+   "z": "",
+   "v": "Special　Plot Ward: dodge +§% while you stand on its plot"
+  },
+  {
+   "k": "name.hoe_shock",
+   "z": "",
+   "v": "Shock"
+  },
+  {
+   "k": "desc.hoe_shock",
+   "z": "",
+   "v": "A lightning cut: the arc leaps from your target to the enemies around it. Stacks § layers."
+  },
+  {
+   "k": "name.hoe_frenzy",
+   "z": "",
+   "v": "Frenzy"
+  },
+  {
+   "k": "desc.hoe_frenzy",
+   "z": "",
+   "v": "An enemy already worn down takes a harder cut from you. Stacks § layers."
+  },
+  {
+   "k": "name.hoe_giant",
+   "z": "",
+   "v": "Giant"
+  },
+  {
+   "k": "desc.hoe_giant",
+   "z": "",
+   "v": "Your swing stops being a half-circle in front of you and becomes a full ring around you. Only § layer, no stacking."
+  },
+  {
+   "k": "name.can_sewer",
+   "z": "",
+   "v": "Sewer"
+  },
+  {
+   "k": "desc.can_sewer",
+   "z": "",
+   "v": "The jet turns into murky green water, and every so often it slops a huge banana peel down beside you. Stacks § layers."
+  },
+  {
+   "k": "name.can_wave",
+   "z": "",
+   "v": "Wave"
+  },
+  {
+   "k": "desc.can_wave",
+   "z": "",
+   "v": "Spraying a jet rolls a wave out from your feet; anything it touches is shaken and you move faster too. Stacks § layers."
+  },
+
+
+  {
+   "k": "name.fert_blackhole",
+   "z": "",
+   "v": "Black Hole"
+  },
+  {
+   "k": "desc.fert_blackhole",
+   "z": "",
+   "v": "Before the fertilizer goes off, nearby enemies are dragged toward the blast point. Only § layer, no stacking."
+  },
+  {
+   "k": "name.angel_descent",
+   "z": "",
+   "v": "Angel's Descent"
+  },
+  {
+   "k": "desc.angel_descent",
+   "z": "",
+   "v": "Trigger: you die while holding this item. Effect: time stops for § seconds as angel feathers drift down from the sky; a single revival then completes, all health is restored, and time resumes. That revival consumes one copy — it turns into a Fallen Angel Feather on the spot and still occupies this item slot (that item lowers max HP by §). Numbers: together with Fallen Angel Feather you may hold at most § copies, and one death consumes only § copy. Limits: extra copies add no stats, only extra revivals; without this item, dying ends the run as usual."
+  },
+  {
+   "k": "name.fallen_angel_feather",
+   "z": "",
+   "v": "Fallen Angel Feather"
+  },
+  {
+   "k": "desc.fallen_angel_feather",
+   "z": "",
+   "v": "Trigger: only created when Angel's Descent revives you — it never appears in the shop, in drops, or on rerolls. Effect: a charred feather weighing on your back; max HP −§ (current HP is pressed down to the new cap). Numbers: hold up to § copies, sharing one combined cap with Angel's Descent. Limits: it is not a purchasable benefit, only the residue left after Angel's Descent is spent; extra copies stack the penalty linearly."
+  }
+ ]
+}

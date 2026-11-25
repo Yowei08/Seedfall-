@@ -1,0 +1,85 @@
+{
+  "families": {
+    "shard": {
+      "count": 6,
+      "variants": [
+        {
+          "variant": 0,
+          "verts": 24,
+          "tris": 8,
+          "outward": 1.0
+        },
+        {
+          "variant": 1,
+          "verts": 24,
+          "tris": 8,
+          "outward": 1.0
+        },
+        {
+          "variant": 2,
+          "verts": 24,
+          "tris": 8,
+          "outward": 1.0
+        },
+        {
+          "variant": 3,
+          "verts": 24,
+          "tris": 8,
+          "outward": 1.0
+        },
+        {
+          "variant": 4,
+          "verts": 24,
+          "tris": 8,
+          "outward": 1.0
+        },
+        {
+          "variant": 5,
+          "verts": 24,
+          "tris": 8,
+          "outward": 1.0
+        }
+      ],
+      "verts": 24,
+      "tris": 8
+    },
+    "frustum": {
+      "sides": 6,
+      "ra": 0.72,
+      "rb": 1.0,
+      "verts": 72,
+      "tris": 24,
+      "outward": 1.0
+    },
+    "icoshell": {
+      "subdiv": 1,
+      "verts": 240,
+      "tris": 80,
+      "outward": 1.0
+    },
+    "disc": {
+      "segs": 18,
+      "verts": 54,
+      "tris": 18,
+      "normal_up": 1.0
+    }
+  },
+  "expected": {
+    "shard": {
+      "verts": 24,
+      "tris": 8
+    },
+    "frustum6": {
+      "verts": 72,
+      "tris": 24
+    },
+    "icoshell1": {
+      "verts": 240,
+      "tris": 80
+    },
+    "disc18": {
+      "verts": 54,
+      "tris": 18
+    }
+  }
+}

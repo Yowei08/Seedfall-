@@ -29,14 +29,19 @@ namespace Seedfall
     // ═══════════════════════════════════════════════════════════════════════
 
     /// <summary>
-    /// 商品品质。**沿用工程既有的五档**（`Rarity.Names`：普通/一般/稀有/史诗/传奇）✗
+    /// 商品品质。★ 阶段 3 改名为 **D / C / B / A / S**（不再用 Common…Legendary）★
     ///
-    /// 为什么不新建一套：`Rarity.ColorOf` / `NameOf` / 商店的 `PriceMult` /
-    /// 苗的 `GradeColor` 全都基于这个五档制 ✓
-    /// 新建一套会出现"同一个品质在两个地方有两个名字" ✗ —— 本会话已经吃过一次
-    /// （稀有度配色 bug：颜色一直对，错的是**第二份名字表**）✓
+    /// ★ 为什么改成字母档 ★
+    /// 旧名是一套"英文稀有度形容词"（普通/一般/稀有/史诗/传奇），而**插件表里根本没有"普通"**
+    /// —— 12 件全部落在 C 及以上 ⇒ 一整套五档名里只有四档真的被用到 ✗
+    /// 换成字母档之后，档位本身就是"从低到高"的顺序，读表时不用再背一张对照表 ✓
+    ///
+    /// ★ 索引必须保持 0..4 且顺序不变 ★
+    /// `ShopPool.seedQualityWeights / pluginQualityWeights / itemQualityWeights` 是**按索引**
+    /// 取权重的数组（`(int)quality`）✗ 换名但换序会让"哪一档更常见"悄悄反过来 ✓
+    /// 所以这里只改名与注释，**取值一个不动**：D=0 / C=1 / B=2 / A=3 / S=4 ✓
     /// </summary>
-    public enum GoodsQuality { Common = 0, Uncommon = 1, Rare = 2, Epic = 3, Legendary = 4 }
+    public enum GoodsQuality { D = 0, C = 1, B = 2, A = 3, S = 4 }
 
     /// <summary>
     /// **插件适用的武器**。取值与 `RunSession.ToolHoe/Can/Fertilizer` 对齐 ✗
@@ -51,58 +56,181 @@ namespace Seedfall
     /// 插件修改攻击行为的**方式**。用枚举分派，避免为每个插件写一个类 ✗
     ///
     /// ★ 每一档都【必须】被攻击路径真的消费 ★（本工程最贵的一课：看着活着、实际死的）
-    /// 所以枚举按"它改的是攻击的哪一环"分组，并且每条都在
-    /// `WeaponSystem.Aggregate` 里有分支、在 `RunSession` 的三条攻击路径里被读 ✓
     /// 自检里有一条"每个枚举值都被消费"的断言来钉住这条纪律。
     ///
+    /// ══════════════════════════════════════════════════════════════════════
+    /// ★ 阶段 3：**只改攻击方式，不改玩家属性** ★
+    ///
+    /// 上一版的 17 种里有 12 种是"给玩家属性加一个数"（伤害 +N / 攻速 +N% / 暴击 +N% …）✗
+    /// 它们买到的是**同一个体验的更大版本** —— 商店里没有真正的选择，永远是"哪件数字高" ✓
+    /// 这一版把这 12 种**全部删掉**（`PLUGIN-NO-STAT` 这条断言就是在数它们还剩几件）✓
+    ///
+    /// 留下的是 12 种"**改变攻击的形态**"：多一道、多一刀、多一炸、附一层、回一点水 ✓
+    /// 属性区因此从 `WeaponModifiers` 上整体消失 —— 攻击公式的入参不再有任何一项来自插件 ✓
+    /// ══════════════════════════════════════════════════════════════════════
+    ///
     /// ★ 单位约定（踩过的坑，写在这里免得下次再踩）★
-    /// `CritRate` / `CritDamage` / `Dodge` 这类"率"在这一局里是**0..1 的小数**，
-    /// 不是百分数：`tuning.player.critRate = 0`、`caps.critRate = 1.0`，
-    /// 而消费点是 `World.Rng.Chance(st.Get(StatId.CritRate))` ✓
-    /// ⇒ 插件写 `amount: 8` 会得到 **800% 暴击率**（`Chance(8)` 恒真），必须写 `0.08` ✓
-    /// 而 `AttackSpeed` / `Range` / `DamagePercent` / `ExplodeRadius` 是**倍率增量**（0.15 = +15%）✓
+    /// `Lifesteal` / `FreeBurst` / `ThickJet` / `SlowOnHit.pct` 这类"比例"是 **0..1 小数**：
+    /// `0.20` = 20%、`0.12` = 12%。写成 `20` 会得到 2000% ✓
+    /// 而 `AutoCharge`（每秒回 5 点水）是**绝对值**，写 `0.05` 会变成"每秒回 0.05 点"✓
     /// </summary>
     public enum PluginEffectKind
     {
+        /// <summary>无效果（表里写错 / 还没配）。**不算一种效果**，自检把它当"这行是死的"。</summary>
         None = 0,
 
-        // ── ② 对武器的**数值**进行操作（9 种，改的是攻击公式的某一个乘区）──
-        DamageFlat,        // 伤害 +N（加到 AttackFormula 的 baseValue）
-        DamagePercent,     // 伤害 ×(1+N)
-        AttackSpeed,       // 攻速 +N（0.15 = 挥击间隔 ×1/1.15）
-        Range,             // 范围 +N%（近战判定框 / 激光射程 / 爆炸半径）
-        CritRate,          // 暴击率 +N（**0..1 小数**，0.10 = +10%）
-        CritDamage,        // 暴击伤害 +N（倍率增量，0.5 = 暴击倍率 +50%）
-        ExplodeRadius,     // 爆炸范围 +N%（只对肥料那条路有判定）
-        ProjectileCount,   // **弹道数 +N**（按武器解释：剑气条数 / 激光条数 / 爆炸点数）
-        Knockback,         // 击退 +N（加到 DamageRequest.Knockback）
+        // ───────────── 锄头 `allowedWeapons:[0]` ─────────────
 
-        // ── ① 对武器的**攻击形式**进行拓展（1 种）──
-        /// <summary>剑气：近战挥击**同时**沿瞄准方向发一道剑气，打到近战判定框之外的敌人。
-        /// `amount` = 剑气基础条数（≥1 即启用），实际条数 = round(amount) + ProjectileCount。</summary>
+        /// <summary>**剑气**（`hoe_swordwave`，B 档）：挥击的同时沿瞄准方向多劈 `amount` 道/层剑气，
+        /// 射程 = 近战范围 ×2。打的是**挥击框之外**的敌人（框内的已被挥击打过，不重复打）。</summary>
         SwordWave,
 
-        // ── ③ 小机制（2 种）──
-        /// <summary>命中霜冻：每次命中额外叠 `amount` 层寒冷（既有的减速/冻结体系）。</summary>
-        ChillOnHit,
-        /// <summary>击杀回弹药：击杀一个敌人回 `amount` 点弹药（水壶/肥料各自的弹药池）。</summary>
-        AmmoOnKill,
-
-        // ── ④ 大机制（3 种）──
-        /// <summary>命中灼烧：命中即让目标进入既有的灼烧（`StatusRuntime.Burn`）。
-        /// `amount` = 灼烧量占本次伤害的比例（0.35 = 本次伤害的 35%）。</summary>
+        /// <summary>**灼烧**（`hoe_burn`，C 档）：命中附 `amount2`(=1) 层灼烧；
+        /// 每层每 1 秒掉 `近战伤害 × amount`(0.50)，持续 5 秒，**时长不叠**、每秒伤害按层乘。
+        /// 结算在 `PluginDotTable`（持续效果表），不在这里。</summary>
         BurnOnHit,
-        /// <summary>共振连锁：命中后向最近的 `amount` 个其它敌人溅射 `amount2` 比例的伤害
-        /// （与星藤植物的 `Chain` 是两套，植物的写死在 Actors.cs，这里的走插件数据）。</summary>
-        ChainOnHit,
-        /// <summary>爆炸回声：肥料爆炸后**原地再结算一次**，`amount` = 第二段的伤害比例。</summary>
-        BlastEcho,
 
-        // ── ⑤ 特殊效果（2 种）──
-        /// <summary>暴击炸裂：这一击暴击时，在命中点引发一次爆炸，`amount` = 溅射伤害比例。</summary>
-        CritBlast,
-        /// <summary>满血增伤：生命满值时这一击的伤害倍率 ×(1+`amount`)。</summary>
-        FullHpBonus,
+        /// <summary>**双击**（`hoe_doublestrike`，A 档）：一次攻击挥砍 `1 + amount×层` 次，
+        /// 每一刀**各自独立结算**（各判暴击），第 k 刀延迟 `0.12s × k`。</summary>
+        DoubleStrike,
+
+        /// <summary>**吸血**（`hoe_lifesteal`，S 档）：造成的伤害 × `amount`(0.20)/层 转成生命，
+        /// 上限 `MaxHp`。★ **对持续伤害不生效** ★（DoT 不经过 `PluginPostHit`）。</summary>
+        Lifesteal,
+
+        // ───────────── 水壶 `allowedWeapons:[1]` ─────────────
+
+        /// <summary>**多柱**（`can_multijet`，B 档）：水柱 +`amount`(1) 道/层，每道朝向差
+        /// `amount2`(8)°，**每道独立扣水**（一次判定 N 道就付 N 份）。</summary>
+        MultiJet,
+
+        /// <summary>**减速**（`can_slow`，C 档）：命中附 `amount2`(=1) 层减速；
+        /// 移速 −`amount`(0.12)/层（下限 −60%）；被减速的敌人每秒受 `远程伤害 × 0.50`，持续 5 秒。
+        /// 结算同样在 `PluginDotTable`。</summary>
+        SlowOnHit,
+
+        /// <summary>**加粗**（`can_thickjet`，A 档）：水柱**宽度** +`amount`(0.50)/层。
+        /// ★ **只改宽不改长** ★ —— 射程由 `tools.can.range` 决定，本档不许碰它。</summary>
+        ThickJet,
+
+        /// <summary>**自充**（`can_autocharge`，S 档）：每秒回 `amount`(5) 点水量/层，
+        /// 上限 `WaterAmmoMax`。它回的是**弹药**，不是玩家属性 ✓</summary>
+        AutoCharge,
+
+        // ───────────── 肥料 `allowedWeapons:[2]` ─────────────
+
+        /// <summary>**子爆**（`fert_subburst`，B 档）：主爆旁额外 `amount`(1) 个子爆/层，
+        /// 子爆半径 = 主爆 × `amount2`(0.70)，落点按**正六边形**角分布（0°/60°/…/300°）、
+        /// 距主爆心 = 主爆半径 × 0.9。</summary>
+        SubBurst,
+
+        /// <summary>**毒素**（`fert_poison`，C 档）：爆点留 5 秒毒区/层，毒区半径 = 主爆 ×0.8，
+        /// 每层每秒 `爆炸伤害 × amount`(0.50)。毒区**按位置**，后走进来的敌人照样掉血 ✓</summary>
+        PoisonZone,
+
+        /// <summary>**免耗**（`fert_freeburst`，A 档）：`amount`(0.12)/层 概率**不消耗**肥料充能，
+        /// 上限 100%（叠到 9 层就是必不耗）。</summary>
+        FreeBurst,
+
+        /// <summary>**连环**（`fert_chain`，S 档）：爆炸次数 +`amount`(1)/层，第二爆点落在
+        /// 主爆点外 `amount2`(2.5)m，★ **半径同主爆** ★（不是子爆的 0.7×）。</summary>
+        ChainBurst,
+
+        // ════════════════════════════════════════════════════════════════════
+        // ★★ v253：**六个全新机制**（用户原话：「我设计过剑气、毒、子爆、加粗等内容，
+        //    新加的插件不要在我的方向做拓展或者做数值强化，设计全新的机制和特效」）★★
+        //
+        // ── 与前面 12 个的根本区别 ──
+        //   前 12 个回答的都是"**这一下多打谁 / 多打几次 / 打完留什么**"（形态与持续伤害）；
+        //   下面 6 个各自引入一个**新的作用维度**：
+        //     时间（回响）/ 目标跳转（弹射）/ 田地（催熟）/
+        //     连续命中的计数（收束）/ 位移（潮汐）
+        //   ★ 这里的"击杀转化（余温）"一档已随 `hoe_warmth` 一起删除（用户要求删掉余温插件）★
+        //   ⇒ 它们**不是**任何既有档位的 amount 加减，也不是同一效果换了数值 ✓
+        // ════════════════════════════════════════════════════════════════════
+
+        /// <summary>**回响**（锄头）：命中 `amount2`(0.35) 秒后，在**同一个敌人身上**再结算一次
+        /// `本次伤害 × amount`(0.40) 的伤害。★ 新维度 = **时间**：这一击的账延后结 ✓
+        /// 与"双击/剑气"的区别：那两者是**当下**多打；回响是**同一刀**晚一点再疼一次 ✓</summary>
+        Echo,
+
+        /// <summary>**弹射**（水壶）：水柱命中后，跳到 `amount2`(3.5)m 内的**另一个**敌人，
+        /// 造成 `本次伤害 × amount`(0.60)。★ 新维度 = **目标跳转**（不是多一道柱、不是加宽）✓</summary>
+        Ricochet,
+
+        /// <summary>**催熟**（水壶）：水柱扫过"已种下但没成熟"的地块时，立刻推进
+        /// `amount`(3) 秒成长。★ 新维度 = **作用于田地**（把"浇水"变成"催熟"）✓</summary>
+        Ripen,
+
+        /// <summary>**收束**（锄头）：对**同一个敌人**每命中 `amount`(3) 次，第 `amount` 次追加
+        /// `本次伤害 × amount2`(0.40) 的"处决"伤害，并把计数清零；`FocusWindow` 秒内没再命中就重置。
+        /// ★ 新维度 = **命中计数**（前 12 个都不记"这是第几下"）✓</summary>
+        Focus,
+
+        /// <summary>**潮汐**（水壶）：水柱命中时把敌人**推开** `amount`(1.2)m（沿"玩家→敌人"方向）。
+        /// ★ 新维度 = **位移**：减速改的是"走多快"，潮汐改的是"站在哪" ✓</summary>
+        Tide,
+
+        // ════════════════════════════════════════════════════════════════════
+        // ★★ v255：肥料线的三件新机制（用户定稿）★★
+        // ════════════════════════════════════════════════════════════════════
+
+        /// <summary>**伏雷**（肥料）：落地不立刻炸，先埋进土里上膛；**敌人踩到**按 `amount`(1.5) 倍引爆，
+        /// 没人踩则上膛 `MineFuse`(6) 秒后自己炸、按 `amount2`(0.8) 倍。
+        /// ★ 新维度 = **引爆时机交给敌人**（既有爆炸全是"投出即爆"）✓</summary>
+        Mine,
+
+        /// <summary>**护壤**（肥料）：爆炸时玩家**自己在半径内**才吃到 —— 获得 `amount`(2) 点额外护盾，
+        /// 持续 `amount2`(3) 秒。★ 新维度 = **玩家侧防御**（前 18 件全是对敌效果）✓</summary>
+        Ward,
+
+        /// <summary>**灼印**（肥料）：被炸到的敌人挂一个像素「X」标记，**下一次任何来源的伤害** ×(1+`amount`)
+        /// 并消耗标记，标记最多挂 `amount2`(3) 秒。★ 新维度 = **跨伤害源**（前 18 件都只管自己那条线）✓</summary>
+        Mark,
+
+        // ════════════════════════════════════════════════════════════════════
+        // ★★ v290：**5 个全新机制**（锄头 3 / 水壶 2 / 肥料 1）★★
+        //
+        // ── 与前面 20 个的区别（每一条都换了一个"作用对象"，不是数值加减）──
+        //   感电：把**这一刀**传播到它周围的敌人（20 件里没有一件看"溅射数量"的）
+        //   狂暴：判据是**目标的血量**（上一轮回收的「弱点」也是这个维度 —— 本轮按用户新规格
+        //         把它定为"残血目标多吃伤害"，且**只有它**，不再有第二个同类）
+        //   巨型：改的是**挥击判定的形状**（半圆 → 整圈），不是范围数值
+        //   臭水沟：把**弹药消耗**变成掉落物（前 20 件没有一件读"耗了多少水"）
+        //   海浪：作用在**玩家的移动**上（唯一一件给玩家位移增益的）
+        //   黑洞：把**爆炸的落点变成有引力的场**（唯一一件在爆炸之前改站位）
+        //   ★ 「锋利」（水壶也能收割）已随 `can_sharp` 一起删除（用户要求删掉锋利插件）★
+        //
+        // ── 执行点（与上一轮同一条纪律：算式只有一处）──
+        //   闸门组（感电 / 狂暴）在 `World.DealDamage`（`Actors.cs`，与灼印同位置）；
+        //   几何组（巨型）在 `RunSession.MeleePointHit`；
+        //   动作组（臭水沟 / 海浪 / 黑洞）在各自的那一次出手上。
+        //   **算式全部在 `Combat/PluginExtra2.cs`**，`Aggregate` 只把数搬进格子 ✓
+        // ════════════════════════════════════════════════════════════════════
+
+        /// <summary>**感电**（锄头）：这一刀再电击主目标 `ShockRadius` 米内最近的若干敌人，
+        /// 每个吃 `这一刀伤害 × 10%`。层数只加**目标数**（3 / 6 / 9 人）。</summary>
+        Shock,
+
+        /// <summary>**狂暴**（锄头）：**目标**生命低于 40% 时，这一击的伤害 +10%/层（2 层 20%）。
+        /// ★ 方向：敌人残血你打它更疼，不是你自己残血 ★</summary>
+        Frenzy,
+
+        /// <summary>**巨型**（锄头，唯一件）：挥击判定从"面前 180° 半圆"改成**环绕玩家的整圈**
+        /// （内径 = 外径 × 0.35，外径沿用既有的 `MeleeRingOuter`）。</summary>
+        Giant,
+
+        /// <summary>**臭水沟**（水壶）：水柱变成**绿色浑浊**；每累计消耗 20 点水，在玩家周围掉一个
+        /// 巨大香蕉皮（吃 `水壶伤害 × 60%`）。1/2 层 ⇒ 一次掉 1/2 个。</summary>
+        Sewer,
+
+        /// <summary>**海浪**（水壶）：喷水时脚底起一道向外扩散的浪，扫到的敌人吃 `水壶伤害 × 30%`，
+        /// 玩家 **+50% 移速 1 秒**；每层再加宽 50%（1/2/3 层）。</summary>
+        Wave,
+
+        /// <summary>**黑洞**（肥料，唯一件）：每次爆炸结算**之前**，先把爆炸范围内的敌人朝爆心拉拢；
+        /// 爆炸前 0.25 秒在爆心画一圈**向内收缩**的暗环（吸引阶段）。</summary>
+        BlackHole,
     }
 
     /// <summary>道具修改的**作用域**。全局规则与玩家属性分开 ✗（两者的叠加规则不同）</summary>
@@ -139,7 +267,7 @@ namespace Seedfall
         [Header("身份")]
         public string id = "";
         public string displayName = "";
-        public GoodsQuality quality = GoodsQuality.Common;
+        public GoodsQuality quality = GoodsQuality.D;
 
         [Header("成长条件（规格：不同种子具有不同成长条件）")]
         [Tooltip("成熟所需的水分总量")]
@@ -174,11 +302,11 @@ namespace Seedfall
             {
                 switch (quality)
                 {
-                    case GoodsQuality.Uncommon: return 1.25f;
-                    case GoodsQuality.Rare: return 1.6f;
-                    case GoodsQuality.Epic: return 2.1f;
-                    case GoodsQuality.Legendary: return 2.8f;
-                    default: return 1f;
+                    case GoodsQuality.C: return 1.25f;
+                    case GoodsQuality.B: return 1.6f;
+                    case GoodsQuality.A: return 2.1f;
+                    case GoodsQuality.S: return 2.8f;
+                    default: return 1f;          // D 档 = 基准价
                 }
             }
         }
@@ -211,7 +339,7 @@ namespace Seedfall
         [Header("身份")]
         public string id = "";
         public string displayName = "";
-        public GoodsQuality quality = GoodsQuality.Common;
+        public GoodsQuality quality = GoodsQuality.D;
         [TextArea] public string description = "";
 
         [Header("适用武器（规格：明确适用武器类型）")]
@@ -219,7 +347,13 @@ namespace Seedfall
         public WeaponSlot[] allowedWeapons = Array.Empty<WeaponSlot>();
 
         [Header("效果（规格：效果参数）")]
-        public PluginEffectKind effect = PluginEffectKind.DamageFlat;
+        public PluginEffectKind effect = PluginEffectKind.None;
+        /// <summary>
+        /// 表里 `effect` 那一格的**字面值**（由 `TableDatabase` 填，运行时不改）✓
+        /// 用途只有一个：**报告与自检要点名"表里写的到底是什么"** ✗
+        /// `effect` 解析失败会回落 `None` ⇒ 只留枚举的话，诊断信息只剩"没写效果" ✓
+        /// </summary>
+        public string rawEffect = "";
         public float amount = 1f;
         /// <summary>
         /// ★ 第二效果参数（v171 新增）★
@@ -253,11 +387,11 @@ namespace Seedfall
             {
                 switch (quality)
                 {
-                    case GoodsQuality.Uncommon: return 1.25f;
-                    case GoodsQuality.Rare: return 1.6f;
-                    case GoodsQuality.Epic: return 2.1f;
-                    case GoodsQuality.Legendary: return 2.8f;
-                    default: return 1f;
+                    case GoodsQuality.C: return 1.25f;
+                    case GoodsQuality.B: return 1.6f;
+                    case GoodsQuality.A: return 2.1f;
+                    case GoodsQuality.S: return 2.8f;
+                    default: return 1f;          // D 档 = 基准价
                 }
             }
         }
@@ -272,7 +406,7 @@ namespace Seedfall
         [Header("身份")]
         public string id = "";
         public string displayName = "";
-        public GoodsQuality quality = GoodsQuality.Common;
+        public GoodsQuality quality = GoodsQuality.D;
         [TextArea] public string description = "";
 
         [Header("作用域")]
@@ -302,11 +436,11 @@ namespace Seedfall
             {
                 switch (quality)
                 {
-                    case GoodsQuality.Uncommon: return 1.25f;
-                    case GoodsQuality.Rare: return 1.6f;
-                    case GoodsQuality.Epic: return 2.1f;
-                    case GoodsQuality.Legendary: return 2.8f;
-                    default: return 1f;
+                    case GoodsQuality.C: return 1.25f;
+                    case GoodsQuality.B: return 1.6f;
+                    case GoodsQuality.A: return 2.1f;
+                    case GoodsQuality.S: return 2.8f;
+                    default: return 1f;          // D 档 = 基准价
                 }
             }
         }

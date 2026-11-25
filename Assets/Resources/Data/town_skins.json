@@ -1,0 +1,89 @@
+{
+  "_note": "★★ v213：主城**皮肤商店**的商品表 ★★ 读它的唯一代码是 Assets/Scripts/Town/TownSkins.cs；皮肤的**几何**不在本表里 —— 表只给「叫什么、多少钱、挂哪根骨骼、用什么色」，真模型的形状写在 Assets/Scripts/Art/SkinModels.cs 里（按 id 分派）。为什么不把形状参数也灌进 JSON：一件装饰是十几个零件的相对位置，写成数据会变成一张没有编译期检查的脚手架表，改起来比代码更难读。",
+  "_note_槽位": "slot 决定「同时只能穿一件」的分组：hat 头饰 / scarf 围巾 / backpack 背包 / belt 腰带 / cape 斗篷 / mask 面具 / glasses 眼镜 / pauldron 肩甲。8 件商品各占一个槽 ⇒ 8 件可以**同时全穿上**，而将来同槽再加一件时「换上 = 顶掉旧的那件」是自动成立的。",
+  "_note_骨骼": "bones = `PlayerBean` 建出来的节点名（逗号分隔，第一根是主挂点）。名字必须与 Art/PlayerBean.cs 的 Node(...) 逐字一致：HEAD / NECK / TORSO / SHOULDER_L / SHOULDER_R。SkinModels 找不到节点时**不崩**：只记一条 Warning 并跳过这一件（主城不能因为一件装饰消失）—— 而挂上了之后，它就跟着骨骼一起动：转头它跟着转、走路它跟着摆、受击压扁它也跟着压扁，这是「加载骨骼节点上」而不是「加在世界坐标上」的全部意义。",
+  "_note_买/装/卸": "三件事分开：price 是**买**（花主城金币，一次性，永久拥有）；装备是**穿**（可以随时换同槽的另一件、也可以卸下来）。卸下**不退款、不销毁** —— 已买的永远在 Owned 里，商店那一行会显示「穿戴中 / 已买 / 未买」三态。",
+  "_note_颜色": "color = 主色，color2 = 点缀色；两者都进 ToonLook 的**共享材质池**（键 = 底色 + 描边粗细）⇒ 8 件商品最多 16 份材质，与「穿了几件」无关，也与「建了几个模型」无关。",
+  "items": [
+    {
+      "id": "skin_flower_crown",
+      "name": "稻草花冠",
+      "slot": "hat",
+      "bones": "HEAD",
+      "price": 140,
+      "color": "#EFE3B0",
+      "color2": "#D9534F",
+      "desc": "一圈压扁的草绳环套在草帽檐上，环上插 8 朵花与 4 片叶 —— 主城最便宜的一件，买来就有得看。"
+    },
+    {
+      "id": "skin_red_scarf",
+      "name": "红围巾",
+      "slot": "scarf",
+      "bones": "NECK",
+      "price": 180,
+      "color": "#C0392B",
+      "color2": "#E8A33D",
+      "desc": "脖子上一圈活扣，两条尾巴从锁骨垂到胸口 —— 走路时跟着躯干摆，站着不动也有垂坠感。"
+    },
+    {
+      "id": "skin_seed_pack",
+      "name": "种子背包",
+      "slot": "backpack",
+      "bones": "TORSO",
+      "price": 260,
+      "color": "#7A5A38",
+      "color2": "#4E6E3A",
+      "desc": "背在身上的一只方包：包盖 + 两卷铺盖 + 两条过肩带。第一件**从背面也看得出**有装备的东西。"
+    },
+    {
+      "id": "skin_rope_belt",
+      "name": "麻绳腰带",
+      "slot": "belt",
+      "bones": "TORSO",
+      "price": 220,
+      "color": "#C9A227",
+      "color2": "#6B4A2A",
+      "desc": "腰间一圈麻绳 + 一枚铜扣，右侧垂一段带头 —— 贴着蛋形身体做的**椭圆环**，不会像铁圈那样支出去。"
+    },
+    {
+      "id": "skin_leaf_cape",
+      "name": "叶纹斗篷",
+      "slot": "cape",
+      "bones": "TORSO",
+      "price": 420,
+      "color": "#3E7A3A",
+      "color2": "#8FC24A",
+      "desc": "三片逐层收窄的披风挂在背后，肩上一对别扣 —— 越往下越窄的剪影，是背对镜头时唯一的识别点。"
+    },
+    {
+      "id": "skin_owl_mask",
+      "name": "守望面具",
+      "slot": "mask",
+      "bones": "HEAD",
+      "price": 520,
+      "color": "#6E5A46",
+      "color2": "#2A2119",
+      "desc": "木面具 + 两只凹眼 + 尖喙 + 一对耳簇 —— 戴上去整张脸被盖住，只留两只亮银点。最贵的一档之一。"
+    },
+    {
+      "id": "skin_moth_glasses",
+      "name": "飞蛾镜",
+      "slot": "glasses",
+      "bones": "HEAD",
+      "price": 360,
+      "color": "#C9A6D6",
+      "color2": "#5B4B8A",
+      "desc": "两枚圆框 + 梁 + 两条镜腿，镜框外缘各挂一片小蛾翅 —— 圆框套在现有眼睛前面，瞳孔不会被糊住。"
+    },
+    {
+      "id": "skin_iron_pauldron",
+      "name": "铁肩甲",
+      "slot": "pauldron",
+      "bones": "SHOULDER_L,SHOULDER_R",
+      "price": 680,
+      "color": "#9AA3AD",
+      "color2": "#C08A3E",
+      "desc": "两片叠甲各盖住一只肩，顶上竖一根短刺、缀两枚铜钉 —— 挂在肩关节上，挥锄时跟着手臂一起抬。"
+    }
+  ]
+}

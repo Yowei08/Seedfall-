@@ -1,0 +1,78 @@
+{
+  "_note": "★★ 主城「杂货商店」的商品表 —— **只卖 道具 / 插件 / 成品，一颗种子都不卖** ★★ 读它的唯一代码是 Assets/Scripts/Town/TownData.cs（解析）+ Assets/Scripts/Town/TownGoods.cs（成交与效果）。上一版这张表卖 8 种种子（seedId 指向 town_seeds.json），用户明确要求「商店不提供种子出售」「所有主城种子必须通过战斗 boss 掉落」⇒ 本表已删掉 seedId 字段，加载时若还出现 seedId 会**直接报错**（不静默跳过）。",
+  "_note_为什么商店卖这些": "★★ 种子这条经济链已经整条挪到战斗侧（BOSS 掉落 → 仓库 → 种地 → 金币）★★ 主城金币的唯一去处如果还是种子，就等于把用户点名要删的供给又开了一个后门 ✗ 所以商店改成卖三样东西：① 道具 = 立刻生效的消耗品（加速成熟）② 插件 = 买一次、永久生效的被动（金币/秒、生长速度）③ 成品 = 买一次、永久摆出来的装饰。它们**都不进种子仓库**，也**都不产出种子** ✓",
+  "_note_字段": "★★ kind = 道具/插件/成品（只影响面板上的分组标签）｜effect = grow/income/growth/decor（**决定代码走哪条分支**，写错的键会在加载时报错）｜amount = 效果量（grow: 秒；income: 金/秒每块地；growth: 生长速度的增量，0.25 = ×1.25；decor: 必须为 0）｜price = 主城金币 ｜color = 面板上的小色块，不参与任何算式 ★★",
+  "_note_价格": "★★ 价格阶梯按「多久能赚回来」定：洒水壶 60 金（早期用一次就能多收一轮）、草木灰肥 150 金、蜂箱 320 金（永久产出，约 5 分钟回本）、环形喷灌 620 金（永久加速，中后期）、三件成品 240/380/900 金（纯外观，最贵那件是喷泉金像，专门给「钱没地方花」的阶段）★★",
+  "items": [
+    {
+      "id": "good_wateringcan",
+      "name": "铜洒水壶",
+      "kind": "道具",
+      "effect": "grow",
+      "amount": 45,
+      "price": 60,
+      "color": "#5BC0EB",
+      "desc": "浇一遍水：所有已种的地，成熟进度立刻前进 45 秒。"
+    },
+    {
+      "id": "good_fertilizer",
+      "name": "草木灰肥",
+      "kind": "道具",
+      "effect": "grow",
+      "amount": 180,
+      "price": 150,
+      "color": "#8B6F47",
+      "desc": "追一次肥：所有已种的地，成熟进度立刻前进 180 秒。"
+    },
+    {
+      "id": "good_beehive",
+      "name": "蜂箱",
+      "kind": "插件",
+      "effect": "income",
+      "amount": 0.4,
+      "price": 320,
+      "color": "#E9C25A",
+      "desc": "永久插件：每块已种的地额外 +0.4 金/秒（买一次，永久生效）。"
+    },
+    {
+      "id": "good_sprinkler",
+      "name": "环形喷灌",
+      "kind": "插件",
+      "effect": "growth",
+      "amount": 0.25,
+      "price": 620,
+      "color": "#33D6C8",
+      "desc": "永久插件：所有地的生长速度 ×1.25（买一次，永久生效）。"
+    },
+    {
+      "id": "good_lanternring",
+      "name": "广场灯笼环",
+      "kind": "成品",
+      "effect": "decor",
+      "amount": 0,
+      "price": 240,
+      "color": "#F08A2E",
+      "desc": "成品装饰：在中央广场挂一圈灯笼，晚上整圈亮着（买一次，永久摆放）。"
+    },
+    {
+      "id": "good_scarecrow",
+      "name": "守望稻草人",
+      "kind": "成品",
+      "effect": "decor",
+      "amount": 0,
+      "price": 380,
+      "color": "#E2564D",
+      "desc": "成品装饰：在田圃外沿立一个稻草人（买一次，永久摆放）。"
+    },
+    {
+      "id": "good_goldstatue",
+      "name": "喷泉金像",
+      "kind": "成品",
+      "effect": "decor",
+      "amount": 0,
+      "price": 900,
+      "color": "#FFD84D",
+      "desc": "成品装饰：喷泉顶上加一座金像（买一次，永久摆放）。"
+    }
+  ]
+}

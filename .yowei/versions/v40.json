@@ -1,0 +1,220 @@
+{
+  "id": "v40",
+  "label": "turn-1793838177704",
+  "at": 1793838191903,
+  "why": "",
+  "note": "工具：yowei_plan、yowei_expand\n产出：策划案 x1、拓展方案 x2\n工程改动：无（只写了 .yowei 下的文档，未拍快照）\n耗时：14 秒\n结束原因：本轮对话结束",
+  "summary": "新策划 1 篇 · 新玩法 1 篇",
+  "changes": {
+    "design": [
+      {
+        "id": "v255-plugin-design",
+        "title": "v255 肥料线插件设计：伏雷 / 护壤 / 灼印",
+        "added": true,
+        "index": 0
+      }
+    ],
+    "play": [
+      {
+        "id": "v255-plugin-expand",
+        "title": "v255 三件新插件的施工拆解",
+        "added": true,
+        "index": 0
+      }
+    ],
+    "items": [],
+    "removed": []
+  },
+  "unchanged": 25,
+  "entries": [
+    {
+      "kind": "plans",
+      "id": "v255-plugin-design",
+      "title": "v255 肥料线插件设计：伏雷 / 护壤 / 灼印",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-round6-redesign",
+      "title": "第六轮 · 数据重设计 ＋ 界面重排 ＋ 攻击特效重做",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-plant-fairness-v176",
+      "title": "植物命名与公平数值 v176",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-round2-spec",
+      "title": "Seedfall · 第二轮打磨结果（v8 · 8 项对账）",
+      "index": 1,
+      "versions": 2
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-content-standard",
+      "title": "Seedfall · v6 增量（UI 收口 / 插件生效 / 平衡结论）",
+      "index": 3,
+      "versions": 4
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-attrs-v3",
+      "title": "Seedfall · 新版玩法（v3 · 带机器证据）",
+      "index": 2,
+      "versions": 3
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-core-v2",
+      "title": "Seedfall 守园者 · 新版核心玩法（玩家武器战斗 + 植物经济）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-project-design",
+      "title": "Seedfall 守园者 · 完整项目设计与改版记录（v46）",
+      "index": 2,
+      "versions": 3
+    },
+    {
+      "kind": "plans",
+      "id": "seedfall-garden-survivors",
+      "title": "Seedfall 守园者 · 策划案 v36（自动种植 · 攻击即互动）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "expansions",
+      "id": "v255-plugin-expand",
+      "title": "v255 三件新插件的施工拆解",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-round6-plugins",
+      "title": "第六轮 · 12 件插件精确规格 ＋ 图标与攻击特效",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-round6-build",
+      "title": "第六轮施工拆分 · 六个阶段",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-round5-full-expand",
+      "title": "v15 · 第五轮结果（★ 十项 ✗ 九项有证据）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-round5-results-expand",
+      "title": "v14 · 第五轮（画质与 UI ✗ 已取证部分）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-round4-results-expand",
+      "title": "v13 · 第四轮结果（★ 六项 ✗ 五项已收）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-plant-fairness-v176-expand",
+      "title": "植物公平性扩展方向",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-round4-spec-expand",
+      "title": "v12 · 第四轮（商店车 ✗ 玩家 ✗ 植物）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-round3-spec-expand",
+      "title": "v11 · 第三轮（① 作物 ✗ ② 昼夜）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-round2-spec-expand",
+      "title": "v10 · 八项状态（含 ② 的确切结论）",
+      "index": 3,
+      "versions": 4
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-content-standard-expand",
+      "title": "收尾清单（v6 之后）",
+      "index": 3,
+      "versions": 4
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-attrs-v3-expand",
+      "title": "拓展方案 v3 · 按证据强度重排",
+      "index": 2,
+      "versions": 3
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-core-v2-expand",
+      "title": "新版玩法 · 拓展方案",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-expansion",
+      "title": "Seedfall 守园者 · 拓展方案（v3）",
+      "index": 2,
+      "versions": 3
+    },
+    {
+      "kind": "expansions",
+      "id": "seedfall-garden-survivors-expand",
+      "title": "Seedfall 守园者 · 玩法方案 v16（新设计收尾清单）",
+      "index": 9,
+      "versions": 10
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-timebased-core",
+      "title": "Seedfall 计时制核心循环架构（替代回合制）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-architecture",
+      "title": "Seedfall 守园者 · 架构案（子系统边界 / 接口 / 数据流 / 失败模式）",
+      "index": 0,
+      "versions": 1
+    },
+    {
+      "kind": "docs",
+      "id": "seedfall-core-arch",
+      "title": "Seedfall 守园者 · 核心架构 v1",
+      "index": 0,
+      "versions": 1
+    }
+  ]
+}
